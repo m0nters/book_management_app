@@ -12,11 +12,11 @@ enum MainFunctionsContexts {
   advancedSearch
 }
 
-var mainScreenStartScreen = MainFunctionsContexts.home; // CAN CHANGE
+var mainScreenStartScreen = MainFunctionsContexts.home;
 
-enum OverallScreenContexts { home, mainFunctions, advancedSearch, setting }
+enum OverallScreenContexts { mainFunctions, advancedSearch, setting }
 
-var overallScreenStartScreen = OverallScreenContexts.mainFunctions; // CANNOT CHANGE
+var overallScreenStartScreen = OverallScreenContexts.mainFunctions;
 
 class MainScreenContextController extends StatefulWidget {
   final int startPage;
@@ -40,10 +40,6 @@ class _OverallScreenContextControllerState
 
     // Initialize _contextOptions here to include the switchContext function
     _contextOptions = [
-
-      MainFunctionsContextController( // FORCE RETURN to home, for back button of Setting or Advanced Search
-          startPage: MainFunctionsContexts.home.index,
-          overallScreenContextSwitcher: switchContext),
       MainFunctionsContextController(
           startPage: mainScreenStartScreen.index,
           overallScreenContextSwitcher: switchContext),

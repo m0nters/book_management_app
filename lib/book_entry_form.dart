@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main_screen_context_controller.dart';
+import 'overall_screen_context_controller.dart';
 import 'mutual_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -138,61 +138,59 @@ class _BookEntryFormState extends State<BookEntryForm> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 103),
-              Center(
-                child: CustomRoundedButton(
-                  backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
-                  foregroundColor: const Color.fromRGBO(225, 227, 234, 1),
-                  title: "Lập mới",
-                  fontSize: 24,
-                  onPressed: () {},
+        child: ListView(
+          children: [
+            const SizedBox(height: 103),
+            Center(
+              child: CustomRoundedButton(
+                backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
+                foregroundColor: const Color.fromRGBO(225, 227, 234, 1),
+                title: "Lập mới",
+                fontSize: 24,
+                onPressed: () {},
+              ),
+            ),
+            const SizedBox(height: 103),
+            Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Lịch sử',
+                      style: TextStyle(
+                          fontSize: 22, color: Color.fromRGBO(12, 24, 68, 1)),
+                    ),
+                    const SizedBox(width: 199),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Tooltip(
+                        message: 'Mới đến cũ',
+                        child: SvgPicture.asset(
+                          'assets/icons/new_to_old_1.svg',
+                          width: 30,
+                          height: 30,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Tooltip(
+                        message: 'Cũ đến mới',
+                        child: SvgPicture.asset(
+                          'assets/icons/old_to_new_1.svg',
+                          width: 30,
+                          height: 30,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 103),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Lịch sử',
-                        style: TextStyle(
-                            fontSize: 22, color: Color.fromRGBO(12, 24, 68, 1)),
-                      ),
-                      const SizedBox(width: 199),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Tooltip(
-                          message: 'Mới đến cũ',
-                          child: SvgPicture.asset(
-                            'assets/icons/new_to_old_1.svg',
-                            width: 30,
-                            height: 30,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Tooltip(
-                          message: 'Cũ đến mới',
-                          child: SvgPicture.asset(
-                            'assets/icons/old_to_new_1.svg',
-                            width: 30,
-                            height: 30,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Column(children: contentColumn),
-                ],
-              ),
-            ],
-          ),
+                const SizedBox(height: 24),
+                Column(children: contentColumn,)
+              ],
+            ),
+          ],
         ),
       ),
     );

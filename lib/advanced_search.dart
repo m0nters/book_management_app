@@ -21,7 +21,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
             fontWeight: FontWeight.w400, color: Color.fromRGBO(7, 25, 82, 1)),),
         leading: IconButton(
           onPressed: () {
-            widget.overallScreenContextSwitcher(OverallScreenContexts.home.index);
+            widget.overallScreenContextSwitcher(OverallScreenContexts.mainFunctions.index);
           },
           icon: const Icon(Icons.arrow_back),
           color: const Color.fromRGBO(7, 25, 82, 1),),
