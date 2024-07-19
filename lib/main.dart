@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'overall_screen_context_controller.dart';
-import 'book_entry_form_create_form.dart';
+import 'debug_screen.dart';
 
 void main() {
   runApp(const BookstoreManagementApp());
@@ -19,6 +19,7 @@ class BookstoreManagementApp extends StatelessWidget {
         // highlightColor: Colors.transparent, // Disable highlight for long presses
       ),
       home: SafeArea(child: MainScreenContextController(startPage: overallScreenStartScreen.index,)),
+      // home: const DebugScreen(),
     );
   }
 }

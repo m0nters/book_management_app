@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'overall_screen_context_controller.dart';
 import 'mutual_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -52,43 +51,43 @@ List<Widget> contentColumn = [
     backgroundImage: backgroundImageTicket,
     onTap: () {},
   ),
-  const SizedBox(height: 24),
+  const SizedBox(height: 24,),
   BookEntryFormInfoTicket(
     fields: data2,
     backgroundImage: backgroundImageTicket,
     onTap: () {},
   ),
-  const SizedBox(height: 24),
+  const SizedBox(height: 24,),
   BookEntryFormInfoTicket(
     fields: data3,
     backgroundImage: backgroundImageTicket,
     onTap: () {},
   ),
-  const SizedBox(height: 24),
+  const SizedBox(height: 24,),
   BookEntryFormInfoTicket(
     fields: data4,
     backgroundImage: backgroundImageTicket,
     onTap: () {},
   ),
-  const SizedBox(height: 24),
+  const SizedBox(height: 24,),
   BookEntryFormInfoTicket(
     fields: data4,
     backgroundImage: backgroundImageTicket,
     onTap: () {},
   ),
-  const SizedBox(height: 24),
+  const SizedBox(height: 24,),
   BookEntryFormInfoTicket(
     fields: data4,
     backgroundImage: backgroundImageTicket,
     onTap: () {},
   ),
-  const SizedBox(height: 24),
+  const SizedBox(height: 24,),
   BookEntryFormInfoTicket(
     fields: data4,
     backgroundImage: backgroundImageTicket,
     onTap: () {},
   ),
-  const SizedBox(height: 24),
+  const SizedBox(height: 24,),
   BookEntryFormInfoTicket(
     fields: data4,
     backgroundImage: backgroundImageTicket,
@@ -151,45 +150,41 @@ class _BookEntryFormState extends State<BookEntryForm> {
               ),
             ),
             const SizedBox(height: 103),
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Lịch sử',
-                      style: TextStyle(
-                          fontSize: 22, color: Color.fromRGBO(12, 24, 68, 1)),
-                    ),
-                    const SizedBox(width: 199),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Tooltip(
-                        message: 'Mới đến cũ',
-                        child: SvgPicture.asset(
-                          'assets/icons/new_to_old_1.svg',
-                          width: 30,
-                          height: 30,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Tooltip(
-                        message: 'Cũ đến mới',
-                        child: SvgPicture.asset(
-                          'assets/icons/old_to_new_1.svg',
-                          width: 30,
-                          height: 30,
-                        ),
-                      ),
-                    ),
-                  ],
+                const Text(
+                  'Lịch sử',
+                  style: TextStyle(
+                      fontSize: 22, color: Color.fromRGBO(12, 24, 68, 1)),
                 ),
-                const SizedBox(height: 24),
-                Column(children: contentColumn,)
+                const SizedBox(width: 199),
+                IconButton(
+                  onPressed: () {},
+                  icon: Tooltip(
+                    message: 'Mới đến cũ',
+                    child: SvgPicture.asset(
+                      'assets/icons/new_to_old_1.svg',
+                      width: 30,
+                      height: 30,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Tooltip(
+                    message: 'Cũ đến mới',
+                    child: SvgPicture.asset(
+                      'assets/icons/old_to_new_1.svg',
+                      width: 30,
+                      height: 30,
+                    ),
+                  ),
+                ),
               ],
             ),
+            const SizedBox(height: 24),
+            Column(children: contentColumn,)
           ],
         ),
       ),

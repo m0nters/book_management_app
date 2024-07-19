@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
 
+// In a separate file or in the main function scope
 List<Book> globalBookList = [];
 
 // THIS FILE IS FOR TESTING NEW FUNCTIONALITIES
@@ -20,7 +21,7 @@ class Book {
 
 // Book Input Form
 class BookInputForm extends StatefulWidget {
-  late int orderNum; // this cannot be `final` since we may remove a form and other forms behind it must update their `orderNum`s
+  late int orderNum; // this cannot be `final` since we may remove a form and other forms behind it must update their order number
   final Color titleBarColor;
   final Color titleColor;
   final Color contentAreaColor;
@@ -95,7 +96,7 @@ class _BookInputFormState extends State<BookInputForm> {
           ),
         ),
         Container(
-          // content area
+            // content area
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
                 color: widget.contentAreaColor,
@@ -267,17 +268,17 @@ class _BookInputFormState extends State<BookInputForm> {
   }
 }
 
-class BookEntryFormCreateForm extends StatefulWidget {
-  const BookEntryFormCreateForm({super.key});
+class DebugScreen extends StatefulWidget {
+  const DebugScreen({super.key});
 
   @override
-  State<BookEntryFormCreateForm> createState() => _BookEntryFormCreateFormState();
+  State<DebugScreen> createState() => _DebugScreenState();
 }
 
-class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
+class _DebugScreenState extends State<DebugScreen> {
   final List<Widget> _formWidgets = []; // Dynamic list of form widgets
   final List<GlobalKey<_BookInputFormState>> _formKeys =
-  []; // Corresponding keys
+      []; // Corresponding keys
   final ScrollController _scrollController = ScrollController(); // Scroll controller
 
   @override
@@ -304,6 +305,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
         ),
       );
     });
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) { // Check if the controller is attached
         _scrollController.animateTo(
@@ -392,15 +394,15 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
                 controller: _scrollController,
                 itemCount: _formWidgets.length,
                 itemBuilder: (context, index) {
-                  return Dismissible( // Wrap the form in Dismissible
-                    key: UniqueKey(), // Unique key for Dismissible
+                  return Dismissible(
+                    key: UniqueKey(),
                     direction: DismissDirection.endToStart, // Swipe left to delete
                     onDismissed: (direction) {
                       setState(() {
                         _formWidgets.removeAt(index);
                         _formKeys.removeAt(index);
 
-                        // Update order numbers of remaining forms
+                        // Update order numbers of behind forms
                         for (int i = index; i < _formWidgets.length; i++) {
                           (_formWidgets[i].key as GlobalKey<_BookInputFormState>)
                               .currentState!

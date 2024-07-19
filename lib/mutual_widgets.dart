@@ -251,42 +251,20 @@ class CustomDropdownMenu extends StatefulWidget {
   final Function(String?) action;
   final double fontSize;
   final double width;
+  final double height;
+  final Color borderColor;
   final Color fillColor;
   final String hintText;
 
-  /// A customizable dropdown menu widget for Flutter.
-  ///
-  /// This widget provides a visually consistent dropdown menu with customizable options, actions, and styling.
-  ///
-  /// **Key Features:**
-  ///
-  /// * **Required Options:** A list of `options` (strings) to be displayed in the dropdown.
-  /// * **Required Action Callback:** A function `action` that is called when an option is selected, passing the selected value as a parameter.
-  /// * **Customizable Font Size:** Adjust the `fontSize` of the dropdown text.
-  /// * **Customizable Width:** Control the `width` of the dropdown (defaults to full width).
-  /// * **Customizable Fill Color:** Change the background `fillColor` of the dropdown.
-  /// * **Customizable Hint Text:** Provide a `hintText` to guide the user when no option is selected.
-  ///
-  /// **Usage:**
-  ///
-  /// ```dart
-  /// CustomDropdownMenu(
-  ///   options: ['Option 1', 'Option 2', 'Option 3'],
-  ///   action: (value) {
-  ///     // Handle the selected value (e.g., update state)
-  ///   },
-  ///   fontSize: 18.0,  // Larger font size
-  ///   fillColor: Colors.grey[200], // Light grey background
-  ///   hintText: 'Select an option',
-  /// ),
-  /// ```
   const CustomDropdownMenu({
     super.key,
     required this.options,
     required this.action,
     this.fontSize = 16,
+    this.borderColor = Colors.grey,
     this.fillColor = Colors.white,
     this.width = double.infinity,
+    this.height = 46.5, // fit with the height of TextField when `isDense` property is `true`
     this.hintText = 'Chọn một tùy chọn',
   });
 
@@ -301,9 +279,10 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
   Widget build(BuildContext context) {
     return Container(
       width: widget.width,
+      height: widget.height,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade400),
+        border: Border.all(color: widget.borderColor),
         color: widget.fillColor,
         borderRadius: BorderRadius.circular(4),
       ),
@@ -332,6 +311,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
             widget.action(newValue);
           },
           isExpanded: true,
+          dropdownColor: widget.fillColor,
         ),
       ),
     );
@@ -345,13 +325,53 @@ class DatePickerBox extends StatefulWidget {
   final Color backgroundColor;
   final Color foregroundColor;
   final Color borderColor;
+  final double fontSize;
+  final double iconSize;
 
+  /// A customizable date picker widget for Flutter.
+  ///
+  /// This widget provides a visually appealing box that, when tapped, opens a date picker dialog. It displays the selected date in a formatted string and optionally indicates if the date is today.
+  ///
+  /// **Key Features:**
+  ///
+  /// - **Initial Date:** Sets the `initialDate` to be displayed when the widget is first rendered.
+  /// - **On Date Changed Callback:** Triggers the `onDateChanged` callback function whenever the user selects a new date, passing the selected `DateTime` as an argument.
+  /// - **Customizable Colors:** Allows you to customize the `backgroundColor`, `foregroundColor`, and `borderColor` of the box.
+  /// - **Customizable Font and Icon Size:** Adjust the size of the displayed date and the calendar icon using `fontSize` and `iconSize`.
+  /// - **Formatted Date Display:** Shows the selected date in the format 'dd/MM/yyyy' and appends "(hôm nay)" if it's the current date.
+  /// - **Calendar Icon:** Includes a calendar icon for visual clarity.
+  ///
+  /// **Usage:**
+  ///
+  /// ```dart
+  /// DatePickerBox(
+  ///   initialDate: DateTime.now(),
+  ///   onDateChanged: (selectedDate) {
+  ///     // Handle the selected date (e.g., update state)
+  ///   },
+  ///   backgroundColor: Colors.blue[100],  // Light blue background
+  ///   foregroundColor: Colors.blue[900], // Dark blue text
+  ///   borderColor: Colors.blue,           // Blue border
+  ///   fontSize: 18.0,                     // Larger font size for the date
+  ///   iconSize: 24.0,                     // Larger calendar icon
+  /// ),
+  /// ```
+  ///
+  /// **Note:**
+  ///
+  /// - The `firstDate` and `lastDate` of the date picker can be adjusted within the widget's code to restrict the user's selection range.
+  /// - The widget uses `InkWell` for tap interactions, providing visual feedback (ripples) when tapped.
+  /// - You can further customize the appearance using additional `BoxDecoration` properties (e.g., shadows).
+  /// - The `fontSize` and `iconSize` are passed down to the Text and Icon widgets, respectively.
   const DatePickerBox({super.key,
     required this.initialDate, // input Date(year,day,month)
     required this.onDateChanged,
     this.backgroundColor = Colors.white,
     this.foregroundColor = Colors.black,
-    this.borderColor = Colors.grey});
+    this.borderColor = Colors.grey,
+    this.fontSize = 16,
+    this.iconSize = 20,
+  });
 
   @override
   createState() => _DatePickerBoxState();
@@ -413,9 +433,9 @@ class _DatePickerBoxState extends State<DatePickerBox> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('$formattedDate$todayLabel',
-                style: TextStyle(fontSize: 16, color: widget.foregroundColor)),
-            const SizedBox(width: 8), // Spacing
-            const Icon(Icons.calendar_month_sharp), // Calendar icon
+                style: TextStyle(fontSize: widget.fontSize, color: widget.foregroundColor)),
+            const SizedBox(width: 4), // Spacing
+            Icon(Icons.calendar_month_sharp, size: widget.iconSize, color: widget.foregroundColor,), // Calendar icon
           ],
         ),
       ),
