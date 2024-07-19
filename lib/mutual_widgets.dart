@@ -253,6 +253,7 @@ class CustomDropdownMenu extends StatefulWidget {
   final double width;
   final double height;
   final Color borderColor;
+  final Color contentColor;
   final Color fillColor;
   final String hintText;
 
@@ -262,6 +263,7 @@ class CustomDropdownMenu extends StatefulWidget {
     required this.action,
     this.fontSize = 16,
     this.borderColor = Colors.grey,
+    this.contentColor = const Color.fromRGBO(12, 24, 68, 1),
     this.fillColor = Colors.white,
     this.width = double.infinity,
     this.height = 46.5, // fit with the height of TextField when `isDense` property is `true`
@@ -292,6 +294,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
           hint: Text(
             widget.hintText,
             style: TextStyle(fontSize: widget.fontSize),
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
           items: widget.options.map((String option) {
@@ -299,7 +302,8 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
               value: option,
               child: Text(
                 option,
-                style: TextStyle(fontSize: widget.fontSize),
+                style: TextStyle(fontSize: widget.fontSize, color: widget.contentColor),
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             );

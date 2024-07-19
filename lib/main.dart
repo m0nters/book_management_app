@@ -18,7 +18,7 @@ class BookstoreManagementApp extends StatelessWidget {
         // splashColor: Colors.transparent, // Disable splash for taps
         // highlightColor: Colors.transparent, // Disable highlight for long presses
       ),
-      home: SafeArea(child: MainScreenContextController(startPage: overallScreenStartScreen.index,)),
+      home: const SafeArea(child: MainScreenContextController()),
       // home: const DebugScreen(),
     );
   }

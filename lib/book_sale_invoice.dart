@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'main_screen_context_controller.dart';
 import 'mutual_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'book_sale_invoice_create_invoice.dart';
 
 const String title1 = "Mã hóa đơn";
 const String title2 = "Tên khách hàng";
@@ -103,8 +103,9 @@ List<Widget> contentColumn = [
 
 /// Hóa đơn bán sách
 class BookSaleInvoice extends StatefulWidget{
-  final VoidCallback mainScreenContextSwitcher;
-  const BookSaleInvoice({super.key, required this.mainScreenContextSwitcher});
+  final VoidCallback backContextSwitcher;
+  final Function(Widget) internalScreenContextSwitcher;
+  const BookSaleInvoice({super.key, required this.backContextSwitcher, required this.internalScreenContextSwitcher});
 
   @override
   State<BookSaleInvoice> createState() => _BookSaleInvoiceState();
@@ -120,10 +121,12 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
         foregroundColor: const Color.fromRGBO(120, 171, 168, 1),
         title: const Text("Hóa đơn bán sách", style: TextStyle(fontWeight: FontWeight.w400, color: Color.fromRGBO(120, 171, 168, 1)),),
         leading: IconButton(onPressed: (){
-          widget.mainScreenContextSwitcher();
+          widget.backContextSwitcher();
         }, icon: const Icon(Icons.arrow_back), color: const Color.fromRGBO(120, 171, 168, 1),),
         actions: [
-          IconButton(onPressed: (){}, icon: const Icon(Icons.add_circle)),
+          IconButton(onPressed: (){
+            widget.internalScreenContextSwitcher(BookSaleInvoiceCreateInvoice(backContextSwitcher: widget.backContextSwitcher));
+          }, icon: const Icon(Icons.add_circle)),
           IconButton(onPressed: (){}, icon: const Icon(Icons.search,size: 29,)),
         ],
       ),
@@ -138,7 +141,9 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
                 foregroundColor: const Color.fromRGBO(241, 248, 232, 1),
                 title: "Lập mới",
                 fontSize: 24,
-                onPressed: () {},
+                onPressed: () {
+                  widget.internalScreenContextSwitcher(BookSaleInvoiceCreateInvoice(backContextSwitcher: widget.backContextSwitcher));
+                },
               ),
             ),
             const SizedBox(height: 103),

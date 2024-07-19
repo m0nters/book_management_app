@@ -12,16 +12,10 @@ enum MainFunctionsContexts {
   advancedSearch
 }
 
-var mainScreenStartScreen = MainFunctionsContexts.home;
-
 enum OverallScreenContexts { mainFunctions, advancedSearch, setting }
 
-var overallScreenStartScreen = OverallScreenContexts.mainFunctions;
-
 class MainScreenContextController extends StatefulWidget {
-  final int startPage;
-
-  const MainScreenContextController({required this.startPage, super.key});
+  const MainScreenContextController({super.key});
 
   @override
   createState() => _OverallScreenContextControllerState();
@@ -36,15 +30,16 @@ class _OverallScreenContextControllerState
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.startPage;
+    _selectedIndex = OverallScreenContexts.mainFunctions.index;
 
     // Initialize _contextOptions here to include the switchContext function
     _contextOptions = [
       MainFunctionsContextController(
-          startPage: mainScreenStartScreen.index,
           overallScreenContextSwitcher: switchContext),
       AdvancedSearch(overallScreenContextSwitcher: switchContext),
-      Setting(overallScreenContextSwitcher: switchContext,),
+      Setting(
+        overallScreenContextSwitcher: switchContext,
+      ),
     ];
   }
 

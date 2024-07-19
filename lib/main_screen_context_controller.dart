@@ -5,54 +5,28 @@ import 'book_entry_form.dart';
 import 'book_sale_invoice.dart';
 import 'bill.dart';
 import 'debt_report.dart';
-import 'dart:collection';
-
-Queue<int> previousContexts = Queue<int>(); // for the back button in every context in main screen
 
 class MainFunctionsContextController extends StatefulWidget {
-  final int startPage;
   final Function(int) overallScreenContextSwitcher;
 
   const MainFunctionsContextController(
-      {required this.startPage,
-      required this.overallScreenContextSwitcher,
-      super.key});
+      {required this.overallScreenContextSwitcher, super.key});
 
   @override
   createState() => _MainFunctionsContextControllerState();
 }
 
+
+
 class _MainFunctionsContextControllerState
     extends State<MainFunctionsContextController> {
-  late int _selectedIndex;
-
-  static List<Widget> _contextOptions = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.startPage;
-
-    // Initialize _contextOptions here to include the switchContext function
-    _contextOptions = [
-      Home(
-        mainScreenContextSwitcher: switchContext,
-        overallScreenContextSwitcher: widget.overallScreenContextSwitcher,
-      ),
-      BookEntryForm(mainScreenContextSwitcher: goBack,),
-      BookSaleInvoice(mainScreenContextSwitcher: goBack,),
-      Bill(mainScreenContextSwitcher: goBack,),
-      DebtReport(mainScreenContextSwitcher: goBack,),
-    ];
-  }
-
-  static const List<Color> _bottomNavigationBarBackgroundColorOptions = [
-    Color.fromRGBO(194, 203, 194, 1),
-    Color.fromRGBO(12, 24, 68, 1),
-    Color.fromRGBO(200, 207, 160, 1),
-    Color.fromRGBO(8, 131, 149, 1),
-    Color.fromRGBO(5, 12, 156, 1),
-  ];
+  late int
+      _selectedIndex; // ALWAYS need this to adjust selected item, colors,... for bottom bar's visualization
+  late Widget _currentContext;
+  List<Map<int, Widget>> backButtonWidgetsHistory = [];
+  Map<int, List<Widget>> bottomBarScreensHistory = {};
+  static List<Widget> _mainContextsFirstPage =
+      []; // don't know whether we should use static or not, this MainFunctionsContextController object's only used 1 time in `over_screen_context_controller.dart` anyway
 
   static const List<Color> _scaffoldBackgroundColorOptions = [
     Color.fromRGBO(235, 244, 246, 1),
@@ -78,24 +52,109 @@ class _MainFunctionsContextControllerState
     Color.fromRGBO(255, 255, 255, 1),
   ];
 
-  void switchContext(int index) {
-    setState((){
-      previousContexts.add(_selectedIndex);
+  static const List<Color> _bottomNavigationBarBackgroundColorOptions = [
+    Color.fromRGBO(194, 203, 194, 1),
+    Color.fromRGBO(12, 24, 68, 1),
+    Color.fromRGBO(200, 207, 160, 1),
+    Color.fromRGBO(8, 131, 149, 1),
+    Color.fromRGBO(5, 12, 156, 1),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = MainFunctionsContexts.home.index;
+
+    // Initialize _contextOptions here to include the switchContext function
+    _mainContextsFirstPage = [
+      Home(
+        mainScreenContextSwitcher: externalContextSwitcher,
+        overallScreenContextSwitcher: widget.overallScreenContextSwitcher,
+      ),
+      BookEntryForm(
+        backContextSwitcher: goBack,
+        internalScreenContextSwitcher: internalContextSwitcher,
+      ),
+      BookSaleInvoice(
+        backContextSwitcher: goBack,
+        internalScreenContextSwitcher: internalContextSwitcher,
+      ),
+      Bill(
+        backContextSwitcher: goBack,
+        internalScreenContextSwitcher: internalContextSwitcher,
+      ),
+      DebtReport(
+        backContextSwitcher: goBack,
+      ),
+    ];
+
+    _currentContext = _mainContextsFirstPage[_selectedIndex];
+  }
+
+  // this function is only for bottom bar navigation externally
+  void externalContextSwitcher(int index) {
+    setState(() {
+      // Save the current context to the screen history of the currently selected index
+      if (!bottomBarScreensHistory.containsKey(_selectedIndex)) {
+        bottomBarScreensHistory[_selectedIndex] = [];
+      }
+      bottomBarScreensHistory[_selectedIndex]!.add(_currentContext);
+
+      if (index != _selectedIndex) { // in case user spams one item many times and it also saves in the history lol
+        backButtonWidgetsHistory.add({_selectedIndex: _currentContext});
+      }
       _selectedIndex = index;
-      if (index == MainFunctionsContexts.home.index){
-        previousContexts.clear();
+
+      // If the selected index has a screen history, use the last one
+      if (bottomBarScreensHistory.containsKey(_selectedIndex) &&
+          bottomBarScreensHistory[_selectedIndex]!.isNotEmpty) {
+        _currentContext =
+            bottomBarScreensHistory[_selectedIndex]!.removeLast();
+      } else {
+        _currentContext = _mainContextsFirstPage[_selectedIndex];
+      }
+
+      // because home screen doesn't have back button so every widget history
+      // must be deleted to minimalize the space occupied
+      if (index == MainFunctionsContexts.home.index) {
+        backButtonWidgetsHistory.clear();
       }
     });
   }
 
-  void goBack(){
-    setState(() => _selectedIndex = previousContexts.removeLast());
+  void goBack() {
+    setState(() {
+      var recentHistory = backButtonWidgetsHistory.removeLast();
+      _selectedIndex = recentHistory.keys.first;
+      _currentContext = recentHistory.values.first;
+
+      // by logic, there's no way that when you back to home screen and the `widgetsHistory` list still has elements
+      // it all thanks to `switchMainContext` function above
+      // so no delete `widgetsHistory` list here!
+    });
+  }
+
+  // this function is only for switching screen in one selected index internally
+  void internalContextSwitcher(Widget screen) {
+    setState(() {
+      backButtonWidgetsHistory.add({_selectedIndex: _currentContext});
+      _currentContext = screen;
+    });
+  }
+
+  void forceRestartToFirstScreen(int index) { // in case there's many widget histories and you can't go back to first page
+    setState(() {
+      // bottomBarScreensHistory[index]?.clear();
+      if (index == _selectedIndex) {
+        _currentContext = _mainContextsFirstPage[_selectedIndex];
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _contextOptions[_selectedIndex],
+      body: _currentContext,
       bottomNavigationBar: Container(
         color: _scaffoldBackgroundColorOptions[_selectedIndex],
         height: 72,
@@ -114,28 +173,15 @@ class _MainFunctionsContextControllerState
                 ),
                 child: BottomNavigationBar(
                   elevation: 0,
-                  items: const <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.home),
-                      label: 'Trang chủ',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.input),
-                      label: 'Nhập sách',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.receipt),
-                      label: 'Hóa đơn',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.monetization_on_outlined),
-                      label: 'Tiền',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.assignment),
-                      label: 'Báo cáo',
-                    ),
-                  ],
+                  items: List.generate(5, (index) {
+                    return BottomNavigationBarItem(
+                      icon: GestureDetector(
+                        onDoubleTap: () => forceRestartToFirstScreen(index),
+                        child: getIconForIndex(index),
+                      ),
+                      label: getLabelForIndex(index),
+                    );
+                  }),
                   currentIndex: _selectedIndex,
                   selectedItemColor: _selectedItemColorOptions[_selectedIndex],
                   unselectedItemColor:
@@ -143,8 +189,9 @@ class _MainFunctionsContextControllerState
                   type: BottomNavigationBarType.fixed,
                   backgroundColor: Colors.transparent,
                   // don't need since we override the outer container for this
-                  onTap: switchContext,
+                  onTap: externalContextSwitcher,
                   showUnselectedLabels: true,
+                  selectedIconTheme: const IconThemeData(size: 28),
                   showSelectedLabels: true,
                   selectedFontSize: 12.0,
                   unselectedFontSize: 9.0,
@@ -158,5 +205,39 @@ class _MainFunctionsContextControllerState
         ),
       ),
     );
+  }
+
+  Widget getIconForIndex(int index) {
+    switch (index) {
+      case 0: // unfortunate we can't use `MainFunctionsContexts.home.index` since dart doesn't consider it as a constant, please also notice this place too when changing order
+        return const Icon(Icons.home);
+      case 1:
+        return const Icon(Icons.input);
+      case 2:
+        return const Icon(Icons.receipt);
+      case 3:
+        return const Icon(Icons.monetization_on_outlined);
+      case 4:
+        return const Icon(Icons.assignment);
+      default:
+        return const Icon(Icons.home);
+    }
+  }
+
+  String getLabelForIndex(int index) {
+    switch (index) {
+      case 0:
+        return 'Trang chủ';
+      case 1:
+        return 'Nhập sách';
+      case 2:
+        return 'Hóa đơn';
+      case 3:
+        return 'Thu tiền';
+      case 4:
+        return 'Báo cáo';
+      default:
+        return 'Trang chủ';
+    }
   }
 }

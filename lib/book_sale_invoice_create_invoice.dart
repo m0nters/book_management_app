@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
 
-List<BookEntry> serverUploadedBookEntriesData = [];
+List<BookSaleInvoice> serverUploadedBookEntriesData = [];
 
 // THIS FILE IS FOR TESTING NEW FUNCTIONALITIES
-class BookEntry {
+class BookSaleInvoice {
   String title;
   String category;
-  String author;
+  int price;
   int quantity;
 
-  BookEntry({
+  BookSaleInvoice({
     required this.title,
     required this.category,
-    required this.author,
+    required this.price,
     required this.quantity,
   });
 }
 
 // Book Input Form
-class BookEntryInputForm extends StatefulWidget {
+class BookSaleInvoiceInputForm extends StatefulWidget {
   late int orderNum; // this cannot be `final` since we may remove a form and other forms behind it must update their `orderNum`s
   final Color titleBarColor;
   final Color titleColor;
@@ -29,25 +29,25 @@ class BookEntryInputForm extends StatefulWidget {
   final Color contentInputFormFillColor;
   final Color textFieldBorderColor;
 
-  BookEntryInputForm({
+  BookSaleInvoiceInputForm({
     super.key,
     required this.orderNum,
-    this.titleBarColor = const Color.fromRGBO(12, 24, 68, 1),
-    this.titleColor = const Color.fromRGBO(225, 227, 234, 1),
-    this.contentAreaColor = const Color.fromRGBO(255, 245, 225, 1),
-    this.contentTitleColor = const Color.fromRGBO(12, 24, 68, 1),
+    this.titleBarColor = const Color.fromRGBO(252, 220, 148, 1),
+    this.titleColor = const Color.fromRGBO(120, 171, 168, 1),
+    this.contentAreaColor = const Color.fromRGBO(120, 171, 168, 1),
+    this.contentTitleColor = const Color.fromRGBO(241, 248, 232, 1),
     this.contentInputColor = const Color.fromRGBO(12, 24, 68, 1),
-    this.contentInputFormFillColor = Colors.white,
+    this.contentInputFormFillColor = const Color.fromRGBO(241, 248, 232, 1),
     this.textFieldBorderColor = Colors.grey,
   });
 
   @override
-  createState() => _BookEntryInputFormState();
+  createState() => _BookSaleInvoiceInputFormState();
 }
 
-class _BookEntryInputFormState extends State<BookEntryInputForm> {
+class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _authorController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
   String genreController = '';
 
@@ -62,7 +62,7 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
   @override
   void dispose() {
     _titleController.dispose();
-    _authorController.dispose();
+    _priceController.dispose();
     _quantityController.dispose();
     super.dispose();
   }
@@ -184,10 +184,10 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.person,
+                              Icon(Icons.money,
                                   color: widget.contentTitleColor),
                               const SizedBox(width: 4),
-                              Text('Tác giả',
+                              Text('Đơn giá',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -196,12 +196,13 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
                           ),
                           const SizedBox(height: 4),
                           TextField(
-                            controller: _authorController,
+                            controller: _priceController,
+                            keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               isDense: true,
                               filled: true,
                               fillColor: widget.contentInputFormFillColor,
-                              hintText: "Nhập tác giả",
+                              hintText: "Nhập đơn giá",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(4),
                               ),
@@ -210,6 +211,7 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
                                     color: widget.textFieldBorderColor,
                                     width: 1.0),
                               ),
+                              suffixText: "VND",
                             ),
                             style: TextStyle(color: widget.contentInputColor),
                           ),
@@ -264,27 +266,27 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
     );
   }
 
-  BookEntry getBookEntryData() {
-    return BookEntry(
+  BookSaleInvoice getBookSaleInvoiceData() {
+    return BookSaleInvoice(
       title: _titleController.text,
       category: genreController,
-      author: _authorController.text,
+      price: int.tryParse(_priceController.text) ?? 0,
       quantity: int.tryParse(_quantityController.text) ?? 0,
     );
   }
 }
 
-class BookEntryFormCreateForm extends StatefulWidget {
+class BookSaleInvoiceCreateInvoice extends StatefulWidget {
   final VoidCallback backContextSwitcher;
-  const BookEntryFormCreateForm({super.key, required this.backContextSwitcher});
+  const BookSaleInvoiceCreateInvoice({super.key, required this.backContextSwitcher});
 
   @override
-  State<BookEntryFormCreateForm> createState() => _BookEntryFormCreateFormState();
+  State<BookSaleInvoiceCreateInvoice> createState() => _BookSaleInvoiceCreateInvoiceState();
 }
 
-class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
+class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvoice> {
   final List<Widget> _formWidgets = []; // Dynamic list of form widgets
-  final List<GlobalKey<_BookEntryInputFormState>> _formKeys =
+  final List<GlobalKey<_BookSaleInvoiceInputFormState>> _formKeys =
   []; // Corresponding keys
   final ScrollController _scrollController = ScrollController(); // Scroll controller
 
@@ -302,11 +304,11 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
 
   void _addForm() {
     setState(() {
-      final formKey = GlobalKey<_BookEntryInputFormState>();
+      final formKey = GlobalKey<_BookSaleInvoiceInputFormState>();
       _formKeys.add(formKey); // Add the key to the list
 
       _formWidgets.add(
-        BookEntryInputForm(
+        BookSaleInvoiceInputForm(
           orderNum: _formWidgets.length + 1, // Dynamic order number
           key: formKey, // Assign the key
         ),
@@ -326,19 +328,19 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
   void _onSavePressed() {
     setState(() {
       serverUploadedBookEntriesData =
-          _formKeys.map((key) => key.currentState!.getBookEntryData()).toList();
+          _formKeys.map((key) => key.currentState!.getBookSaleInvoiceData()).toList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(225, 227, 234, 1),
+      backgroundColor: const Color.fromRGBO(241, 248, 232, 1),
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(225, 227, 234, 1),
-        foregroundColor: const Color.fromRGBO(12, 24, 68, 1),
+        backgroundColor: const Color.fromRGBO(241, 248, 232, 1),
+        foregroundColor: const Color.fromRGBO(120, 171, 168, 1),
         title: const Text(
-          "Lập phiếu",
+          "Lập hóa đơn",
           style: TextStyle(
               fontWeight: FontWeight.w400,
           ),
@@ -381,12 +383,33 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
                 )
               ],
             ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.end,
+            //   children: [
+            //     const Text(
+            //       "Họ tên khách hàng: ",
+            //       style: TextStyle(fontSize: 16),
+            //     ),
+            //     TextField(
+            //       decoration: InputDecoration(
+            //         isDense: true,
+            //         filled: true,
+            //         fillColor: const Color.fromRGBO(200, 207, 160, 1),
+            //         hintText: "Nhập tên sách",
+            //         border: OutlineInputBorder(
+            //           borderRadius: BorderRadius.circular(4),
+            //         ),
+            //         enabledBorder: const OutlineInputBorder(),
+            //       ),
+            //     ),
+            //   ],
+            // ),
             const SizedBox(
               height: 46,
             ),
             CustomRoundedButton(
-              backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
-              foregroundColor: const Color.fromRGBO(255, 227, 234, 1),
+              backgroundColor: const Color.fromRGBO(239, 156, 102, 1),
+              foregroundColor: const Color.fromRGBO(241, 248, 232, 1),
               title: "Lưu",
               onPressed: _onSavePressed,
               width: 108,
@@ -409,7 +432,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
 
                         // Update order numbers of remaining forms
                         for (int i = index; i < _formWidgets.length; i++) {
-                          (_formWidgets[i].key as GlobalKey<_BookEntryInputFormState>)
+                          (_formWidgets[i].key as GlobalKey<_BookSaleInvoiceInputFormState>)
                               .currentState!
                               .updateOrderNumber(i + 1);
                         }

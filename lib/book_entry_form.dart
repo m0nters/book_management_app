@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'book_entry_form_create_form.dart';
 
 const String title1 = "Mã phiếu";
 const String title2 = "Sách";
@@ -44,7 +45,7 @@ const List<Map<String, String>> data4 = [
   {'title': title5, 'content': '12'},
 ];
 
-// Add the content here
+// Add the content in this list here
 List<Widget> contentColumn = [
   BookEntryFormInfoTicket(
     fields: data1,
@@ -97,8 +98,9 @@ List<Widget> contentColumn = [
 
 /// Phiếu nhập sách
 class BookEntryForm extends StatefulWidget {
-  final VoidCallback mainScreenContextSwitcher;
-  const BookEntryForm({super.key, required this.mainScreenContextSwitcher});
+  final VoidCallback backContextSwitcher;
+  final Function(Widget) internalScreenContextSwitcher;
+  const BookEntryForm({super.key, required this.backContextSwitcher, required this.internalScreenContextSwitcher});
 
   @override
   State<BookEntryForm> createState() => _BookEntryFormState();
@@ -120,13 +122,15 @@ class _BookEntryFormState extends State<BookEntryForm> {
         ),
         leading: IconButton(
           onPressed: () {
-            widget.mainScreenContextSwitcher();
+            widget.backContextSwitcher();
           },
           icon: const Icon(Icons.arrow_back),
           color: const Color.fromRGBO(12, 24, 68, 1),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.add_circle)),
+          IconButton(onPressed: () {
+            widget.internalScreenContextSwitcher(BookEntryFormCreateForm(backContextSwitcher: widget.backContextSwitcher));
+          }, icon: const Icon(Icons.add_circle)),
           IconButton(
               onPressed: () {},
               icon: const Icon(
@@ -146,7 +150,9 @@ class _BookEntryFormState extends State<BookEntryForm> {
                 foregroundColor: const Color.fromRGBO(225, 227, 234, 1),
                 title: "Lập mới",
                 fontSize: 24,
-                onPressed: () {},
+                onPressed: () {
+                  widget.internalScreenContextSwitcher(BookEntryFormCreateForm(backContextSwitcher: widget.backContextSwitcher));
+                },
               ),
             ),
             const SizedBox(height: 103),

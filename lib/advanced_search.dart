@@ -25,11 +25,6 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
           },
           icon: const Icon(Icons.arrow_back),
           color: const Color.fromRGBO(7, 25, 82, 1),),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.add_circle)),
-          IconButton(
-              onPressed: () {}, icon: const Icon(Icons.search, size: 29,)),
-        ],
       ),
     );
   }
