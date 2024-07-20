@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
 
-List<BookSaleInvoice> serverUploadedBookEntriesData = [];
+late DateTime serverUploadedDateInputData;
+List<BookSaleInvoice> serverUploadedBookSaleInvoicesData = [];
 
 // THIS FILE IS FOR TESTING NEW FUNCTIONALITIES
 class BookSaleInvoice {
@@ -326,10 +327,14 @@ class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvo
   }
 
   void _onSavePressed() {
-    setState(() {
-      serverUploadedBookEntriesData =
-          _formKeys.map((key) => key.currentState!.getBookSaleInvoiceData()).toList();
-    });
+    serverUploadedBookSaleInvoicesData = _formKeys.map((key) => key.currentState!.getBookSaleInvoiceData()).toList();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Đã lưu các hóa đơn bán sách hôm nay!', style: TextStyle(color: Color.fromRGBO(241, 248, 232, 1))),
+        backgroundColor: Color.fromRGBO(239, 156, 102, 1),
+        duration: Duration(seconds: 2), // Adjust duration as needed
+      ),
+    );
   }
 
   @override
@@ -377,8 +382,8 @@ class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvo
                 ),
                 DatePickerBox(
                   initialDate: DateTime.now(),
-                  onDateChanged: (date) => print(date.day),
-                  backgroundColor: const Color.fromRGBO(255, 245, 225, 1),
+                  onDateChanged: (date) => serverUploadedDateInputData = date,
+                  backgroundColor: const Color.fromRGBO(200, 207, 160, 1),
                   foregroundColor: const Color.fromRGBO(12, 24, 68, 1),
                 )
               ],

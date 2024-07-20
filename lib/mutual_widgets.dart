@@ -430,7 +430,7 @@ class _DatePickerBoxState extends State<DatePickerBox> {
         padding: const EdgeInsets.all(10), // Adjust padding
         decoration: BoxDecoration(
           color: widget.backgroundColor, // Background color
-          border: Border.all(color: widget.borderColor, width: 1.5),
+          border: Border.all(color: widget.borderColor, width: 1),
           borderRadius: BorderRadius.circular(8), // Border radius
         ),
         child: Row(

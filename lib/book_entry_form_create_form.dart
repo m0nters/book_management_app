@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
 
+late DateTime serverUploadedDateInputData;
 List<BookEntry> serverUploadedBookEntriesData = [];
 
 // THIS FILE IS FOR TESTING NEW FUNCTIONALITIES
@@ -324,10 +325,14 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
   }
 
   void _onSavePressed() {
-    setState(() {
-      serverUploadedBookEntriesData =
-          _formKeys.map((key) => key.currentState!.getBookEntryData()).toList();
-    });
+    serverUploadedBookEntriesData = _formKeys.map((key) => key.currentState!.getBookEntryData()).toList();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Đã lưu các phiếu nhập sách hôm nay!', style: TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
+        backgroundColor: Color.fromRGBO(255, 105, 105, 1),
+        duration: Duration(seconds: 2), // Adjust duration as needed
+      ),
+    );
   }
 
   @override
@@ -375,7 +380,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
                 ),
                 DatePickerBox(
                   initialDate: DateTime.now(),
-                  onDateChanged: (date) => print(date.day),
+                  onDateChanged: (date) => serverUploadedDateInputData = date,
                   backgroundColor: const Color.fromRGBO(255, 245, 225, 1),
                   foregroundColor: const Color.fromRGBO(12, 24, 68, 1),
                 )

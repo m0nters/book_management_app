@@ -94,15 +94,16 @@ class _MainFunctionsContextControllerState
   // this function is only for bottom bar navigation externally
   void externalContextSwitcher(int index) {
     setState(() {
-      // Save the current context to the screen history of the currently selected index
-      if (!bottomBarScreensHistory.containsKey(_selectedIndex)) {
-        bottomBarScreensHistory[_selectedIndex] = [];
-      }
-      bottomBarScreensHistory[_selectedIndex]!.add(_currentContext);
-
       if (index != _selectedIndex) { // in case user spams one item many times and it also saves in the history lol
         backButtonWidgetsHistory.add({_selectedIndex: _currentContext});
+
+        // Save the current context to the screen history of the currently selected index
+        if (!bottomBarScreensHistory.containsKey(_selectedIndex)) {
+          bottomBarScreensHistory[_selectedIndex] = [];
+        }
+        bottomBarScreensHistory[_selectedIndex]!.add(_currentContext);
       }
+      
       _selectedIndex = index;
 
       // If the selected index has a screen history, use the last one
@@ -191,8 +192,9 @@ class _MainFunctionsContextControllerState
                   // don't need since we override the outer container for this
                   onTap: externalContextSwitcher,
                   showUnselectedLabels: true,
-                  selectedIconTheme: const IconThemeData(size: 28),
                   showSelectedLabels: true,
+                  unselectedIconTheme: const IconThemeData(size: 20),
+                  selectedIconTheme: const IconThemeData(size: 28),
                   selectedFontSize: 12.0,
                   unselectedFontSize: 9.0,
                 ),
