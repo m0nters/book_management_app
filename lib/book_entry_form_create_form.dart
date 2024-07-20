@@ -292,6 +292,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
       []; // Corresponding keys
   final ScrollController _scrollController =
       ScrollController(); // Scroll controller
+  bool _isSaving = false; // Track save button state
 
   @override
   void dispose() {
@@ -330,6 +331,10 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
   }
 
   void _onSavePressed() {
+    if (_isSaving) return; // Prevent multiple presses
+    setState(() {
+      _isSaving = true; // Set saving state to true
+    });
     String dateSaved = (serverUploadedDateInputData.year ==
                 DateTime.now().year &&
             serverUploadedDateInputData.month == DateTime.now().month &&
@@ -341,11 +346,15 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Đã lưu các phiếu nhập sách cho $dateSaved!',
-            style: TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
+            style: const TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
         backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
         duration: const Duration(seconds: 2), // Adjust duration as needed
       ),
-    );
+    ).closed.then((reason) {
+      setState(() {
+        _isSaving = false; // Reset saving state after snack bar is closed
+      });
+    });
   }
 
   @override

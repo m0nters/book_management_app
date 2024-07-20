@@ -296,6 +296,7 @@ class _BookSaleInvoiceCreateInvoiceState
       []; // Corresponding keys
   final ScrollController _scrollController =
       ScrollController(); // Scroll controller
+  bool _isSaving = false; // Track save button state
 
   @override
   void dispose() {
@@ -334,6 +335,10 @@ class _BookSaleInvoiceCreateInvoiceState
   }
 
   void _onSavePressed() {
+    if (_isSaving) return; // Prevent multiple presses
+    setState(() {
+      _isSaving = true; // Set saving state to true
+    });
     String dateSaved = (serverUploadedDateInputData.year ==
         DateTime.now().year &&
         serverUploadedDateInputData.month == DateTime.now().month &&
@@ -351,7 +356,11 @@ class _BookSaleInvoiceCreateInvoiceState
         backgroundColor: const Color.fromRGBO(239, 156, 102, 1),
         duration: const Duration(seconds: 2), // Adjust duration as needed
       ),
-    );
+    ).closed.then((reason) {
+      setState(() {
+        _isSaving = false; // Reset saving state after snack bar is closed
+      });
+    });
   }
 
   @override
