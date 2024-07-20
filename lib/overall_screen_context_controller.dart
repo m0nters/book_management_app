@@ -9,7 +9,6 @@ enum MainFunctionsContexts {
   bookSaleInvoice,
   bill,
   debtReport,
-  advancedSearch
 }
 
 enum OverallScreenContexts { mainFunctions, advancedSearch, setting }

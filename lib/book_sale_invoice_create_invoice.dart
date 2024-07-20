@@ -21,7 +21,8 @@ class BookSaleInvoice {
 
 // Book Input Form
 class BookSaleInvoiceInputForm extends StatefulWidget {
-  late int orderNum; // this cannot be `final` since we may remove a form and other forms behind it must update their `orderNum`s
+  late int
+      orderNum; // this cannot be `final` since we may remove a form and other forms behind it must update their `orderNum`s
   final Color titleBarColor;
   final Color titleColor;
   final Color contentAreaColor;
@@ -98,7 +99,7 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
           ),
         ),
         Container(
-          // content area
+            // content area
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
                 color: widget.contentAreaColor,
@@ -279,17 +280,22 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
 
 class BookSaleInvoiceCreateInvoice extends StatefulWidget {
   final VoidCallback backContextSwitcher;
-  const BookSaleInvoiceCreateInvoice({super.key, required this.backContextSwitcher});
+
+  const BookSaleInvoiceCreateInvoice(
+      {super.key, required this.backContextSwitcher});
 
   @override
-  State<BookSaleInvoiceCreateInvoice> createState() => _BookSaleInvoiceCreateInvoiceState();
+  State<BookSaleInvoiceCreateInvoice> createState() =>
+      _BookSaleInvoiceCreateInvoiceState();
 }
 
-class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvoice> {
+class _BookSaleInvoiceCreateInvoiceState
+    extends State<BookSaleInvoiceCreateInvoice> {
   final List<Widget> _formWidgets = []; // Dynamic list of form widgets
   final List<GlobalKey<_BookSaleInvoiceInputFormState>> _formKeys =
-  []; // Corresponding keys
-  final ScrollController _scrollController = ScrollController(); // Scroll controller
+      []; // Corresponding keys
+  final ScrollController _scrollController =
+      ScrollController(); // Scroll controller
 
   @override
   void dispose() {
@@ -316,7 +322,8 @@ class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvo
       );
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) { // Check if the controller is attached
+      if (_scrollController.hasClients) {
+        // Check if the controller is attached
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 300),
@@ -327,12 +334,22 @@ class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvo
   }
 
   void _onSavePressed() {
-    serverUploadedBookSaleInvoicesData = _formKeys.map((key) => key.currentState!.getBookSaleInvoiceData()).toList();
+    String dateSaved = (serverUploadedDateInputData.year ==
+        DateTime.now().year &&
+        serverUploadedDateInputData.month == DateTime.now().month &&
+        serverUploadedDateInputData.day == DateTime.now().day)
+        ? "hôm nay"
+        : "ngày ${serverUploadedDateInputData.day}/${serverUploadedDateInputData.month}/${serverUploadedDateInputData.year}";
+    serverUploadedBookSaleInvoicesData = _formKeys
+        .map((key) => key.currentState!.getBookSaleInvoiceData())
+        .toList();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Đã lưu các hóa đơn bán sách hôm nay!', style: TextStyle(color: Color.fromRGBO(241, 248, 232, 1))),
-        backgroundColor: Color.fromRGBO(239, 156, 102, 1),
-        duration: Duration(seconds: 2), // Adjust duration as needed
+      SnackBar(
+        content: Text(
+            'Đã lưu các hóa đơn bán sách cho $dateSaved!',
+            style: const TextStyle(color: Color.fromRGBO(241, 248, 232, 1))),
+        backgroundColor: const Color.fromRGBO(239, 156, 102, 1),
+        duration: const Duration(seconds: 2), // Adjust duration as needed
       ),
     );
   }
@@ -347,7 +364,7 @@ class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvo
         title: const Text(
           "Lập hóa đơn",
           style: TextStyle(
-              fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w400,
           ),
         ),
         leading: IconButton(
@@ -378,7 +395,8 @@ class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvo
               children: [
                 const Text(
                   "Ngày lập: ",
-                  style: TextStyle(fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                  style: TextStyle(
+                      fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
                 ),
                 DatePickerBox(
                   initialDate: DateTime.now(),
@@ -420,16 +438,21 @@ class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvo
               width: 108,
               fontSize: 24,
             ),
-            const SizedBox(height: 46,),
+            const SizedBox(
+              height: 46,
+            ),
             Expanded(
               // Make the forms scrollable
               child: ListView.builder(
                 controller: _scrollController,
                 itemCount: _formWidgets.length,
                 itemBuilder: (context, index) {
-                  return Dismissible( // Wrap the form in Dismissible
-                    key: UniqueKey(), // Unique key for Dismissible
-                    direction: DismissDirection.endToStart, // Swipe left to delete
+                  return Dismissible(
+                    // Wrap the form in Dismissible
+                    key: UniqueKey(),
+                    // Unique key for Dismissible
+                    direction: DismissDirection.endToStart,
+                    // Swipe left to delete
                     onDismissed: (direction) {
                       setState(() {
                         _formWidgets.removeAt(index);
@@ -437,7 +460,8 @@ class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvo
 
                         // Update order numbers of remaining forms
                         for (int i = index; i < _formWidgets.length; i++) {
-                          (_formWidgets[i].key as GlobalKey<_BookSaleInvoiceInputFormState>)
+                          (_formWidgets[i].key
+                                  as GlobalKey<_BookSaleInvoiceInputFormState>)
                               .currentState!
                               .updateOrderNumber(i + 1);
                         }
@@ -462,7 +486,6 @@ class _BookSaleInvoiceCreateInvoiceState extends State<BookSaleInvoiceCreateInvo
                 },
               ),
             ),
-
           ],
         ),
       ),

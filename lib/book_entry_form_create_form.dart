@@ -21,7 +21,8 @@ class BookEntry {
 
 // Book Input Form
 class BookEntryInputForm extends StatefulWidget {
-  late int orderNum; // this cannot be `final` since we may remove a form and other forms behind it must update their `orderNum`s
+  late int
+      orderNum; // this cannot be `final` since we may remove a form and other forms behind it must update their `orderNum`s
   final Color titleBarColor;
   final Color titleColor;
   final Color contentAreaColor;
@@ -98,7 +99,7 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
           ),
         ),
         Container(
-          // content area
+            // content area
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
                 color: widget.contentAreaColor,
@@ -277,17 +278,20 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
 
 class BookEntryFormCreateForm extends StatefulWidget {
   final VoidCallback backContextSwitcher;
+
   const BookEntryFormCreateForm({super.key, required this.backContextSwitcher});
 
   @override
-  State<BookEntryFormCreateForm> createState() => _BookEntryFormCreateFormState();
+  State<BookEntryFormCreateForm> createState() =>
+      _BookEntryFormCreateFormState();
 }
 
 class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
   final List<Widget> _formWidgets = []; // Dynamic list of form widgets
   final List<GlobalKey<_BookEntryInputFormState>> _formKeys =
-  []; // Corresponding keys
-  final ScrollController _scrollController = ScrollController(); // Scroll controller
+      []; // Corresponding keys
+  final ScrollController _scrollController =
+      ScrollController(); // Scroll controller
 
   @override
   void dispose() {
@@ -314,7 +318,8 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
       );
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) { // Check if the controller is attached
+      if (_scrollController.hasClients) {
+        // Check if the controller is attached
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 300),
@@ -325,12 +330,20 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
   }
 
   void _onSavePressed() {
-    serverUploadedBookEntriesData = _formKeys.map((key) => key.currentState!.getBookEntryData()).toList();
+    String dateSaved = (serverUploadedDateInputData.year ==
+                DateTime.now().year &&
+            serverUploadedDateInputData.month == DateTime.now().month &&
+            serverUploadedDateInputData.day == DateTime.now().day)
+        ? "hôm nay"
+        : "ngày ${serverUploadedDateInputData.day}/${serverUploadedDateInputData.month}/${serverUploadedDateInputData.year}";
+    serverUploadedBookEntriesData =
+        _formKeys.map((key) => key.currentState!.getBookEntryData()).toList();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Đã lưu các phiếu nhập sách hôm nay!', style: TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
-        backgroundColor: Color.fromRGBO(255, 105, 105, 1),
-        duration: Duration(seconds: 2), // Adjust duration as needed
+      SnackBar(
+        content: Text('Đã lưu các phiếu nhập sách cho $dateSaved!',
+            style: TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
+        backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
+        duration: const Duration(seconds: 2), // Adjust duration as needed
       ),
     );
   }
@@ -345,7 +358,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
         title: const Text(
           "Lập phiếu",
           style: TextStyle(
-              fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w400,
           ),
         ),
         leading: IconButton(
@@ -376,7 +389,8 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
               children: [
                 const Text(
                   "Ngày lập: ",
-                  style: TextStyle(fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                  style: TextStyle(
+                      fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
                 ),
                 DatePickerBox(
                   initialDate: DateTime.now(),
@@ -397,16 +411,21 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
               width: 108,
               fontSize: 24,
             ),
-            const SizedBox(height: 46,),
+            const SizedBox(
+              height: 46,
+            ),
             Expanded(
               // Make the forms scrollable
               child: ListView.builder(
                 controller: _scrollController,
                 itemCount: _formWidgets.length,
                 itemBuilder: (context, index) {
-                  return Dismissible( // Wrap the form in Dismissible
-                    key: UniqueKey(), // Unique key for Dismissible
-                    direction: DismissDirection.endToStart, // Swipe left to delete
+                  return Dismissible(
+                    // Wrap the form in Dismissible
+                    key: UniqueKey(),
+                    // Unique key for Dismissible
+                    direction: DismissDirection.endToStart,
+                    // Swipe left to delete
                     onDismissed: (direction) {
                       setState(() {
                         _formWidgets.removeAt(index);
@@ -414,7 +433,8 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
 
                         // Update order numbers of remaining forms
                         for (int i = index; i < _formWidgets.length; i++) {
-                          (_formWidgets[i].key as GlobalKey<_BookEntryInputFormState>)
+                          (_formWidgets[i].key
+                                  as GlobalKey<_BookEntryInputFormState>)
                               .currentState!
                               .updateOrderNumber(i + 1);
                         }
@@ -439,7 +459,6 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
                 },
               ),
             ),
-
           ],
         ),
       ),
