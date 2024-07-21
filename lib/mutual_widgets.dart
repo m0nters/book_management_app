@@ -133,7 +133,6 @@ class InfoTicket extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Ink(
-        height: 95,
         padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 4),
         decoration: BoxDecoration(
             image: DecorationImage(

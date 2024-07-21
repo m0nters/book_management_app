@@ -197,9 +197,7 @@ class BookSaleInvoiceInfoTicket extends InfoTicket{
   const BookSaleInvoiceInfoTicket({super.key, required super.fields, required super.backgroundImage, required super.onTap});
 
   @override
-  // TODO: implement titleColor
   Color get titleColor => const Color.fromRGBO(252, 220, 148, 1);
   @override
-  // TODO: implement contentColor
   Color get contentColor => const Color.fromRGBO(241, 248, 232, 1);
 }

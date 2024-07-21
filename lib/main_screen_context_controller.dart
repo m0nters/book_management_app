@@ -158,18 +158,18 @@ class _MainFunctionsContextControllerState
       body: _currentContext,
       bottomNavigationBar: Container(
         color: _scaffoldBackgroundColorOptions[_selectedIndex],
-        height: 72,
+        height: 73,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(100)),
               child: Container(
-                height: 56,
+                height: 57,
                 width: 360,
                 decoration: BoxDecoration(
                   color: _bottomNavigationBarBackgroundColorOptions[
-                      _selectedIndex],
+                  _selectedIndex],
                   borderRadius: const BorderRadius.all(Radius.circular(100)),
                 ),
                 child: BottomNavigationBar(
@@ -186,7 +186,7 @@ class _MainFunctionsContextControllerState
                   currentIndex: _selectedIndex,
                   selectedItemColor: _selectedItemColorOptions[_selectedIndex],
                   unselectedItemColor:
-                      _unselectedItemColorOptions[_selectedIndex],
+                  _unselectedItemColorOptions[_selectedIndex],
                   type: BottomNavigationBarType.fixed,
                   backgroundColor: Colors.transparent,
                   // don't need since we override the outer container for this
