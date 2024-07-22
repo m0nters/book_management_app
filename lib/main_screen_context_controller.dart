@@ -23,8 +23,8 @@ class _MainFunctionsContextControllerState
   late int
       _selectedIndex; // ALWAYS need this to adjust selected item, colors,... for bottom bar's visualization
   late Widget _currentContext;
-  List<Map<int, Widget>> backButtonWidgetsHistory = [];
-  Map<int, List<Widget>> bottomBarScreensHistory = {};
+  List<Map<int, Widget>> backButtonScreensHistory = []; // what were all of the last screens to navigate back
+  Map<int, Widget> bottomBarScreensHistory = {}; // what was the last screen of a specific item in bottom bar
   static List<Widget> _mainContextsFirstPage =
       []; // don't know whether we should use static or not, this MainFunctionsContextController object's only used 1 time in `over_screen_context_controller.dart` anyway
 
@@ -95,22 +95,17 @@ class _MainFunctionsContextControllerState
   void externalContextSwitcher(int index) {
     setState(() {
       if (index != _selectedIndex) { // in case user spams one item many times and it also saves in the history lol
-        backButtonWidgetsHistory.add({_selectedIndex: _currentContext});
+        backButtonScreensHistory.add({_selectedIndex: _currentContext});
 
-        // Save the current context to the screen history of the currently selected index
-        if (!bottomBarScreensHistory.containsKey(_selectedIndex)) {
-          bottomBarScreensHistory[_selectedIndex] = [];
-        }
-        bottomBarScreensHistory[_selectedIndex]!.add(_currentContext);
+        bottomBarScreensHistory[_selectedIndex] = _currentContext;
       }
       
       _selectedIndex = index;
 
       // If the selected index has a screen history, use the last one
-      if (bottomBarScreensHistory.containsKey(_selectedIndex) &&
-          bottomBarScreensHistory[_selectedIndex]!.isNotEmpty) {
+      if (bottomBarScreensHistory.containsKey(_selectedIndex)) {
         _currentContext =
-            bottomBarScreensHistory[_selectedIndex]!.removeLast();
+            bottomBarScreensHistory[_selectedIndex]!;
       } else {
         _currentContext = _mainContextsFirstPage[_selectedIndex];
       }
@@ -118,14 +113,14 @@ class _MainFunctionsContextControllerState
       // because home screen doesn't have back button so every widget history
       // must be deleted to minimalize the space occupied
       if (index == MainFunctionsContexts.home.index) {
-        backButtonWidgetsHistory.clear();
+        backButtonScreensHistory.clear();
       }
     });
   }
 
   void goBack() {
     setState(() {
-      var recentHistory = backButtonWidgetsHistory.removeLast();
+      var recentHistory = backButtonScreensHistory.removeLast();
       _selectedIndex = recentHistory.keys.first;
       _currentContext = recentHistory.values.first;
 
@@ -138,16 +133,17 @@ class _MainFunctionsContextControllerState
   // this function is only for switching screen in one selected index internally
   void internalContextSwitcher(Widget screen) {
     setState(() {
-      backButtonWidgetsHistory.add({_selectedIndex: _currentContext});
+      backButtonScreensHistory.add({_selectedIndex: _currentContext});
       _currentContext = screen;
     });
   }
 
   void forceRestartToFirstScreen(int index) { // in case there's many widget histories and you can't go back to first page
     setState(() {
-      // bottomBarScreensHistory[index]?.clear();
+      // double tap other item will result nothing
       if (index == _selectedIndex) {
         _currentContext = _mainContextsFirstPage[_selectedIndex];
+        bottomBarScreensHistory.remove(index);
       }
     });
   }

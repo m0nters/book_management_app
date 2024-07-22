@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
 
 late DateTime serverUploadedDateInputData;
-List<BookEntry> serverUploadedBookEntriesData = [];
+List<BookEntryInfo> serverUploadedBookEntriesData = [];
 
 // THIS FILE IS FOR TESTING NEW FUNCTIONALITIES
-class BookEntry {
+class BookEntryInfo {
   String title;
   String category;
   String author;
   int quantity;
 
-  BookEntry({
+  BookEntryInfo({
     required this.title,
     required this.category,
     required this.author,
@@ -81,8 +81,7 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
       children: [
         Container(
           // title bar
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
           decoration: BoxDecoration(
               color: widget.titleBarColor,
               borderRadius: const BorderRadius.only(
@@ -266,8 +265,8 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
     );
   }
 
-  BookEntry getBookEntryData() {
-    return BookEntry(
+  BookEntryInfo getBookEntryData() {
+    return BookEntryInfo(
       title: _titleController.text,
       category: genreController,
       author: _authorController.text,
@@ -318,6 +317,10 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
         ),
       );
     });
+
+    // make the list view scroll to the bottom automatically when a new form is created
+    // first is to keep track with what we've created
+    // second is that it won't create a wrong illusion that we haven't created a form in some cases
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         // Check if the controller is attached
@@ -331,24 +334,38 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
   }
 
   void _onSavePressed() {
-    if (_isSaving) return; // Prevent multiple presses
+    if (_isSaving) return; // Prevent spamming button
+
     setState(() {
       _isSaving = true; // Set saving state to true
     });
-    String dateSaved = (serverUploadedDateInputData.year ==
-                DateTime.now().year &&
-            serverUploadedDateInputData.month == DateTime.now().month &&
-            serverUploadedDateInputData.day == DateTime.now().day)
+
+    String dateSaved = (serverUploadedDateInputData.year == DateTime.now().year &&
+        serverUploadedDateInputData.month == DateTime.now().month &&
+        serverUploadedDateInputData.day == DateTime.now().day)
         ? "hôm nay"
         : "ngày ${serverUploadedDateInputData.day}/${serverUploadedDateInputData.month}/${serverUploadedDateInputData.year}";
+
+    if (_formWidgets.isEmpty) {
+      _showSnackBar('Không có dữ liệu gì để lưu cho $dateSaved!', isError: true);
+      return;
+    }
+
     serverUploadedBookEntriesData =
         _formKeys.map((key) => key.currentState!.getBookEntryData()).toList();
+
+    // add the code to upload data to server here
+
+    _showSnackBar('Đã lưu các phiếu nhập sách cho $dateSaved!');
+  }
+
+  void _showSnackBar(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Đã lưu các phiếu nhập sách cho $dateSaved!',
+        content: Text(message,
             style: const TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
-        backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
-        duration: const Duration(seconds: 2), // Adjust duration as needed
+        backgroundColor: isError ? const Color.fromRGBO(255, 105, 105, 1) : Colors.green,
+        duration: const Duration(seconds: 2),
       ),
     ).closed.then((reason) {
       setState(() {

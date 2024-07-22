@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
 
 late DateTime serverUploadedDateInputData;
-List<BookSaleInvoice> serverUploadedBookSaleInvoicesData = [];
+late String serverUploadedCustomerNameInputData;
+List<BookSaleInfo> serverUploadedBookSaleInvoicesData = [];
 
 // THIS FILE IS FOR TESTING NEW FUNCTIONALITIES
-class BookSaleInvoice {
+class BookSaleInfo {
   String title;
   String category;
   int price;
   int quantity;
 
-  BookSaleInvoice({
+  BookSaleInfo({
     required this.title,
     required this.category,
     required this.price,
@@ -81,8 +82,7 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
       children: [
         Container(
           // title bar
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
           decoration: BoxDecoration(
               color: widget.titleBarColor,
               borderRadius: const BorderRadius.only(
@@ -268,8 +268,8 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
     );
   }
 
-  BookSaleInvoice getBookSaleInvoiceData() {
-    return BookSaleInvoice(
+  BookSaleInfo getBookSaleInvoiceData() {
+    return BookSaleInfo(
       title: _titleController.text,
       category: genreController,
       price: int.tryParse(_priceController.text) ?? 0,
@@ -335,26 +335,38 @@ class _BookSaleInvoiceCreateInvoiceState
   }
 
   void _onSavePressed() {
-    if (_isSaving) return; // Prevent multiple presses
+    if (_isSaving) return; // Prevent spamming button
+
     setState(() {
       _isSaving = true; // Set saving state to true
     });
-    String dateSaved = (serverUploadedDateInputData.year ==
-        DateTime.now().year &&
+
+    String dateSaved = (serverUploadedDateInputData.year == DateTime.now().year &&
         serverUploadedDateInputData.month == DateTime.now().month &&
         serverUploadedDateInputData.day == DateTime.now().day)
         ? "hôm nay"
         : "ngày ${serverUploadedDateInputData.day}/${serverUploadedDateInputData.month}/${serverUploadedDateInputData.year}";
-    serverUploadedBookSaleInvoicesData = _formKeys
-        .map((key) => key.currentState!.getBookSaleInvoiceData())
-        .toList();
+
+    if (_formWidgets.isEmpty) {
+      _showSnackBar('Không có dữ liệu gì để lưu cho $dateSaved!',isError: true);
+      return;
+    }
+
+    serverUploadedBookSaleInvoicesData =
+        _formKeys.map((key) => key.currentState!.getBookSaleInvoiceData()).toList();
+
+    // add the code to upload data to server here
+
+    _showSnackBar('Đã lưu các phiếu nhập sách cho $dateSaved!');
+  }
+
+  void _showSnackBar(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-            'Đã lưu các hóa đơn bán sách cho $dateSaved!',
-            style: const TextStyle(color: Color.fromRGBO(241, 248, 232, 1))),
-        backgroundColor: const Color.fromRGBO(239, 156, 102, 1),
-        duration: const Duration(seconds: 2), // Adjust duration as needed
+        content: Text(message,
+            style: const TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
+        backgroundColor: isError ? const Color.fromRGBO(239, 156, 102, 1) : Colors.green,
+        duration: const Duration(seconds: 2),
       ),
     ).closed.then((reason) {
       setState(() {

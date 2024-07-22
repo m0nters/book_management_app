@@ -107,6 +107,12 @@ class BookEntryForm extends StatefulWidget {
 }
 
 class _BookEntryFormState extends State<BookEntryForm> {
+  Future<void> _loadData() async {
+    // this is just placeholder
+    // replace this line of code by the function where you fetch data from server
+    await Future.delayed(const Duration(microseconds: 200));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,60 +145,75 @@ class _BookEntryFormState extends State<BookEntryForm> {
               )),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-        child: ListView(
-          children: [
-            const SizedBox(height: 103),
-            Center(
-              child: CustomRoundedButton(
-                backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
-                foregroundColor: const Color.fromRGBO(225, 227, 234, 1),
-                title: "Lập mới",
-                fontSize: 24,
-                onPressed: () {
-                  widget.internalScreenContextSwitcher(BookEntryFormCreateForm(backContextSwitcher: widget.backContextSwitcher));
-                },
+      body: FutureBuilder(
+        future: _loadData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(color: Color.fromRGBO(255, 105, 105, 1)),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+              child: ListView(
+                children: [
+                  const SizedBox(height: 103),
+                  Center(
+                    child: CustomRoundedButton(
+                      backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
+                      foregroundColor: const Color.fromRGBO(225, 227, 234, 1),
+                      title: "Lập mới",
+                      fontSize: 24,
+                      onPressed: () {
+                        widget.internalScreenContextSwitcher(BookEntryFormCreateForm(backContextSwitcher: widget.backContextSwitcher));
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 103),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Lịch sử',
+                        style: TextStyle(
+                            fontSize: 22, color: Color.fromRGBO(12, 24, 68, 1)),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Tooltip(
+                          message: 'Mới đến cũ',
+                          child: SvgPicture.asset(
+                            'assets/icons/new_to_old_1.svg',
+                            width: 30,
+                            height: 30,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Tooltip(
+                          message: 'Cũ đến mới',
+                          child: SvgPicture.asset(
+                            'assets/icons/old_to_new_1.svg',
+                            width: 30,
+                            height: 30,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Column(children: contentColumn,)
+                ],
               ),
-            ),
-            const SizedBox(height: 103),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Lịch sử',
-                  style: TextStyle(
-                      fontSize: 22, color: Color.fromRGBO(12, 24, 68, 1)),
-                ),
-                const SizedBox(width: 199),
-                IconButton(
-                  onPressed: () {},
-                  icon: Tooltip(
-                    message: 'Mới đến cũ',
-                    child: SvgPicture.asset(
-                      'assets/icons/new_to_old_1.svg',
-                      width: 30,
-                      height: 30,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Tooltip(
-                    message: 'Cũ đến mới',
-                    child: SvgPicture.asset(
-                      'assets/icons/old_to_new_1.svg',
-                      width: 30,
-                      height: 30,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Column(children: contentColumn,)
-          ],
-        ),
+            );
+          }
+        },
       ),
     );
   }

@@ -387,6 +387,10 @@ class _DatePickerBoxState extends State<DatePickerBox> {
   void initState() {
     super.initState();
     _selectedDate = widget.initialDate;
+
+    // ensure the system automatically record the today as selected date right at the beginning
+    // otherwise you need to tap into the date picker (formally), while do nothing then but
+    // that's the only way for the system to know your selected date
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.onDateChanged(_selectedDate);
     });
