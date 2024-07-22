@@ -207,7 +207,7 @@ class _MainFunctionsContextControllerState
 
   Widget getIconForIndex(int index) {
     switch (index) {
-      case 0: // unfortunate we can't use `MainFunctionsContexts.home.index` since dart doesn't consider it as a constant, please also notice this place too when changing order
+      case 0: // unfortunate we can't use `MainFunctionsContexts.home.index` since dart doesn't consider it as a `const`, in fact, it's `final`, please also notice this place too when changing order
         return const Icon(Icons.home);
       case 1:
         return const Icon(Icons.input);

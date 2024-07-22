@@ -4,7 +4,6 @@ import 'mutual_widgets.dart';
 late DateTime serverUploadedDateInputData;
 List<BookEntryInfo> serverUploadedBookEntriesData = [];
 
-// THIS FILE IS FOR TESTING NEW FUNCTIONALITIES
 class BookEntryInfo {
   String title;
   String category;
@@ -51,9 +50,9 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _authorController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
-  String genreController = '';
+  String _genreController = '';
 
-  final List<String> genres = [
+  final List<String> _genres = [
     'Tiểu thuyết thanh thiếu niên',
     'Tiểu thuyết phiêu lưu',
     'Khoa học viễn tưởng',
@@ -67,12 +66,6 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
     _authorController.dispose();
     _quantityController.dispose();
     super.dispose();
-  }
-
-  void updateOrderNumber(int newOrderNum) {
-    setState(() {
-      widget.orderNum = newOrderNum;
-    });
   }
 
   @override
@@ -165,8 +158,8 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
                           ),
                           const SizedBox(height: 4),
                           CustomDropdownMenu(
-                            options: genres,
-                            action: (genre) => genreController = genre ?? '',
+                            options: _genres,
+                            action: (genre) => _genreController = genre ?? '',
                             fillColor: widget.contentInputFormFillColor,
                             width: double.infinity,
                             hintText: 'Chọn một thể loại',
@@ -265,10 +258,16 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
     );
   }
 
+  void updateOrderNumber(int newOrderNum) {
+    setState(() {
+      widget.orderNum = newOrderNum;
+    });
+  }
+
   BookEntryInfo getBookEntryData() {
     return BookEntryInfo(
       title: _titleController.text,
-      category: genreController,
+      category: _genreController,
       author: _authorController.text,
       quantity: int.tryParse(_quantityController.text) ?? 0,
     );
@@ -446,41 +445,41 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
                 controller: _scrollController,
                 itemCount: _formWidgets.length,
                 itemBuilder: (context, index) {
-                  return Dismissible(
-                    // Wrap the form in Dismissible
-                    key: UniqueKey(),
-                    // Unique key for Dismissible
-                    direction: DismissDirection.endToStart,
-                    // Swipe left to delete
-                    onDismissed: (direction) {
-                      setState(() {
-                        _formWidgets.removeAt(index);
-                        _formKeys.removeAt(index);
+                  return Column(
+                    children: [
+                      Dismissible(
+                        // Wrap the form in Dismissible
+                        key: UniqueKey(),
+                        // Unique key for Dismissible
+                        direction: DismissDirection.endToStart,
+                        // Swipe left to delete
+                        onDismissed: (direction) {
+                          setState(() {
+                            _formWidgets.removeAt(index);
+                            _formKeys.removeAt(index);
 
-                        // Update order numbers of remaining forms
-                        for (int i = index; i < _formWidgets.length; i++) {
-                          (_formWidgets[i].key
-                                  as GlobalKey<_BookEntryInputFormState>)
-                              .currentState!
-                              .updateOrderNumber(i + 1);
-                        }
-                      });
-                    },
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
+                            // Update order numbers of remaining forms behind
+                            for (int i = index; i < _formWidgets.length; i++) {
+                              (_formWidgets[i].key
+                                      as GlobalKey<_BookEntryInputFormState>)
+                                  .currentState!
+                                  .updateOrderNumber(i + 1);
+                            }
+                          });
+                        },
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                        child: _formWidgets[index],
                       ),
-                    ),
-                    child: Column(
-                      children: [
-                        _formWidgets[index],
-                        const SizedBox(height: 30),
-                      ],
-                    ),
+                      const SizedBox(height: 30),
+                    ],
                   );
                 },
               ),

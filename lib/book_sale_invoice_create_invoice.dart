@@ -5,7 +5,6 @@ late DateTime serverUploadedDateInputData;
 late String serverUploadedCustomerNameInputData;
 List<BookSaleInfo> serverUploadedBookSaleInvoicesData = [];
 
-// THIS FILE IS FOR TESTING NEW FUNCTIONALITIES
 class BookSaleInfo {
   String title;
   String category;
@@ -68,12 +67,6 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
     _priceController.dispose();
     _quantityController.dispose();
     super.dispose();
-  }
-
-  void updateOrderNumber(int newOrderNum) {
-    setState(() {
-      widget.orderNum = newOrderNum;
-    });
   }
 
   @override
@@ -268,6 +261,12 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
     );
   }
 
+  void updateOrderNumber(int newOrderNum) {
+    setState(() {
+      widget.orderNum = newOrderNum;
+    });
+  }
+
   BookSaleInfo getBookSaleInvoiceData() {
     return BookSaleInfo(
       title: _titleController.text,
@@ -296,11 +295,13 @@ class _BookSaleInvoiceCreateInvoiceState
       []; // Corresponding keys
   final ScrollController _scrollController =
       ScrollController(); // Scroll controller
+  final TextEditingController _customerNameController = TextEditingController();
   bool _isSaving = false; // Track save button state
 
   @override
   void dispose() {
-    _scrollController.dispose(); // Dispose of the scroll controller
+    _scrollController.dispose();
+    _customerNameController.dispose();
     super.dispose();
   }
 
@@ -334,6 +335,22 @@ class _BookSaleInvoiceCreateInvoiceState
     });
   }
 
+  bool isValidForUpload({required String dateSaved}) {
+    if (_formWidgets.isEmpty) {
+      _showSnackBar('Không có dữ liệu gì để lưu cho $dateSaved!',
+          isError: true);
+      return false;
+    }
+
+    if (_customerNameController.text.isEmpty) {
+      _showSnackBar('Hóa đơn không hợp lệ nếu không có tên khách hàng!',
+          isError: true);
+      return false;
+    }
+
+    return true;
+  }
+
   void _onSavePressed() {
     if (_isSaving) return; // Prevent spamming button
 
@@ -341,34 +358,39 @@ class _BookSaleInvoiceCreateInvoiceState
       _isSaving = true; // Set saving state to true
     });
 
-    String dateSaved = (serverUploadedDateInputData.year == DateTime.now().year &&
-        serverUploadedDateInputData.month == DateTime.now().month &&
-        serverUploadedDateInputData.day == DateTime.now().day)
+    String dateSaved = (serverUploadedDateInputData.year ==
+                DateTime.now().year &&
+            serverUploadedDateInputData.month == DateTime.now().month &&
+            serverUploadedDateInputData.day == DateTime.now().day)
         ? "hôm nay"
         : "ngày ${serverUploadedDateInputData.day}/${serverUploadedDateInputData.month}/${serverUploadedDateInputData.year}";
 
-    if (_formWidgets.isEmpty) {
-      _showSnackBar('Không có dữ liệu gì để lưu cho $dateSaved!',isError: true);
-      return;
+    if (isValidForUpload(dateSaved: dateSaved)) {
+      serverUploadedCustomerNameInputData = _customerNameController.text;
+      serverUploadedBookSaleInvoicesData = _formKeys
+          .map((key) => key.currentState!.getBookSaleInvoiceData())
+          .toList();
+
+      // add the code to upload data to server here
+
+      _showSnackBar('Đã lưu các phiếu nhập sách cho $dateSaved!');
     }
-
-    serverUploadedBookSaleInvoicesData =
-        _formKeys.map((key) => key.currentState!.getBookSaleInvoiceData()).toList();
-
-    // add the code to upload data to server here
-
-    _showSnackBar('Đã lưu các phiếu nhập sách cho $dateSaved!');
   }
 
   void _showSnackBar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message,
-            style: const TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
-        backgroundColor: isError ? const Color.fromRGBO(239, 156, 102, 1) : Colors.green,
-        duration: const Duration(seconds: 2),
-      ),
-    ).closed.then((reason) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+          SnackBar(
+            content: Text(message,
+                style:
+                    const TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
+            backgroundColor:
+                isError ? const Color.fromRGBO(239, 156, 102, 1) : Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        )
+        .closed
+        .then((reason) {
       setState(() {
         _isSaving = false; // Reset saving state after snack bar is closed
       });
@@ -415,9 +437,9 @@ class _BookSaleInvoiceCreateInvoiceState
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const Text(
-                  "Ngày lập: ",
+                  "Ngày lập hoá đơn: ",
                   style: TextStyle(
-                      fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1)),
                 ),
                 DatePickerBox(
                   initialDate: DateTime.now(),
@@ -427,27 +449,39 @@ class _BookSaleInvoiceCreateInvoiceState
                 )
               ],
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.end,
-            //   children: [
-            //     const Text(
-            //       "Họ tên khách hàng: ",
-            //       style: TextStyle(fontSize: 16),
-            //     ),
-            //     TextField(
-            //       decoration: InputDecoration(
-            //         isDense: true,
-            //         filled: true,
-            //         fillColor: const Color.fromRGBO(200, 207, 160, 1),
-            //         hintText: "Nhập tên sách",
-            //         border: OutlineInputBorder(
-            //           borderRadius: BorderRadius.circular(4),
-            //         ),
-            //         enabledBorder: const OutlineInputBorder(),
-            //       ),
-            //     ),
-            //   ],
-            // ),
+            const SizedBox(
+              height: 12,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text(
+                  "Họ tên khách hàng: ",
+                  style: TextStyle(
+                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1)),
+                ),
+                SizedBox(
+                  width: 196,
+                  child: TextField(
+                    controller: _customerNameController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      filled: true,
+                      fillColor: const Color.fromRGBO(200, 207, 160, 1),
+                      hintText: "Nhập họ tên khách hàng",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                    ),
+                    style: const TextStyle(
+                        fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                  ),
+                )
+              ],
+            ),
             const SizedBox(
               height: 46,
             ),
@@ -468,41 +502,41 @@ class _BookSaleInvoiceCreateInvoiceState
                 controller: _scrollController,
                 itemCount: _formWidgets.length,
                 itemBuilder: (context, index) {
-                  return Dismissible(
-                    // Wrap the form in Dismissible
-                    key: UniqueKey(),
-                    // Unique key for Dismissible
-                    direction: DismissDirection.endToStart,
-                    // Swipe left to delete
-                    onDismissed: (direction) {
-                      setState(() {
-                        _formWidgets.removeAt(index);
-                        _formKeys.removeAt(index);
+                  return Column(
+                    children: [
+                      Dismissible(
+                        // Wrap the form in Dismissible
+                        key: UniqueKey(),
+                        // Unique key for Dismissible
+                        direction: DismissDirection.endToStart,
+                        // Swipe left to delete
+                        onDismissed: (direction) {
+                          setState(() {
+                            _formWidgets.removeAt(index);
+                            _formKeys.removeAt(index);
 
-                        // Update order numbers of remaining forms
-                        for (int i = index; i < _formWidgets.length; i++) {
-                          (_formWidgets[i].key
-                                  as GlobalKey<_BookSaleInvoiceInputFormState>)
-                              .currentState!
-                              .updateOrderNumber(i + 1);
-                        }
-                      });
-                    },
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
+                            // Update order numbers of remaining forms behind
+                            for (int i = index; i < _formWidgets.length; i++) {
+                              (_formWidgets[i].key as GlobalKey<
+                                      _BookSaleInvoiceInputFormState>)
+                                  .currentState!
+                                  .updateOrderNumber(i + 1);
+                            }
+                          });
+                        },
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                        child: _formWidgets[index],
                       ),
-                    ),
-                    child: Column(
-                      children: [
-                        _formWidgets[index],
-                        const SizedBox(height: 30),
-                      ],
-                    ),
+                      const SizedBox(height: 30),
+                    ],
                   );
                 },
               ),

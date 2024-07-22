@@ -160,7 +160,7 @@ class _BookEntryFormState extends State<BookEntryForm> {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
               child: ListView(
-                children: [
+                children: <Widget>[
                   const SizedBox(height: 103),
                   Center(
                     child: CustomRoundedButton(

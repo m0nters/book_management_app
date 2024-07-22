@@ -255,6 +255,7 @@ class CustomDropdownMenu extends StatefulWidget {
   final Color contentColor;
   final Color fillColor;
   final String hintText;
+  final String initialValue;
 
   const CustomDropdownMenu({
     super.key,
@@ -267,6 +268,7 @@ class CustomDropdownMenu extends StatefulWidget {
     this.width = double.infinity,
     this.height = 46.5, // fit with the height of TextField when `isDense` property is `true`
     this.hintText = 'Chọn một tùy chọn',
+    this.initialValue = "",
   });
 
   @override
@@ -275,6 +277,12 @@ class CustomDropdownMenu extends StatefulWidget {
 
 class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
   String? _selectedOption;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedOption = widget.initialValue == "" ? null : widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -330,6 +338,7 @@ class DatePickerBox extends StatefulWidget {
   final Color borderColor;
   final double fontSize;
   final double iconSize;
+  final double borderRadius;
 
   /// A customizable date picker widget for Flutter.
   ///
@@ -374,6 +383,7 @@ class DatePickerBox extends StatefulWidget {
     this.borderColor = Colors.grey,
     this.fontSize = 16,
     this.iconSize = 20,
+    this.borderRadius = 4,
   });
 
   @override
@@ -428,13 +438,13 @@ class _DatePickerBoxState extends State<DatePickerBox> {
 
     return InkWell(
       onTap: () => _selectDate(context),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(widget.borderRadius),
       child: Ink(
         padding: const EdgeInsets.all(10), // Adjust padding
         decoration: BoxDecoration(
           color: widget.backgroundColor, // Background color
           border: Border.all(color: widget.borderColor, width: 1),
-          borderRadius: BorderRadius.circular(8), // Border radius
+          borderRadius: BorderRadius.circular(widget.borderRadius), // Border radius
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

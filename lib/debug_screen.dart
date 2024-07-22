@@ -1,272 +1,327 @@
 import 'package:flutter/material.dart';
-import 'mutual_widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:permission_handler/permission_handler.dart';
 
-// In a separate file or in the main function scope
-List<Book> globalBookList = [];
+class SearchCard extends StatefulWidget {
+  final int orderNum;
+  final String title;
+  final String genre;
+  final String author;
+  final int quantity;
+  final int price;
+  final String imageUrl;
 
-// THIS FILE IS FOR TESTING NEW FUNCTIONALITIES
-class Book {
-  String title;
-  String category;
-  String author;
-  int quantity;
-
-  Book({
-    required this.title,
-    required this.category,
-    required this.author,
-    required this.quantity,
-  });
-}
-
-// Book Input Form
-class BookInputForm extends StatefulWidget {
-  late int orderNum; // this cannot be `final` since we may remove a form and other forms behind it must update their order number
-  final Color titleBarColor;
-  final Color titleColor;
-  final Color contentAreaColor;
-  final Color contentTitleColor;
-  final Color contentInputFormFillColor;
-  final Color textFieldBorderColor;
-
-  BookInputForm({
+  const SearchCard({
     super.key,
     required this.orderNum,
-    this.titleBarColor = const Color.fromRGBO(12, 24, 68, 1),
-    this.titleColor = Colors.white,
-    this.contentAreaColor = const Color.fromRGBO(255, 245, 225, 1),
-    this.contentTitleColor = const Color.fromRGBO(12, 24, 68, 1),
-    this.contentInputFormFillColor = Colors.white,
-    this.textFieldBorderColor = Colors.grey,
+    required this.title,
+    required this.genre,
+    required this.author,
+    required this.quantity,
+    required this.price,
+    this.imageUrl = "https://via.placeholder.com/80",
   });
 
   @override
-  createState() => _BookInputFormState();
+  createState() => _SearchCardState();
 }
 
-class _BookInputFormState extends State<BookInputForm> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _authorController = TextEditingController();
-  final TextEditingController _quantityController = TextEditingController();
-  String genreController = '';
+class _SearchCardState extends State<SearchCard> {
+  File? _image;
+  TextStyle contentStyle = const TextStyle(
+    fontSize: 14,
+    color: Color.fromRGBO(235, 244, 246, 1),
+  );
+  TextStyle titleStyle = const TextStyle(
+    fontSize: 18,
+    color: Color.fromRGBO(235, 244, 246, 1),
+    fontWeight: FontWeight.bold,
+  );
 
-  final List<String> genres = [
-    'Tiểu thuyết thanh thiếu niên',
-    'Tiểu thuyết phiêu lưu',
-    'Khoa học viễn tưởng',
-    'Văn học cổ điển',
-    // Add more genres as needed
-  ];
+  Future<void> _pickImage() async {
+    final status = await Permission.storage.request();
 
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _authorController.dispose();
-    _quantityController.dispose();
-    super.dispose();
+    if (status.isGranted) {
+      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+      setState(() {
+        if (pickedFile!= null) {
+          _image = File(pickedFile.path);
+        }
+      });
+    } else if (status.isPermanentlyDenied) {
+      // Handle permanently denied permission (guide user to app settings)
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Yêu cầu quyền truy cập'),
+          content: const Text('Quyền truy cập vào thư viện ảnh là bắt buộc nếu bạn muốn sử dụng tính năng này. Vui lòng cấp quyền trong cài đặt ứng dụng.'),
+          actions: [
+            TextButton(
+              onPressed: () => openAppSettings(),
+              child: const Text('Mở cài đặt'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Hủy'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Show custom dialog for permission request
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Yêu cầu quyền truy cập'),
+          content: const Text('Ứng dụng này yêu cầu quyền truy cập vào thư viện, bạn có đồng ý cung cấp quyền này cho ứng dụng?'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context); // Close the dialog
+                final status = await Permission.storage.request(); // Request again
+                if (status.isGranted) {
+                  _pickImage(); // Retry picking image if granted
+                }
+              },
+              child: const Text('Có'),
+            ),TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Không'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
-  void updateOrderNumber(int newOrderNum) {
-    setState(() {
-      widget.orderNum = newOrderNum;
-    });
+  double _measureTextWidth(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size.width;}
+
+  String _formatText(String text, TextStyle textStyle, {int maxWidth = 130}) { // maxWidth in pixels
+    double textWidth = _measureTextWidth(text, textStyle);
+    if (textWidth > maxWidth) {
+      String truncatedText = text;
+      do {
+        truncatedText = truncatedText.substring(0, truncatedText.length - 1);
+        textWidth = _measureTextWidth('$truncatedText...', textStyle);
+      } while (textWidth > maxWidth);
+      return '$truncatedText...';
+    }
+    return text;
+  }
+
+  Widget _getStockLabel() {
+    if (widget.quantity == 0) {
+      return const OutOfStockLabel();
+    } else if (widget.quantity <= 10) {
+      return const LowStockLabel();
+    } else {
+      return const InStockLabel();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          // title bar
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          height: 40,
-          decoration: BoxDecoration(
-              color: widget.titleBarColor,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(8), topRight: Radius.circular(8))),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'STT ${widget.orderNum}',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: widget.titleColor),
-            ),
-          ),
+    return InkWell(
+      borderRadius: BorderRadius.circular(25),
+      onTap: () {},
+      child: Ink(
+        height: 190,
+        decoration: const BoxDecoration(
+          color: Color.fromRGBO(7, 25, 82, 1),
+          borderRadius: BorderRadius.all(Radius.circular(25)),
         ),
-        Container(
-            // content area
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(
-                color: widget.contentAreaColor,
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(8),
-                    bottomRight: Radius.circular(8))),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.book, color: widget.contentTitleColor),
-                              const SizedBox(width: 4),
-                              Text('Tên sách',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: widget.contentTitleColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          TextField(
-                            controller: _titleController,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              filled: true,
-                              fillColor: widget.contentInputFormFillColor,
-                              hintText: "Nhập tên sách",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: widget.textFieldBorderColor,
-                                    width: 1.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.category,
-                                  color: widget.contentTitleColor),
-                              const SizedBox(width: 4),
-                              Text('Thể loại',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: widget.contentTitleColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          CustomDropdownMenu(
-                            options: genres,
-                            action: (genre) => genreController = genre ?? '',
-                            fillColor: widget.contentInputFormFillColor,
-                            width: double.infinity,
-                            hintText: 'Chọn một thể loại',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+        child: Stack(
+          children: [
+            Positioned(
+              top: 7,
+              left: 14,
+              child: Text(
+                widget.orderNum.toString(),
+                style: const TextStyle(
+                  color: Color.fromRGBO(235, 244, 246, 1),
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 28),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.person,
-                                  color: widget.contentTitleColor),
-                              const SizedBox(width: 4),
-                              Text('Tác giả',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: widget.contentTitleColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          TextField(
-                            controller: _authorController,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              filled: true,
-                              fillColor: widget.contentInputFormFillColor,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: widget.textFieldBorderColor,
-                                    width: 1.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.confirmation_num,
-                                  color: widget.contentTitleColor),
-                              const SizedBox(width: 4),
-                              Text('Số lượng',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: widget.contentTitleColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          TextField(
-                            controller: _quantityController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              filled: true,
-                              fillColor: widget.contentInputFormFillColor,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: widget.textFieldBorderColor,
-                                    width: 1.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+              ),
+            ),
+            Positioned(
+              top: 20,
+              left: 20,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20.0),
+                child: SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: _image == null
+                      ? Image.network(
+                    fit: BoxFit.cover,
+                    widget.imageUrl,
+                  )
+                      : Image.file(
+                    _image!,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ],
-            ))
-      ],
-    );
-  }
-
-  Book getBookData() {
-    return Book(
-      title: _titleController.text,
-      category: genreController,
-      author: _authorController.text,
-      quantity: int.tryParse(_quantityController.text) ?? 0,
+              ),
+            ),
+            Positioned(
+              top: 70,
+              left: 70,
+              child: IconButton(
+                icon: const Icon(Icons.photo_library, color: Colors.white),
+                onPressed: _pickImage,
+              ),
+            ),
+            Positioned(
+              top: 16,
+              left: 147,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Thể loại:",
+                        style: contentStyle,
+                      ),
+                      const SizedBox(width: 20),
+                      Text(
+                        _formatText(widget.genre, contentStyle),
+                        style: contentStyle,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Text(
+                        "Tác giả:",
+                        style: contentStyle,
+                      ),
+                      const SizedBox(width: 25),
+                      Text(
+                        _formatText(widget.author, contentStyle,),
+                        style: contentStyle,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Text(
+                        "Số lượng:",
+                        style: contentStyle,
+                      ),
+                      const SizedBox(width: 15),
+                      Text(
+                        _formatText(widget.quantity.toString(), contentStyle,),
+                        style: contentStyle,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Text(
+                        "Đơn giá:",
+                        style: contentStyle,
+                      ),
+                      const SizedBox(width: 22),
+                      Text(
+                        "${_formatText(widget.price.toString(), contentStyle, maxWidth: 100)} VND",
+                        style: contentStyle,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  _getStockLabel(),
+                ],
+              ),
+            ),
+            Positioned(
+              left: 16,
+              bottom: 10,
+              child: Text(
+                _formatText(widget.title, titleStyle, maxWidth: 330),
+                style: titleStyle,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
+
+class AvailabilityLabel extends StatelessWidget {
+  final String text;
+  final Color backgroundColor;
+  final Color foregroundColor;
+  final String message;
+
+  const AvailabilityLabel({
+    super.key,
+    required this.text,
+    required this.backgroundColor,
+    this.foregroundColor = const Color.fromRGBO(245, 245, 245, 1),
+    required this.message,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: message,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(color: foregroundColor, fontSize: 14),
+        ),
+      ),
+    );
+  }
+}
+
+class InStockLabel extends AvailabilityLabel {
+  const InStockLabel({super.key})
+      : super(
+    text: 'Còn hàng',
+    backgroundColor: const Color.fromRGBO(8, 131, 149, 1),
+    message: "Từ 100 trở lên",
+  );
+}
+
+class LowStockLabel extends AvailabilityLabel {
+  const LowStockLabel({super.key})
+      : super(
+    text: 'Còn ít hàng',
+    backgroundColor: const Color.fromRGBO(239, 156, 102, 1),
+    message: "Ít hơn 100",
+  );
+}
+
+class OutOfStockLabel extends AvailabilityLabel {
+  const OutOfStockLabel({super.key})
+      : super(
+    text: 'Hết hàng',
+    backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
+    message: '',
+  );
+}
+
+
 
 class DebugScreen extends StatefulWidget {
   const DebugScreen({super.key});
@@ -276,163 +331,20 @@ class DebugScreen extends StatefulWidget {
 }
 
 class _DebugScreenState extends State<DebugScreen> {
-  final List<Widget> _formWidgets = []; // Dynamic list of form widgets
-  final List<GlobalKey<_BookInputFormState>> _formKeys =
-      []; // Corresponding keys
-  final ScrollController _scrollController = ScrollController(); // Scroll controller
-
-  @override
-  void dispose() {
-    _scrollController.dispose(); // Dispose of the scroll controller
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _addForm(); // Add one form initially
-  }
-
-  void _addForm() {
-    setState(() {
-      final formKey = GlobalKey<_BookInputFormState>();
-      _formKeys.add(formKey); // Add the key to the list
-
-      _formWidgets.add(
-        BookInputForm(
-          orderNum: _formWidgets.length + 1, // Dynamic order number
-          key: formKey, // Assign the key
-        ),
-      );
-    });
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) { // Check if the controller is attached
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
-  }
-
-  void _onSavePressed() {
-    setState(() {
-      globalBookList =
-          _formKeys.map((key) => key.currentState!.getBookData()).toList();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(225, 227, 234, 1),
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(225, 227, 234, 1),
-        foregroundColor: const Color.fromRGBO(12, 24, 68, 1),
-        title: const Text(
-          "Phiếu nhập sách",
-          style: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: Color.fromRGBO(12, 24, 68, 1)),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            //
-          },
-          icon: const Icon(Icons.arrow_back),
-          color: const Color.fromRGBO(12, 24, 68, 1),
-        ),
-        actions: [
-          IconButton(onPressed: _addForm, icon: const Icon(Icons.add_circle)),
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                size: 29,
-              )),
-        ],
+    return const Scaffold(
+        body: Center(
+            child: Padding(
+      padding: EdgeInsets.all(16.0),
+      child: SearchCard(
+          orderNum: 1,
+          title: "Hai con mèo ngồi bên cửa sổ",
+          genre: "Tiểu thuyết",
+          author: "Nguyễn Nhật Ánh",
+          quantity: 12,
+          price: 82500
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 25,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const Text(
-                  "Ngày lập: ",
-                  style: TextStyle(fontSize: 16),
-                ),
-                DatePickerBox(
-                  initialDate: DateTime.now(),
-                  onDateChanged: (date) => print(date.day),
-                  backgroundColor: const Color.fromRGBO(255, 245, 225, 1),
-                  foregroundColor: const Color.fromRGBO(12, 24, 68, 1),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 46,
-            ),
-            CustomRoundedButton(
-              backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
-              foregroundColor: const Color.fromRGBO(255, 227, 234, 1),
-              title: "Lưu",
-              onPressed: _onSavePressed,
-              width: 108,
-              fontSize: 24,
-            ),
-            const SizedBox(height: 46,),
-            Expanded(
-              // Make the forms scrollable
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: _formWidgets.length,
-                itemBuilder: (context, index) {
-                  return Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart, // Swipe left to delete
-                    onDismissed: (direction) {
-                      setState(() {
-                        _formWidgets.removeAt(index);
-                        _formKeys.removeAt(index);
-
-                        // Update order numbers of behind forms
-                        for (int i = index; i < _formWidgets.length; i++) {
-                          (_formWidgets[i].key as GlobalKey<_BookInputFormState>)
-                              .currentState!
-                              .updateOrderNumber(i + 1);
-                        }
-                      });
-                    },
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        _formWidgets[index],
-                        const SizedBox(height: 30),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-
-          ],
-        ),
-      ),
-    );
+    )));
   }
 }

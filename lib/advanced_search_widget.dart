@@ -59,6 +59,9 @@ class OutOfStockLabel extends AvailabilityLabel {
       backgroundColor: const Color.fromRGBO(255, 105, 105, 1),);
 }
 
+// =============================================================================
+// WE ONLY USE 2 BELOW
+
 class SearchCard extends StatefulWidget {
   final int orderNum;
   final String title;
@@ -177,7 +180,7 @@ class _SearchCardState extends State<SearchCard> {
   Widget _getStockLabel() {
     if (widget.quantity == 0) {
       return const OutOfStockLabel();
-    } else if (widget.quantity <= 10) {
+    } else if (widget.quantity < 100) {
       return const LowStockLabel();
     } else {
       return const InStockLabel();
