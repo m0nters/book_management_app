@@ -358,8 +358,8 @@ class _BookSaleInvoiceCreateInvoiceState
       _isSaving = true; // Set saving state to true
     });
 
-    String dateSaved = (serverUploadedDateInputData.year ==
-                DateTime.now().year &&
+    String dateSaved = (
+        serverUploadedDateInputData.year == DateTime.now().year &&
             serverUploadedDateInputData.month == DateTime.now().month &&
             serverUploadedDateInputData.day == DateTime.now().day)
         ? "hôm nay"

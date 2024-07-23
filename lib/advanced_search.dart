@@ -352,11 +352,13 @@ class SearchResults extends StatelessWidget {
         ),
         const SizedBox(height: 15,),
         Expanded(
-          child: ListView.builder(
-            itemCount: resultCards.length,
-            itemBuilder: (context, index) {
-              return resultCards[index];
-            },
+          child: Material(
+            child: ListView.builder(
+              itemCount: resultCards.length,
+              itemBuilder: (context, index) {
+                return resultCards[index];
+              },
+            ),
           ),
         ),
       ],
