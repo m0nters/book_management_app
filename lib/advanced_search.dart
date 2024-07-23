@@ -326,11 +326,11 @@ class SearchResults extends StatelessWidget {
             const Text(
               'Sắp xếp theo: ',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 16,
                 color: Color.fromRGBO(7, 25, 82, 1),
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const Spacer(),
             CustomDropdownMenu(
               options: const ['Bán chạy tháng', 'Mới nhất', 'Giá từ thấp tới cao', 'Giá từ cao tới thấp'],
               action: (selected) {},
@@ -344,14 +344,21 @@ class SearchResults extends StatelessWidget {
               options: const ['Tất cả', 'Còn hàng', 'Hết hàng'],
               action: (selected) {},
               fillColor: Colors.white,
-              width: 116,
+              width: 100,
               initialValue: 'Tất cả',
               fontSize: 14,
             ),
           ],
         ),
         const SizedBox(height: 15,),
-        Column(children: contentColumn,),
+        Expanded(
+          child: ListView.builder(
+            itemCount: resultCards.length,
+            itemBuilder: (context, index) {
+              return resultCards[index];
+            },
+          ),
+        ),
       ],
     );
   }
@@ -384,7 +391,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-        child: ListView(
+        child: Column(
           children: [
             const SizedBox(height: 15,),
             const AdvancedSearchForm(
@@ -409,7 +416,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
               ),
             ),
             const SizedBox(height: 36,),
-            SearchResults(resultCards: contentColumn),
+            Expanded(child: SearchResults(resultCards: contentColumn)),
           ],
         ),
       )

@@ -154,8 +154,8 @@ class InfoTicket extends StatelessWidget {
   }
 
   String _formatText(String str) {
-    if (str.length >= 20) {
-      return "${str.substring(0, 15)}...";
+    if (str.length >= 17) {
+      return "${str.substring(0, 12)}...";
     }
     return str;
   }

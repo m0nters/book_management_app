@@ -102,9 +102,10 @@ class _SearchCardState extends State<SearchCard> {
     final status = await Permission.storage.request();
 
     if (status.isGranted) {
-      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final pickedFile = await ImagePicker().pickImage(
+          source: ImageSource.gallery);
       setState(() {
-        if (pickedFile!= null) {
+        if (pickedFile != null) {
           _image = File(pickedFile.path);
         }
       });
@@ -112,46 +113,51 @@ class _SearchCardState extends State<SearchCard> {
       // Handle permanently denied permission (guide user to app settings)
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Yêu cầu quyền truy cập'),
-          content: const Text('Quyền truy cập vào thư viện ảnh là bắt buộc nếu bạn muốn sử dụng tính năng này. Vui lòng cấp quyền trong cài đặt ứng dụng.'),
-          actions: [
-            TextButton(
-              onPressed: () => openAppSettings(),
-              child: const Text('Mở cài đặt'),
+        builder: (context) =>
+            AlertDialog(
+              title: const Text('Yêu cầu quyền truy cập'),
+              content: const Text(
+                  'Quyền truy cập vào thư viện ảnh là bắt buộc nếu bạn muốn sử dụng tính năng này. Vui lòng cấp quyền trong cài đặt ứng dụng.'),
+              actions: [
+                TextButton(
+                  onPressed: () => openAppSettings(),
+                  child: const Text('Mở cài đặt'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Hủy'),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Hủy'),
-            ),
-          ],
-        ),
       );
     } else {
       // Show custom dialog for permission request
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Yêu cầu quyền truy cập'),
-          content: const Text('Ứng dụng này yêu cầu quyền truy cập vào thư viện, bạn có đồng ý cung cấp quyền này cho ứng dụng?'),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context); // Close the dialog
-                final status = await Permission.storage.request(); // Request again
-                if (status.isGranted) {
-                  _pickImage(); // Retry picking image if granted
-                }
-              },
-              child: const Text('Có'),
-            ),TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-              },
-              child: const Text('Không'),
+        builder: (context) =>
+            AlertDialog(
+              title: const Text('Yêu cầu quyền truy cập'),
+              content: const Text(
+                  'Ứng dụng này yêu cầu quyền truy cập vào thư viện, bạn có đồng ý cung cấp quyền này cho ứng dụng?'),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context); // Close the dialog
+                    final status = await Permission.storage
+                        .request(); // Request again
+                    if (status.isGranted) {
+                      _pickImage(); // Retry picking image if granted
+                    }
+                  },
+                  child: const Text('Có'),
+                ), TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close the dialog
+                  },
+                  child: const Text('Không'),
+                ),
+              ],
             ),
-          ],
-        ),
       );
     }
   }
@@ -161,10 +167,13 @@ class _SearchCardState extends State<SearchCard> {
       text: TextSpan(text: text, style: style),
       maxLines: 1,
       textDirection: TextDirection.ltr,
-    )..layout(minWidth: 0, maxWidth: double.infinity);
-    return textPainter.size.width;}
+    )
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size.width;
+  }
 
-  String _formatText(String text, TextStyle textStyle, {int maxWidth = 130}) { // maxWidth in pixels
+  String _formatText(String text, TextStyle textStyle, {int maxWidth = 130}) {
+    // maxWidth in pixels
     double textWidth = _measureTextWidth(text, textStyle);
     if (textWidth > maxWidth) {
       String truncatedText = text;
@@ -295,7 +304,8 @@ class _SearchCardState extends State<SearchCard> {
                       ),
                       const SizedBox(width: 22),
                       Text(
-                        "${_formatText(widget.price.toString(), contentStyle, maxWidth: 100)} VND",
+                        "${_formatText(widget.price.toString(), contentStyle,
+                            maxWidth: 100)} VND",
                         style: contentStyle,
                       ),
                     ],

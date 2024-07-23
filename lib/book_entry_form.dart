@@ -38,69 +38,52 @@ const List<Map<String, String>> data3 = [
 ];
 
 const List<Map<String, String>> data4 = [
-  {'title': title1, 'content': 'PNS9884712'},
-  {'title': title2, 'content': 'Homo Deus - Lược Sử Tương Lai'},
-  {'title': title3, 'content': 'Yuval Noah Harari'},
-  {'title': title4, 'content': '29/06/2024'},
+  {'title': title1, 'content': 'PNS2252363'},
+  {'title': title2, 'content': 'Con chim xanh biếc bay về trời'},
+  {'title': title3, 'content': 'Nguyễn Nhật Ánh'},
+  {'title': title4, 'content': '26/06/2024'},
+  {'title': title5, 'content': '124'},
+];
+
+const List<Map<String, String>> data5 = [
+  {'title': title1, 'content': 'PNS2252363'},
+  {'title': title2, 'content': 'Chip War - Cuộc Chiến Vi Mạch'},
+  {'title': title3, 'content': 'Chris Miller'},
+  {'title': title4, 'content': '26/06/2024'},
   {'title': title5, 'content': '12'},
 ];
 
-// Add the content in this list here
-List<Widget> contentColumn = [
-  BookEntryFormInfoTicket(
-    fields: data1,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24,),
-  BookEntryFormInfoTicket(
-    fields: data2,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24,),
-  BookEntryFormInfoTicket(
-    fields: data3,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24,),
-  BookEntryFormInfoTicket(
-    fields: data4,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24,),
-  BookEntryFormInfoTicket(
-    fields: data4,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24,),
-  BookEntryFormInfoTicket(
-    fields: data4,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24,),
-  BookEntryFormInfoTicket(
-    fields: data4,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24,),
-  BookEntryFormInfoTicket(
-    fields: data4,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-];
+// Fetch data from server to this list here
+List<List<Map<String, String>>> dataList = [
+  data1,
+  data5,
+  data4,
+  data2,
+  data3,
+]; // prove that the data will always be sorted at the beginning, regardless of the input order
+
+List<Widget> buildContentColumn(List<List<Map<String, String>>> dataList) {
+  return dataList.expand((dataItem) {
+    return [
+      BookEntryFormInfoTicket(
+        fields: dataItem,
+        backgroundImage: backgroundImageTicket,
+        onTap: () {},
+      ),
+      const SizedBox(height: 24),
+    ];
+  }).toList();
+}
 
 /// Phiếu nhập sách
 class BookEntryForm extends StatefulWidget {
   final VoidCallback backContextSwitcher;
   final Function(Widget) internalScreenContextSwitcher;
-  const BookEntryForm({super.key, required this.backContextSwitcher, required this.internalScreenContextSwitcher});
+
+  const BookEntryForm(
+      {super.key,
+      required this.backContextSwitcher,
+      required this.internalScreenContextSwitcher});
 
   @override
   State<BookEntryForm> createState() => _BookEntryFormState();
@@ -108,9 +91,28 @@ class BookEntryForm extends StatefulWidget {
 
 class _BookEntryFormState extends State<BookEntryForm> {
   Future<void> _loadData() async {
-    // this is just placeholder
-    // replace this line of code by the function where you fetch data from server
-    await Future.delayed(const Duration(microseconds: 200));
+    // replace this line by the function where you fetch data from server
+
+  }
+
+  void sortDates(bool ascending) {
+    dataList.sort((a, b) {
+      DateTime dateA = DateTime.parse(
+          '${a[3]['content']!.split('/')[2]}-${a[3]['content']!.split('/')[1]}-${a[3]['content']!.split('/')[0]}');
+      DateTime dateB = DateTime.parse(
+          '${b[3]['content']!.split('/')[2]}-${b[3]['content']!.split('/')[1]}-${b[3]['content']!.split('/')[0]}');
+
+      int dateComparison =
+          ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
+      if (dateComparison != 0) {
+        return dateComparison;
+      } else {
+        String bookNameA = a[1]['content']!;
+        String bookNameB = b[1]['content']!;
+        return bookNameA.compareTo(bookNameB);
+      }
+    });
+    setState(() {});
   }
 
   @override
@@ -134,9 +136,12 @@ class _BookEntryFormState extends State<BookEntryForm> {
           color: const Color.fromRGBO(12, 24, 68, 1),
         ),
         actions: [
-          IconButton(onPressed: () {
-            widget.internalScreenContextSwitcher(BookEntryFormCreateForm(backContextSwitcher: widget.backContextSwitcher));
-          }, icon: const Icon(Icons.add_circle)),
+          IconButton(
+              onPressed: () {
+                widget.internalScreenContextSwitcher(BookEntryFormCreateForm(
+                    backContextSwitcher: widget.backContextSwitcher));
+              },
+              icon: const Icon(Icons.add_circle)),
           IconButton(
               onPressed: () {},
               icon: const Icon(
@@ -150,7 +155,8 @@ class _BookEntryFormState extends State<BookEntryForm> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: CircularProgressIndicator(color: Color.fromRGBO(255, 105, 105, 1)),
+              child: CircularProgressIndicator(
+                  color: Color.fromRGBO(255, 105, 105, 1)),
             );
           } else if (snapshot.hasError) {
             return Center(
@@ -158,7 +164,8 @@ class _BookEntryFormState extends State<BookEntryForm> {
             );
           } else {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
               child: ListView(
                 children: <Widget>[
                   const SizedBox(height: 103),
@@ -169,7 +176,10 @@ class _BookEntryFormState extends State<BookEntryForm> {
                       title: "Lập mới",
                       fontSize: 24,
                       onPressed: () {
-                        widget.internalScreenContextSwitcher(BookEntryFormCreateForm(backContextSwitcher: widget.backContextSwitcher));
+                        widget.internalScreenContextSwitcher(
+                            BookEntryFormCreateForm(
+                                backContextSwitcher:
+                                    widget.backContextSwitcher));
                       },
                     ),
                   ),
@@ -184,7 +194,9 @@ class _BookEntryFormState extends State<BookEntryForm> {
                       ),
                       const Spacer(),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          sortDates(false);
+                        },
                         icon: Tooltip(
                           message: 'Mới đến cũ',
                           child: SvgPicture.asset(
@@ -195,7 +207,9 @@ class _BookEntryFormState extends State<BookEntryForm> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          sortDates(true);
+                        },
                         icon: Tooltip(
                           message: 'Cũ đến mới',
                           child: SvgPicture.asset(
@@ -208,7 +222,9 @@ class _BookEntryFormState extends State<BookEntryForm> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  Column(children: contentColumn,)
+                  Column(
+                    children: buildContentColumn(dataList),
+                  )
                 ],
               ),
             );
@@ -219,6 +235,10 @@ class _BookEntryFormState extends State<BookEntryForm> {
   }
 }
 
-class BookEntryFormInfoTicket extends InfoTicket{
-  const BookEntryFormInfoTicket({super.key, required super.fields, required super.backgroundImage, required super.onTap});
+class BookEntryFormInfoTicket extends InfoTicket {
+  const BookEntryFormInfoTicket(
+      {super.key,
+      required super.fields,
+      required super.backgroundImage,
+      required super.onTap});
 }

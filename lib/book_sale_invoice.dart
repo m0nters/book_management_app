@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:untitled2/advanced_search.dart';
 import 'mutual_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'book_sale_invoice_create_invoice.dart';
 
 const String title1 = "Mã hóa đơn";
 const String title2 = "Tên khách hàng";
-const String title3 = "Ngày mua";
-const String title4 = "Tên sách";
+const String title3 = "Tên sách";
+const String title4 = "Ngày mua";
 const String title5 = "Số lượng";
 const String title6 = "Đơn giá";
 
@@ -17,91 +18,70 @@ const String backgroundImageTicket =
 // IN FUTURE DEVELOPMENT STAGE, IMPORT IT SOMEHOW FROM THE DATABASE
 const List<Map<String, String>> data1 = [
   {'title': title1, 'content': 'HĐ09284351'},
-  {'title': title2, 'content': 'Trịnh Anh Tài'},
-  {'title': title3, 'content': '30/06/2024'},
-  {'title': title4, 'content': 'Mắt biếc'},
+  {'title': title2, 'content': 'Nguyễn Đức Hưng'},
+  {'title': title3, 'content': 'Mắt biếc'},
+  {'title': title4, 'content': '30/06/2024'},
   {'title': title5, 'content': '1'},
   {'title': title6, 'content': '434.600 VND'},
 ];
 const List<Map<String, String>> data2 = [
   {'title': title1, 'content': 'HĐ98242142'},
   {'title': title2, 'content': 'Trịnh Anh Tài'},
-  {'title': title3, 'content': '30/06/2024'},
-  {'title': title4, 'content': 'Mùa hè không tên'},
+  {'title': title3, 'content': 'Mùa hè không tên'},
+  {'title': title4, 'content': '30/06/2024'},
   {'title': title5, 'content': '1'},
   {'title': title6, 'content': '184.000 VND'},
 ];
 const List<Map<String, String>> data3 = [
   {'title': title1, 'content': 'HĐ12098417'},
   {'title': title2, 'content': 'Trần Nhật Huy'},
-  {'title': title3, 'content': '30/06/2024'},
-  {'title': title4, 'content': 'Đám Trẻ Ở Đại Dương Đen'},
+  {'title': title3, 'content': 'Đám Trẻ Ở Đại Dương Đen'},
+  {'title': title4, 'content': '28/06/2024'},
   {'title': title5, 'content': '1'},
   {'title': title6, 'content': '74.250 VND'},
 ];
 const List<Map<String, String>> data4 = [
   {'title': title1, 'content': 'HĐ73249129'},
   {'title': title2, 'content': 'Nguyễn Quốc Thuần'},
-  {'title': title3, 'content': '29/06/2024'},
   {
-    'title': title4,
+    'title': title3,
     'content':
         'Các Siêu Cường AI: Trung Quốc, Thung Lũng Silicon, Và Trật Tự Thế Giới Mới'
   },
+  {'title': title4, 'content': '29/06/2024'},
   {'title': title5, 'content': '1'},
   {'title': title6, 'content': '112.000 VND'},
 ];
-
-// Add the content here
-List<Widget> contentColumn = [
-  BookSaleInvoiceInfoTicket(
-    fields: data1,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24),
-  BookSaleInvoiceInfoTicket(
-    fields: data2,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24),
-  BookSaleInvoiceInfoTicket(
-    fields: data3,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24),
-  BookSaleInvoiceInfoTicket(
-    fields: data4,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24),
-  BookSaleInvoiceInfoTicket(
-    fields: data4,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24),
-  BookSaleInvoiceInfoTicket(
-    fields: data4,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24),
-  BookSaleInvoiceInfoTicket(
-    fields: data4,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
-  const SizedBox(height: 24),
-  BookSaleInvoiceInfoTicket(
-    fields: data4,
-    backgroundImage: backgroundImageTicket,
-    onTap: () {},
-  ),
+const List<Map<String, String>> data5 = [
+  {'title': title1, 'content': 'HĐ22541252'},
+  {'title': title2, 'content': 'Trịnh Anh Tài'},
+  {'title': title3, 'content': 'Chiến tranh tiền tệ'},
+  {'title': title4, 'content': '29/06/2024'},
+  {'title': title5, 'content': '3'},
+  {'title': title6, 'content': '155.000 VND'},
 ];
+
+// Fetch data from server to this list here
+List<List<Map<String, String>>> dataList = [
+  data5,
+  data2,
+  data1,
+  data3,
+  data4
+]; // prove that the data will always be sorted at the beginning, regardless of the input order
+
+List<Widget> buildContentColumn(List<List<Map<String, String>>> dataList) {
+  return dataList.expand((dataItem) {
+    return [
+      BookSaleInvoiceInfoTicket(
+        fields: dataItem,
+        backgroundImage: backgroundImageTicket,
+        onTap: () {},
+      ),
+      const SizedBox(height: 24),
+    ];
+  }).toList();
+}
 
 /// Hóa đơn bán sách
 class BookSaleInvoice extends StatefulWidget {
@@ -119,9 +99,28 @@ class BookSaleInvoice extends StatefulWidget {
 
 class _BookSaleInvoiceState extends State<BookSaleInvoice> {
   Future<void> _loadData() async {
-    // this is just placeholder
-    // replace this line of code by the function where you fetch data from server
-    await Future.delayed(const Duration(microseconds: 200));
+    // replace this line by the function where you fetch data from server
+
+  }
+
+  void sortDates(bool ascending) {
+    dataList.sort((a, b) {
+      DateTime dateA = DateTime.parse(
+          '${a[3]['content']!.split('/')[2]}-${a[3]['content']!.split('/')[1]}-${a[3]['content']!.split('/')[0]}');
+      DateTime dateB = DateTime.parse(
+          '${b[3]['content']!.split('/')[2]}-${b[3]['content']!.split('/')[1]}-${b[3]['content']!.split('/')[0]}');
+
+      int dateComparison =
+          ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
+      if (dateComparison != 0) {
+        return dateComparison;
+      } else {
+        String bookNameA = a[1]['content']!;
+        String bookNameB = b[1]['content']!;
+        return bookNameA.compareTo(bookNameB);
+      }
+    });
+    setState(() {});
   }
 
   @override
@@ -165,7 +164,9 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
-                child: CircularProgressIndicator(color: Color.fromRGBO(239, 156, 102, 1),),
+                child: CircularProgressIndicator(
+                  color: Color.fromRGBO(239, 156, 102, 1),
+                ),
               );
             } else if (snapshot.hasError) {
               return Center(
@@ -206,7 +207,9 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
                             ),
                             const Spacer(),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                sortDates(false);
+                              },
                               icon: Tooltip(
                                 message: 'Mới đến cũ',
                                 child: SvgPicture.asset(
@@ -217,7 +220,9 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
                               ),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                sortDates(true);
+                              },
                               icon: Tooltip(
                                 message: 'Cũ đến mới',
                                 child: SvgPicture.asset(
@@ -230,7 +235,7 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
                           ],
                         ),
                         const SizedBox(height: 24),
-                        Column(children: contentColumn),
+                        Column(children: buildContentColumn(dataList)),
                       ],
                     ),
                   ],
