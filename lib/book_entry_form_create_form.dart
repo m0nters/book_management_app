@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
+import 'setting.dart';
 
 late DateTime serverUploadedDateInputData;
 List<BookEntryInfo> serverUploadedBookEntriesData = [];
@@ -97,7 +98,16 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
                 color: widget.contentAreaColor,
                 borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(8),
-                    bottomRight: Radius.circular(8))),
+                    bottomRight: Radius.circular(8)
+                ),
+              boxShadow: hasShadow ? const [
+                BoxShadow(
+                  offset: Offset(0, 4),
+                  color: Colors.grey,
+                  blurRadius: 4,
+                )
+              ] : null,
+            ),
             child: Column(
               children: [
                 Row(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'overall_screen_context_controller.dart';
+import 'setting.dart';
 
 /// The `controller` property is required and should be used to manage the
 /// text input. The `onSubmitted` callback is optional and can be used to
@@ -29,6 +30,13 @@ class HomeSearchBarCore extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color.fromRGBO(47, 54, 69, 1), // Background color
         borderRadius: BorderRadius.circular(50.0), // Rounded corners
+        boxShadow: hasShadow ? const [
+          BoxShadow(
+            offset: Offset(0, 4),
+            color: Colors.grey,
+            blurRadius: 4,
+          )
+        ] : null,
       ),
       child: Row(
         children: [
@@ -150,6 +158,7 @@ class HomeFunctionButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
+        elevation: hasShadow ? 5 : 0,
       ),
       onPressed: onPressed,
       child: Row(

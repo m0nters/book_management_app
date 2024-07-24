@@ -1,72 +1,120 @@
 import 'package:flutter/material.dart';
-import 'package:untitled2/advanced_search_widget.dart';
+import 'advanced_search_widget.dart';
 import 'overall_screen_context_controller.dart';
 import 'mutual_widgets.dart';
+import 'setting.dart';
+import 'package:diacritic/diacritic.dart';
 
-List<Widget> contentColumn = [
-  const SearchCard(
-      orderNum: 1,
-      title: "Có hai con mèo ngồi bên cửa sổ",
-      genre: "Tiểu thuyết",
-      author: "Nguyễn Nhật Ánh",
-      quantity: 100,
-      price: 82000,
+class SearchCardData {
+  int orderNum;
+  final String title;
+  final String genre;
+  final String author;
+  final int quantity;
+  final int price;
+  final int monthlySalesCountTotal; // for "Bán chạy tháng" sort
+  final DateTime lastImportDate; // for "Mới nhất" sort
+
+  SearchCardData({
+    required this.orderNum,
+    required this.title,
+    required this.genre,
+    required this.author,
+    required this.quantity,
+    required this.price,
+    this.monthlySalesCountTotal = 0,
+    required this.lastImportDate,
+  });
+}
+
+// Fetch data from server to this list here
+List<SearchCardData> rawDataList = [
+  SearchCardData(
+    orderNum: 1,
+    title: "Có hai con mèo ngồi bên cửa sổ",
+    genre: "Tiểu thuyết",
+    author: "Nguyễn Nhật Ánh",
+    quantity: 100,
+    price: 82000,
+    lastImportDate: DateTime(2024, 6, 25),
   ),
-  const SizedBox(height: 15,),
-  const SearchCard(
+  SearchCardData(
     orderNum: 2,
     title: "Đi qua hoa cúc",
     genre: "Tiểu thuyết",
     author: "Nguyễn Nhật Ánh",
     quantity: 20,
     price: 32800,
+    lastImportDate: DateTime(2024, 6, 30),
   ),
-  const SizedBox(height: 15,),
-  const SearchCard(
+  SearchCardData(
     orderNum: 3,
-    title: "Đi qua hoa cúc",
+    title: "Tư Duy Ngược",
     genre: "Tiểu thuyết",
-    author: "Nguyễn Nhật Ánh",
+    author: "Nguyễn Anh Dũng",
     quantity: 0,
-    price: 32800,
+    price: 69500,
+    lastImportDate: DateTime(2024,6,28),
   ),
-  const SizedBox(height: 15,),
-  const SearchCard(
+  SearchCardData(
     orderNum: 4,
-    title: "Đi qua hoa cúc",
+    title: "38 Bức Thư Rockefeller Gửi Cho Con Trai",
     genre: "Tiểu thuyết",
-    author: "Nguyễn Nhật Ánh",
-    quantity: 20,
+    author: "Thanh Hương biên dịch",
+    quantity: 214,
     price: 32800,
+    lastImportDate: DateTime(2024,7,12),
   ),
-  const SizedBox(height: 15,),
-  const SearchCard(
+  SearchCardData(
     orderNum: 5,
-    title: "Đi qua hoa cúc",
+    title:
+        "Nói Chuyện Là Bản Năng, Giữ Miệng Là Tu Dưỡng, Im Lặng Là Trí Tuệ (Tái Bản)",
     genre: "Tiểu thuyết",
-    author: "Nguyễn Nhật Ánh",
-    quantity: 20,
-    price: 32800,
+    author: "Trương Tiếu Hằng",
+    quantity: 12,
+    price: 141750,
+    lastImportDate: DateTime(2024,7,20),
   ),
-  const SizedBox(height: 15,),const SearchCard(
+  SearchCardData(
     orderNum: 6,
-    title: "Đi qua hoa cúc",
+    title: "Góc Nhỏ Có Nắng",
     genre: "Tiểu thuyết",
-    author: "Nguyễn Nhật Ánh",
-    quantity: 20,
-    price: 32800,
+    author: "Little Rainbow",
+    quantity: 250,
+    price: 55760,
+    lastImportDate: DateTime(2024,7,21),
   ),
-  const SizedBox(height: 15,),
-  const SearchCard(
+  SearchCardData(
     orderNum: 7,
-    title: "Đi qua hoa cúc",
+    title: "Cây Cam Ngọt Của Tôi",
     genre: "Tiểu thuyết",
-    author: "Nguyễn Nhật Ánh",
-    quantity: 20,
-    price: 32800,
+    author: "José Mauro de Vasconcelos",
+    quantity: 125,
+    price: 86400,
+    lastImportDate: DateTime(2024,7,22),
   ),
-  const SizedBox(height: 15,),
-];
+  SearchCardData(
+    orderNum: 8,
+    title: "Ghi Chép Pháp Y - Những Thi Thể Không Hoàn Chỉnh",
+    genre: "Tiểu thuyết",
+    author: "Lưu Bát Bách",
+    quantity: 54,
+    price: 97500,
+    lastImportDate: DateTime(2024,7,23),
+  ),
+  SearchCardData(
+    orderNum: 9,
+    title: "Hai Số Phận",
+    genre: "Tiểu thuyết",
+    author: "Jeffrey Archer",
+    quantity: 86,
+    price: 141000,
+    lastImportDate: DateTime(2024,7,24),
+  ),
+]; // we don't work frontend here
+List<SearchCardData> processedDataList = rawDataList; // work frontend here
+
+// ============================================================================
 
 class AdvancedSearchForm extends StatefulWidget {
   final Color titleBarColor;
@@ -130,9 +178,19 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
           // title bar
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
           decoration: BoxDecoration(
-              color: widget.titleBarColor,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(8), topRight: Radius.circular(8))),
+            color: widget.titleBarColor,
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8), topRight: Radius.circular(8)),
+            boxShadow: hasShadow
+                ? const [
+                    BoxShadow(
+                      offset: Offset(0, 4),
+                      color: Colors.grey,
+                      blurRadius: 4,
+                    )
+                  ]
+                : null,
+          ),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
@@ -145,13 +203,24 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
           ),
         ),
         Container(
-          // content area
+            // content area
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-                color: widget.contentAreaColor,
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(8),
-                    bottomRight: Radius.circular(8))),
+              color: widget.contentAreaColor,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(8),
+                bottomRight: Radius.circular(8),
+              ),
+              boxShadow: hasShadow
+                  ? const [
+                      BoxShadow(
+                        offset: Offset(0, 4),
+                        color: Colors.grey,
+                        blurRadius: 4,
+                      )
+                    ]
+                  : null,
+            ),
             child: Column(
               children: [
                 Row(
@@ -285,7 +354,7 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
                           CustomDropdownMenu(
                             options: priceRanges,
                             action: (priceRange) =>
-                            priceRangeController = priceRange ?? '',
+                                priceRangeController = priceRange ?? '',
                             fillColor: widget.contentInputFormFillColor,
                             width: double.infinity,
                             hintText: 'Chọn một mức giá',
@@ -302,10 +371,94 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
   }
 }
 
-class SearchResults extends StatelessWidget {
-  final List<Widget> resultCards;
+// ============================================================================
 
-  const SearchResults({super.key, required this.resultCards});
+class SearchResult extends StatefulWidget {
+  const SearchResult({super.key});
+
+  @override
+  State<SearchResult> createState() => _SearchResultState();
+}
+
+class _SearchResultState extends State<SearchResult> {
+  String? selectedOption1;
+  String? selectedOption2;
+
+  List<Widget> buildUI(List<SearchCardData> sortedList) {
+    return sortedList
+        .expand((element) => [
+              SearchCard(
+                orderNum: element.orderNum,
+                title: element.title,
+                genre: element.genre,
+                author: element.author,
+                quantity: element.quantity,
+                price: element.price,
+              ),
+              const SizedBox(height: 15),
+            ])
+        .toList();
+  }
+
+  void sortPrices({required bool ascending}) {
+    processedDataList.sort((a, b) {
+      int priceComparison = a.price.compareTo(b.price);
+      if (priceComparison == 0) {
+        // If prices are equal, sort by name (always ascending)
+        // by default Dart doesn't sort Unicode letters so I have to write like this (install `diacritic` library)
+        return removeDiacritics(a.title).compareTo(removeDiacritics(b.title));
+      } else {
+        return ascending ? priceComparison : -priceComparison;
+      }
+    });
+    for (int i = 0; i < processedDataList.length; i++) {
+      processedDataList[i].orderNum = i + 1;
+    }
+  }
+
+  void bestToWorstSellerSort() {
+    processedDataList.sort((a, b) {
+      int comparison = a.monthlySalesCountTotal.compareTo(b.monthlySalesCountTotal);
+      if (comparison == 0) {
+        return removeDiacritics(a.title).compareTo(removeDiacritics(b.title));
+      } else {
+        return -comparison; // Ascending order
+      }
+    });
+    for (int i = 0; i < processedDataList.length; i++) {
+      processedDataList[i].orderNum = i + 1;
+    }
+  }
+
+  void newestToOldestSort() {
+    processedDataList.sort((a, b) {
+      int comparison = a.lastImportDate.compareTo(b.lastImportDate);
+      if (comparison == 0) {
+        return removeDiacritics(a.title).compareTo(removeDiacritics(b.title));
+      } else {
+        return -comparison; // Ascending order
+      }
+    });
+    for (int i = 0; i < processedDataList.length; i++) {
+      processedDataList[i].orderNum = i + 1;
+    }
+  }
+
+  void filterStatus(String? status) {
+    selectedOption1 = null;
+    if (status == 'Tất cả') {
+      // Show all items
+      processedDataList = rawDataList;
+    } else if (status == 'Còn hàng') {
+      // Show only items with quantity > 0
+      processedDataList =
+          rawDataList.where((item) => item.quantity > 0).toList();
+    } else if (status == 'Hết hàng') {
+      // Show only items with quantity == 0
+      processedDataList =
+          rawDataList.where((item) => item.quantity == 0).toList();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -313,14 +466,16 @@ class SearchResults extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Kết quả: ${resultCards.length ~/ 2} kết quả',
+          'Kết quả: ${processedDataList.length} kết quả',
           style: const TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
             color: Color.fromRGBO(7, 25, 82, 1),
           ),
         ),
-        const SizedBox(height: 15,),
+        const SizedBox(
+          height: 15,
+        ),
         Row(
           children: [
             const Text(
@@ -332,31 +487,63 @@ class SearchResults extends StatelessWidget {
               ),
             ),
             CustomDropdownMenu(
-              options: const ['Bán chạy tháng', 'Mới nhất', 'Giá từ thấp tới cao', 'Giá từ cao tới thấp'],
-              action: (selected) {},
+              hintText: "<Trống>",
+              options: const [
+                'Bán chạy tháng',
+                // need int variable maps to each BookEntry to show how many it has sold
+                'Mới nhất',
+                'Giá từ thấp tới cao',
+                'Giá từ cao tới thấp'
+              ],
+              action: (selected) {
+                if (selected == 'Bán chạy tháng') {
+                  bestToWorstSellerSort();
+                }
+                if (selected == 'Mới nhất') {
+                  newestToOldestSort();
+                }
+                else if (selected == 'Giá từ thấp tới cao') {
+                  sortPrices(ascending: true);
+                } else if (selected == 'Giá từ cao tới thấp') {
+                  sortPrices(ascending: false);
+                }
+                setState(() {
+                  selectedOption1 = selected;
+                });
+              },
               fillColor: Colors.white,
-              width: 150,
-              initialValue: 'Bán chạy tháng',
+              width: 140,
+              initialValue: selectedOption1,
               fontSize: 14,
             ),
             const Spacer(),
             CustomDropdownMenu(
+              hintText: "<Trống>",
               options: const ['Tất cả', 'Còn hàng', 'Hết hàng'],
-              action: (selected) {},
+              action: (status) {
+                filterStatus(status);
+
+                setState(() {
+                  selectedOption2 = status;
+                });
+              },
               fillColor: Colors.white,
-              width: 100,
-              initialValue: 'Tất cả',
+              width: 110,
+              initialValue: selectedOption2,
               fontSize: 14,
             ),
           ],
         ),
-        const SizedBox(height: 15,),
+        const SizedBox(
+          height: 15,
+        ),
         Expanded(
           child: Material(
+            color: const Color.fromRGBO(235, 244, 246, 1),
             child: ListView.builder(
-              itemCount: resultCards.length,
+              itemCount: buildUI(processedDataList).length,
               itemBuilder: (context, index) {
-                return resultCards[index];
+                return buildUI(processedDataList)[index];
               },
             ),
           ),
@@ -366,8 +553,11 @@ class SearchResults extends StatelessWidget {
   }
 }
 
+// ============================================================================
+
 class AdvancedSearch extends StatefulWidget {
   final Function(int) overallScreenContextSwitcher;
+
   const AdvancedSearch({super.key, required this.overallScreenContextSwitcher});
 
   @override
@@ -375,53 +565,90 @@ class AdvancedSearch extends StatefulWidget {
 }
 
 class _AdvancedSearchState extends State<AdvancedSearch> {
+  Future<void> _loadData() async {
+    // replace this line by the function where you fetch data from server
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(235, 244, 246, 1),
-      appBar: AppBar(
         backgroundColor: const Color.fromRGBO(235, 244, 246, 1),
-        foregroundColor: const Color.fromRGBO(7, 25, 82, 1),
-        title: const Text("Tìm kiếm nâng cao", style: TextStyle(
-            fontWeight: FontWeight.w400, color: Color.fromRGBO(7, 25, 82, 1)),),
-        leading: IconButton(
-          onPressed: () {
-            widget.overallScreenContextSwitcher(OverallScreenContexts.mainFunctions.index);
-          },
-          icon: const Icon(Icons.arrow_back),
-          color: const Color.fromRGBO(7, 25, 82, 1),),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 15,),
-            const AdvancedSearchForm(
-                titleBarColor: Color.fromRGBO(7, 25, 82, 1),
-                titleColor: Color.fromRGBO(238, 237, 235, 1),
-                contentAreaColor: Color.fromRGBO(55, 183, 195, 1),
-                contentTitleColor: Color.fromRGBO(7, 25, 82, 1),
-                contentInputColor: Color.fromRGBO(7, 25, 82, 1),
-                contentInputFormFillColor: Colors.white,
-                textFieldBorderColor: Colors.grey
-            ),
-            const SizedBox(height: 36,),
-            Center(
-              child: CustomRoundedButton(
-                  backgroundColor: const Color.fromRGBO(7, 25, 82, 1),
-                  foregroundColor: const Color.fromRGBO(235, 244, 246, 1),
-                  title: "Tìm kiếm",
-                  height: 45,
-                  width: 165,
-                  fontSize: 16,
-                  onPressed: () {},
-              ),
-            ),
-            const SizedBox(height: 36,),
-            Expanded(child: SearchResults(resultCards: contentColumn)),
-          ],
+        appBar: AppBar(
+          backgroundColor: const Color.fromRGBO(235, 244, 246, 1),
+          foregroundColor: const Color.fromRGBO(7, 25, 82, 1),
+          title: const Text(
+            "Tìm kiếm nâng cao",
+            style: TextStyle(
+                fontWeight: FontWeight.w400,
+                color: Color.fromRGBO(7, 25, 82, 1)),
+          ),
+          leading: IconButton(
+            onPressed: () {
+              widget.overallScreenContextSwitcher(
+                  OverallScreenContexts.mainFunctions.index);
+            },
+            icon: const Icon(Icons.arrow_back),
+            color: const Color.fromRGBO(7, 25, 82, 1),
+          ),
         ),
-      )
-    );
+        body: FutureBuilder(
+          future: _loadData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: Color.fromRGBO(239, 156, 102, 1),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            } else {
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+                child: Column(
+                  children: [
+                    Expanded(
+                        flex: 2,
+                        child: Column(
+                          children: [
+                            const AdvancedSearchForm(
+                                titleBarColor: Color.fromRGBO(7, 25, 82, 1),
+                                titleColor: Color.fromRGBO(238, 237, 235, 1),
+                                contentAreaColor:
+                                    Color.fromRGBO(55, 183, 195, 1),
+                                contentTitleColor: Color.fromRGBO(7, 25, 82, 1),
+                                contentInputColor: Color.fromRGBO(7, 25, 82, 1),
+                                contentInputFormFillColor: Colors.white,
+                                textFieldBorderColor: Colors.grey),
+                            const Spacer(),
+                            Center(
+                              child: CustomRoundedButton(
+                                backgroundColor:
+                                    const Color.fromRGBO(7, 25, 82, 1),
+                                foregroundColor:
+                                    const Color.fromRGBO(235, 244, 246, 1),
+                                title: "Tìm kiếm",
+                                height: 45,
+                                width: 165,
+                                fontSize: 16,
+                                onPressed: () {},
+                              ),
+                            ),
+                            const Spacer(),
+                          ],
+                        )),
+                    const Expanded(
+                      flex: 3,
+                      child: SearchResult(),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ));
   }
 }

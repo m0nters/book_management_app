@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'setting.dart';
 
 class CustomRoundedButton extends StatelessWidget {
   final Color backgroundColor;
@@ -61,6 +62,7 @@ class CustomRoundedButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+        elevation: hasShadow ? 5 : 0,
         padding: padding,
         backgroundColor: backgroundColor,
         foregroundColor: foregroundColor,
@@ -135,17 +137,20 @@ class InfoTicket extends StatelessWidget {
       child: Ink(
         padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 4),
         decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(backgroundImage),
-              fit: BoxFit.fill,
-            ),
-            boxShadow: const [
-              BoxShadow(
-                offset: Offset(0, 4),
-                color: Colors.grey,
-                blurRadius: 4,
-              )
-            ]),
+          image: DecorationImage(
+            image: AssetImage(backgroundImage),
+            fit: BoxFit.fill,
+          ),
+          boxShadow: hasShadow
+              ? const [
+                  BoxShadow(
+                    offset: Offset(0, 4),
+                    color: Colors.grey,
+                    blurRadius: 4,
+                  )
+                ]
+              : null,
+        ),
         child: Column(
           children: _buildFieldRows(fields),
         ),
@@ -255,7 +260,7 @@ class CustomDropdownMenu extends StatefulWidget {
   final Color contentColor;
   final Color fillColor;
   final String hintText;
-  final String initialValue;
+  final String? initialValue;
 
   const CustomDropdownMenu({
     super.key,
@@ -266,7 +271,8 @@ class CustomDropdownMenu extends StatefulWidget {
     this.contentColor = const Color.fromRGBO(12, 24, 68, 1),
     this.fillColor = Colors.white,
     this.width = double.infinity,
-    this.height = 46.5, // fit with the height of TextField when `isDense` property is `true`
+    this.height =
+        46.5, // fit with the height of TextField when `isDense` property is `true`
     this.hintText = 'Chọn một tùy chọn',
     this.initialValue = "",
   });
@@ -309,7 +315,8 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
               value: option,
               child: Text(
                 option,
-                style: TextStyle(fontSize: widget.fontSize, color: widget.contentColor),
+                style: TextStyle(
+                    fontSize: widget.fontSize, color: widget.contentColor),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -375,7 +382,8 @@ class DatePickerBox extends StatefulWidget {
   /// - The widget uses `InkWell` for tap interactions, providing visual feedback (ripples) when tapped.
   /// - You can further customize the appearance using additional `BoxDecoration` properties (e.g., shadows).
   /// - The `fontSize` and `iconSize` are passed down to the Text and Icon widgets, respectively.
-  const DatePickerBox({super.key,
+  const DatePickerBox({
+    super.key,
     required this.initialDate, // input Date(year,day,month)
     required this.onDateChanged,
     this.backgroundColor = Colors.white,
@@ -425,15 +433,9 @@ class _DatePickerBoxState extends State<DatePickerBox> {
   @override
   Widget build(BuildContext context) {
     final formattedDate = DateFormat('dd/MM/yyyy').format(_selectedDate);
-    final isToday = _selectedDate.year == DateTime
-        .now()
-        .year &&
-        _selectedDate.month == DateTime
-            .now()
-            .month &&
-        _selectedDate.day == DateTime
-            .now()
-            .day;
+    final isToday = _selectedDate.year == DateTime.now().year &&
+        _selectedDate.month == DateTime.now().month &&
+        _selectedDate.day == DateTime.now().day;
     final todayLabel = isToday ? ' (hôm nay)' : '';
 
     return InkWell(
@@ -442,17 +444,33 @@ class _DatePickerBoxState extends State<DatePickerBox> {
       child: Ink(
         padding: const EdgeInsets.all(10), // Adjust padding
         decoration: BoxDecoration(
-          color: widget.backgroundColor, // Background color
+          color: widget.backgroundColor,
+          // Background color
           border: Border.all(color: widget.borderColor, width: 1),
-          borderRadius: BorderRadius.circular(widget.borderRadius), // Border radius
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          // Border radius
+          boxShadow: hasShadow
+              ? const [
+                  BoxShadow(
+                    offset: Offset(0, 4),
+                    color: Colors.grey,
+                    blurRadius: 4,
+                  )
+                ]
+              : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('$formattedDate$todayLabel',
-                style: TextStyle(fontSize: widget.fontSize, color: widget.foregroundColor)),
+                style: TextStyle(
+                    fontSize: widget.fontSize, color: widget.foregroundColor)),
             const SizedBox(width: 4), // Spacing
-            Icon(Icons.calendar_month_sharp, size: widget.iconSize, color: widget.foregroundColor,), // Calendar icon
+            Icon(
+              Icons.calendar_month_sharp,
+              size: widget.iconSize,
+              color: widget.foregroundColor,
+            ), // Calendar icon
           ],
         ),
       ),

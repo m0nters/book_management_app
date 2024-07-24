@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
+import 'setting.dart';
 
 class AvailabilityLabel extends StatelessWidget {
   final String text;
@@ -14,7 +15,7 @@ class AvailabilityLabel extends StatelessWidget {
         required this.text,
         required this.backgroundColor,
         this.foregroundColor = const Color.fromRGBO(245, 245, 245, 1),
-        this.message = '' // meaning there's no hint text event when long press
+        this.message = '' // meaning there's no hint text event when long press by default
       });
 
   @override
@@ -41,7 +42,7 @@ class InStockLabel extends AvailabilityLabel {
       : super(
       text: 'Còn hàng',
       backgroundColor: const Color.fromRGBO(8, 131, 149, 1),
-      message: "Từ 100 trở lên");
+      message: "Số lượng từ 100 trở lên");
 }
 
 class LowStockLabel extends AvailabilityLabel {
@@ -49,7 +50,7 @@ class LowStockLabel extends AvailabilityLabel {
       : super(
       text: 'Còn ít hàng',
       backgroundColor: const Color.fromRGBO(239, 156, 102, 1),
-      message: "Ít hơn 100");
+      message: "Số lượng it hơn 100");
 }
 
 class OutOfStockLabel extends AvailabilityLabel {
@@ -203,9 +204,16 @@ class _SearchCardState extends State<SearchCard> {
       onTap: () {},
       child: Ink(
         height: 190,
-        decoration: const BoxDecoration(
-          color: Color.fromRGBO(7, 25, 82, 1),
-          borderRadius: BorderRadius.all(Radius.circular(25)),
+        decoration: BoxDecoration(
+          color: const Color.fromRGBO(7, 25, 82, 1),
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
+          boxShadow: hasShadow ? const [
+            BoxShadow(
+              offset: Offset(0, 4),
+              color: Colors.grey,
+              blurRadius: 4,
+            )
+          ] : null,
         ),
         child: Stack(
           children: [

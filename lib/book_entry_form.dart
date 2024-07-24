@@ -84,14 +84,14 @@ class BookEntryForm extends StatefulWidget {
 }
 
 class _BookEntryFormState extends State<BookEntryForm> {
-  static const String backgroundImageTicket = "assets/images/book_entry_form_ticket.png";
+  static const String backgroundImageTicket =
+      "assets/images/book_entry_form_ticket.png";
 
   Future<void> _loadData() async {
     // replace this line by the function where you fetch data from server
-
   }
 
-  void sortDates(bool ascending) {
+  void sortDates({required bool ascending}) {
     dataList.sort((a, b) {
       DateTime dateA = DateTime.parse(
           '${a.entryDate.split('/')[2]}-${a.entryDate.split('/')[1]}-${a.entryDate.split('/')[0]}');
@@ -99,7 +99,7 @@ class _BookEntryFormState extends State<BookEntryForm> {
           '${b.entryDate.split('/')[2]}-${b.entryDate.split('/')[1]}-${b.entryDate.split('/')[0]}');
 
       int dateComparison =
-      ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
+          ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
       if (dateComparison != 0) {
         return dateComparison;
       } else {
@@ -109,11 +109,13 @@ class _BookEntryFormState extends State<BookEntryForm> {
     setState(() {});
   }
 
-  List<Widget> buildContentColumn(List<EntryData> dataList) {
+  List<Widget> buildUI(List<EntryData> dataList) {
     return dataList.expand((dataItem) {
       return [
         BookEntryFormInfoTicket(
-          fields: dataItem.toMap().entries
+          fields: dataItem
+              .toMap()
+              .entries
               .map((entry) => {'title': entry.key, 'content': entry.value})
               .toList(),
           backgroundImage: backgroundImageTicket,
@@ -177,69 +179,85 @@ class _BookEntryFormState extends State<BookEntryForm> {
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
               child: Column(
                 children: <Widget>[
-                  const SizedBox(height: 103),
-                  Center(
-                    child: CustomRoundedButton(
-                      backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
-                      foregroundColor: const Color.fromRGBO(225, 227, 234, 1),
-                      title: "Lập mới",
-                      fontSize: 24,
-                      onPressed: () {
-                        widget.internalScreenContextSwitcher(
-                            BookEntryFormCreateForm(
-                                backContextSwitcher:
-                                    widget.backContextSwitcher));
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 103),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Lịch sử',
-                        style: TextStyle(
-                            fontSize: 22, color: Color.fromRGBO(12, 24, 68, 1)),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () {
-                          sortDates(false);
-                        },
-                        icon: Tooltip(
-                          message: 'Mới đến cũ',
-                          child: SvgPicture.asset(
-                            'assets/icons/new_to_old_1.svg',
-                            width: 30,
-                            height: 30,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          sortDates(true);
-                        },
-                        icon: Tooltip(
-                          message: 'Cũ đến mới',
-                          child: SvgPicture.asset(
-                            'assets/icons/old_to_new_1.svg',
-                            width: 30,
-                            height: 30,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
                   Expanded(
-                    child: Material(
-                      color: const Color.fromRGBO(225, 227, 234, 1),
-                      child: ListView.builder(
-                        itemCount: buildContentColumn(dataList).length,
-                        itemBuilder: (context, index) {
-                          return buildContentColumn(dataList)[index];
-                        },
-                      ),
+                      flex: 2,
+                      child: Column(
+                        children: [
+                          const Spacer(),
+                          Center(
+                            child: CustomRoundedButton(
+                              backgroundColor:
+                                  const Color.fromRGBO(255, 105, 105, 1),
+                              foregroundColor:
+                                  const Color.fromRGBO(225, 227, 234, 1),
+                              title: "Lập mới",
+                              fontSize: 24,
+                              onPressed: () {
+                                widget.internalScreenContextSwitcher(
+                                    BookEntryFormCreateForm(
+                                        backContextSwitcher:
+                                            widget.backContextSwitcher));
+                              },
+                            ),
+                          ),
+                          const Spacer(),
+                        ],
+                      )),
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Lịch sử',
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  color: Color.fromRGBO(12, 24, 68, 1)),
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              onPressed: () {
+                                sortDates(ascending: false);
+                              },
+                              icon: Tooltip(
+                                message: 'Mới đến cũ',
+                                child: SvgPicture.asset(
+                                  'assets/icons/new_to_old_1.svg',
+                                  width: 30,
+                                  height: 30,
+                                ),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                sortDates(ascending: true);
+                              },
+                              icon: Tooltip(
+                                message: 'Cũ đến mới',
+                                child: SvgPicture.asset(
+                                  'assets/icons/old_to_new_1.svg',
+                                  width: 30,
+                                  height: 30,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 15),
+                        Expanded(
+                          child: Material(
+                            color: const Color.fromRGBO(225, 227, 234, 1),
+                            child: ListView.builder(
+                              itemCount: buildUI(dataList).length,
+                              itemBuilder: (context, index) {
+                                return buildUI(dataList)[index];
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

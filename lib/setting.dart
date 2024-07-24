@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'overall_screen_context_controller.dart';
-import 'mutual_widgets.dart';
+
+bool hasShadow = false;
 
 class Setting extends StatefulWidget {
   final Function(int) overallScreenContextSwitcher;
@@ -12,14 +13,6 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
-  List<String> startScreenOption = [
-    "Trang chủ",
-    "Phiếu nhập sách",
-    "Hóa đơn bán sách",
-    "Phiếu thu tiền",
-    "Báo cáo công nợ"
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,25 +31,41 @@ class _SettingState extends State<Setting> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                  const Expanded (
-                    child: Text(
-                      "Màn hình bắt đầu: ",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: CustomDropdownMenu(
-                      options: startScreenOption,
-                      width: 180,
-                      hintText: "Chọn một thể loại vừa sức",
-                      action: (String? selectedOption) {
-                        print('Selected option: $selectedOption');
-                      },
-                    ),
-                  ),
+                const Text(
+                  "Bật/tắt hiệu ứng đổ bóng",
+                  style: TextStyle(fontSize: 18),
+                ),
+                IconButton( // Info button with icon
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Thông tin"),
+                        content: const Text("Mặc định tắt để tối ưu hiệu năng."),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Đóng"),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.info_outline), // Or any suitable info icon
+                  constraints: const BoxConstraints(maxHeight: 24), // Control icon size
+                  padding: EdgeInsets.zero, // Remove default padding
+                ),
+                const Spacer(),
+                Switch(
+                  value: hasShadow,
+                  onChanged: (value) {
+                    setState(() {
+                      hasShadow = value;
+                    });
+                  },
+                  activeTrackColor: Colors.lightGreenAccent,
+                  activeColor: Colors.green,
+                ),
               ],
             ),
           ]),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
+import 'setting.dart';
 
 late DateTime serverUploadedDateInputData;
 late String serverUploadedCustomerNameInputData;
@@ -95,10 +96,20 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
             // content area
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-                color: widget.contentAreaColor,
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(8),
-                    bottomRight: Radius.circular(8))),
+              color: widget.contentAreaColor,
+              borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(8),
+                  bottomRight: Radius.circular(8)),
+              boxShadow: hasShadow
+                  ? const [
+                      BoxShadow(
+                        offset: Offset(0, 4),
+                        color: Colors.grey,
+                        blurRadius: 4,
+                      )
+                    ]
+                  : null,
+            ),
             child: Column(
               children: [
                 Row(
@@ -358,8 +369,8 @@ class _BookSaleInvoiceCreateInvoiceState
       _isSaving = true; // Set saving state to true
     });
 
-    String dateSaved = (
-        serverUploadedDateInputData.year == DateTime.now().year &&
+    String dateSaved = (serverUploadedDateInputData.year ==
+                DateTime.now().year &&
             serverUploadedDateInputData.month == DateTime.now().month &&
             serverUploadedDateInputData.day == DateTime.now().day)
         ? "hôm nay"
@@ -460,8 +471,17 @@ class _BookSaleInvoiceCreateInvoiceState
                   style: TextStyle(
                       fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1)),
                 ),
-                SizedBox(
+                Container(
                   width: 196,
+                  decoration: BoxDecoration (
+                    boxShadow: hasShadow ? const [
+                      BoxShadow(
+                        offset: Offset(0, 4),
+                        color: Colors.grey,
+                        blurRadius: 4,
+                      )
+                    ] : null,
+                  ),
                   child: TextField(
                     controller: _customerNameController,
                     decoration: InputDecoration(
