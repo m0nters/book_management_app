@@ -55,11 +55,14 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
   String genreController = '';
 
   final List<String> genres = [
-    'Tiểu thuyết thanh thiếu niên',
-    'Tiểu thuyết phiêu lưu',
-    'Khoa học viễn tưởng',
-    'Văn học cổ điển',
-    // Add more genres as needed
+    'Tình cảm',
+    'Bí ẩn',
+    'Giả tưởng và khoa học viễn tưởng',
+    'Kinh dị, giật gân',
+    'Truyền cảm hứng',
+    'Tiểu sử, tự truyện và hồi ký',
+    'Truyện ngắn',
+    'Lịch sử',
   ];
 
   @override
@@ -231,7 +234,7 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.confirmation_num,
+                              Icon(Icons.production_quantity_limits,
                                   color: widget.contentTitleColor),
                               const SizedBox(width: 4),
                               Text('Số lượng',

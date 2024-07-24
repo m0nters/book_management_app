@@ -5,6 +5,11 @@ import 'mutual_widgets.dart';
 import 'setting.dart';
 import 'package:diacritic/diacritic.dart';
 
+late String serverUploadedTitleInputData;
+late String serverUploadedGenreInputData;
+late String serverUploadedAuthorInputData;
+late int serverUploadedQuantityInputData;
+
 class SearchCardData {
   int orderNum;
   final String title;
@@ -54,7 +59,7 @@ List<SearchCardData> rawDataList = [
     author: "Nguyễn Anh Dũng",
     quantity: 0,
     price: 69500,
-    lastImportDate: DateTime(2024,6,28),
+    lastImportDate: DateTime(2024, 6, 28),
   ),
   SearchCardData(
     orderNum: 4,
@@ -63,7 +68,7 @@ List<SearchCardData> rawDataList = [
     author: "Thanh Hương biên dịch",
     quantity: 214,
     price: 32800,
-    lastImportDate: DateTime(2024,7,12),
+    lastImportDate: DateTime(2024, 7, 12),
   ),
   SearchCardData(
     orderNum: 5,
@@ -73,7 +78,7 @@ List<SearchCardData> rawDataList = [
     author: "Trương Tiếu Hằng",
     quantity: 12,
     price: 141750,
-    lastImportDate: DateTime(2024,7,20),
+    lastImportDate: DateTime(2024, 7, 20),
   ),
   SearchCardData(
     orderNum: 6,
@@ -82,7 +87,7 @@ List<SearchCardData> rawDataList = [
     author: "Little Rainbow",
     quantity: 250,
     price: 55760,
-    lastImportDate: DateTime(2024,7,21),
+    lastImportDate: DateTime(2024, 7, 21),
   ),
   SearchCardData(
     orderNum: 7,
@@ -91,7 +96,7 @@ List<SearchCardData> rawDataList = [
     author: "José Mauro de Vasconcelos",
     quantity: 125,
     price: 86400,
-    lastImportDate: DateTime(2024,7,22),
+    lastImportDate: DateTime(2024, 7, 22),
   ),
   SearchCardData(
     orderNum: 8,
@@ -100,7 +105,7 @@ List<SearchCardData> rawDataList = [
     author: "Lưu Bát Bách",
     quantity: 54,
     price: 97500,
-    lastImportDate: DateTime(2024,7,23),
+    lastImportDate: DateTime(2024, 7, 23),
   ),
   SearchCardData(
     orderNum: 9,
@@ -109,9 +114,12 @@ List<SearchCardData> rawDataList = [
     author: "Jeffrey Archer",
     quantity: 86,
     price: 141000,
-    lastImportDate: DateTime(2024,7,24),
+    lastImportDate: DateTime(2024, 7, 24),
   ),
 ]; // we don't work frontend here
+
+// ============================================================================
+
 List<SearchCardData> processedDataList = rawDataList; // work frontend here
 
 // ============================================================================
@@ -124,6 +132,7 @@ class AdvancedSearchForm extends StatefulWidget {
   final Color contentInputColor;
   final Color contentInputFormFillColor;
   final Color textFieldBorderColor;
+  final VoidCallback fetchDataFunction;
 
   const AdvancedSearchForm({
     super.key,
@@ -134,6 +143,7 @@ class AdvancedSearchForm extends StatefulWidget {
     required this.contentInputColor,
     required this.contentInputFormFillColor,
     required this.textFieldBorderColor,
+    required this.fetchDataFunction,
   });
 
   @override
@@ -143,31 +153,30 @@ class AdvancedSearchForm extends StatefulWidget {
 class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _authorController = TextEditingController();
-  String genreController = '';
-  String priceRangeController = '';
+  String _genreController = '';
+  final TextEditingController _quantityController = TextEditingController();
 
   final List<String> genres = [
-    'Tiểu thuyết thanh thiếu niên',
-    'Tiểu thuyết phiêu lưu',
-    'Khoa học viễn tưởng',
-    'Văn học cổ điển',
-    // Add more genres as needed
-  ];
-
-  final List<String> priceRanges = [
-    '0đ - 150.000đ',
-    '150.000đ - 300.000đ',
-    '300.000đ - 500.000đ',
-    '500.000đ - 700.000đ',
-    '700.000đ trở lên',
-    // Add more price ranges as needed
+    'Tình cảm',
+    'Bí ẩn',
+    'Giả tưởng và khoa học viễn tưởng',
+    'Kinh dị, giật gân',
+    'Truyền cảm hứng',
+    'Tiểu sử, tự truyện và hồi ký',
+    'Truyện ngắn',
+    'Lịch sử',
   ];
 
   @override
   void dispose() {
     _titleController.dispose();
     _authorController.dispose();
+    _quantityController.dispose();
     super.dispose();
+  }
+
+  void uploadDataToServer() {
+    // your backend here
   }
 
   @override
@@ -282,7 +291,7 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
                           const SizedBox(height: 4),
                           CustomDropdownMenu(
                             options: genres,
-                            action: (genre) => genreController = genre ?? '',
+                            action: (genre) => _genreController = genre ?? '',
                             fillColor: widget.contentInputFormFillColor,
                             width: double.infinity,
                             hintText: 'Chọn một thể loại',
@@ -340,10 +349,10 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.monetization_on,
+                              Icon(Icons.production_quantity_limits,
                                   color: widget.contentTitleColor),
                               const SizedBox(width: 4),
-                              Text('Giá',
+                              Text('Số lượng',
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -351,13 +360,24 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
                             ],
                           ),
                           const SizedBox(height: 4),
-                          CustomDropdownMenu(
-                            options: priceRanges,
-                            action: (priceRange) =>
-                                priceRangeController = priceRange ?? '',
-                            fillColor: widget.contentInputFormFillColor,
-                            width: double.infinity,
-                            hintText: 'Chọn một mức giá',
+                          TextField(
+                            controller: _quantityController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              filled: true,
+                              fillColor: widget.contentInputFormFillColor,
+                              hintText: "Chọn số lượng",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: widget.textFieldBorderColor,
+                                    width: 1.0),
+                              ),
+                            ),
+                            style: TextStyle(color: widget.contentInputColor),
                           ),
                         ],
                       ),
@@ -365,7 +385,28 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
                   ],
                 ),
               ],
-            ))
+            )),
+        const Spacer(),
+        Center(
+          child: CustomRoundedButton(
+            backgroundColor: const Color.fromRGBO(7, 25, 82, 1),
+            foregroundColor: const Color.fromRGBO(235, 244, 246, 1),
+            title: "Tìm kiếm",
+            height: 45,
+            width: 165,
+            fontSize: 16,
+            onPressed: () {
+              serverUploadedTitleInputData = _titleController.text;
+              serverUploadedGenreInputData = _genreController;
+              serverUploadedAuthorInputData = _authorController.text;
+              serverUploadedQuantityInputData = _quantityController.text == '' ? 0 : int.parse(_quantityController.text);
+
+              uploadDataToServer();
+              widget.fetchDataFunction();
+            },
+          ),
+        ),
+        const Spacer(),
       ],
     );
   }
@@ -381,10 +422,10 @@ class SearchResult extends StatefulWidget {
 }
 
 class _SearchResultState extends State<SearchResult> {
-  String? selectedOption1;
-  String? selectedOption2;
+  String? sortOptionSelected;
+  String? filterOptionSelected;
 
-  List<Widget> buildUI(List<SearchCardData> sortedList) {
+  List<Widget> buildResultCardsUI(List<SearchCardData> sortedList) {
     return sortedList
         .expand((element) => [
               SearchCard(
@@ -418,7 +459,8 @@ class _SearchResultState extends State<SearchResult> {
 
   void bestToWorstSellerSort() {
     processedDataList.sort((a, b) {
-      int comparison = a.monthlySalesCountTotal.compareTo(b.monthlySalesCountTotal);
+      int comparison =
+          a.monthlySalesCountTotal.compareTo(b.monthlySalesCountTotal);
       if (comparison == 0) {
         return removeDiacritics(a.title).compareTo(removeDiacritics(b.title));
       } else {
@@ -445,7 +487,6 @@ class _SearchResultState extends State<SearchResult> {
   }
 
   void filterStatus(String? status) {
-    selectedOption1 = null;
     if (status == 'Tất cả') {
       // Show all items
       processedDataList = rawDataList;
@@ -460,8 +501,25 @@ class _SearchResultState extends State<SearchResult> {
     }
   }
 
+  void rebuildResultData() {
+    if (filterOptionSelected != null) {
+      filterStatus(filterOptionSelected); // get the processedDataList
+    }
+    // then sort on it
+    if (sortOptionSelected == "Bán chạy tháng") {
+      bestToWorstSellerSort();
+    } else if (sortOptionSelected == "Mới nhất") {
+      newestToOldestSort();
+    } else if (sortOptionSelected == "Giá từ thấp tới cao") {
+      sortPrices(ascending: true);
+    } else {
+      sortPrices(ascending: false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    rebuildResultData();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -487,49 +545,33 @@ class _SearchResultState extends State<SearchResult> {
               ),
             ),
             CustomDropdownMenu(
-              hintText: "<Trống>",
+              hintText: "Trống",
               options: const [
                 'Bán chạy tháng',
-                // need int variable maps to each BookEntry to show how many it has sold
                 'Mới nhất',
                 'Giá từ thấp tới cao',
                 'Giá từ cao tới thấp'
               ],
               action: (selected) {
-                if (selected == 'Bán chạy tháng') {
-                  bestToWorstSellerSort();
-                }
-                if (selected == 'Mới nhất') {
-                  newestToOldestSort();
-                }
-                else if (selected == 'Giá từ thấp tới cao') {
-                  sortPrices(ascending: true);
-                } else if (selected == 'Giá từ cao tới thấp') {
-                  sortPrices(ascending: false);
-                }
                 setState(() {
-                  selectedOption1 = selected;
+                  sortOptionSelected = selected;
                 });
               },
               fillColor: Colors.white,
               width: 140,
-              initialValue: selectedOption1,
               fontSize: 14,
             ),
             const Spacer(),
             CustomDropdownMenu(
-              hintText: "<Trống>",
+              hintText: "Trống",
               options: const ['Tất cả', 'Còn hàng', 'Hết hàng'],
               action: (status) {
-                filterStatus(status);
-
                 setState(() {
-                  selectedOption2 = status;
+                  filterOptionSelected = status;
                 });
               },
               fillColor: Colors.white,
               width: 110,
-              initialValue: selectedOption2,
               fontSize: 14,
             ),
           ],
@@ -541,9 +583,9 @@ class _SearchResultState extends State<SearchResult> {
           child: Material(
             color: const Color.fromRGBO(235, 244, 246, 1),
             child: ListView.builder(
-              itemCount: buildUI(processedDataList).length,
+              itemCount: buildResultCardsUI(processedDataList).length,
               itemBuilder: (context, index) {
-                return buildUI(processedDataList)[index];
+                return buildResultCardsUI(processedDataList)[index];
               },
             ),
           ),
@@ -565,8 +607,8 @@ class AdvancedSearch extends StatefulWidget {
 }
 
 class _AdvancedSearchState extends State<AdvancedSearch> {
-  Future<void> _loadData() async {
-    // replace this line by the function where you fetch data from server
+  void fetchDataFromServer() {
+    // your backend here
   }
 
   @override
@@ -591,64 +633,32 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
             color: const Color.fromRGBO(7, 25, 82, 1),
           ),
         ),
-        body: FutureBuilder(
-          future: _loadData(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Color.fromRGBO(239, 156, 102, 1),
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
-            } else {
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-                child: Column(
-                  children: [
-                    Expanded(
-                        flex: 2,
-                        child: Column(
-                          children: [
-                            const AdvancedSearchForm(
-                                titleBarColor: Color.fromRGBO(7, 25, 82, 1),
-                                titleColor: Color.fromRGBO(238, 237, 235, 1),
-                                contentAreaColor:
-                                    Color.fromRGBO(55, 183, 195, 1),
-                                contentTitleColor: Color.fromRGBO(7, 25, 82, 1),
-                                contentInputColor: Color.fromRGBO(7, 25, 82, 1),
-                                contentInputFormFillColor: Colors.white,
-                                textFieldBorderColor: Colors.grey),
-                            const Spacer(),
-                            Center(
-                              child: CustomRoundedButton(
-                                backgroundColor:
-                                    const Color.fromRGBO(7, 25, 82, 1),
-                                foregroundColor:
-                                    const Color.fromRGBO(235, 244, 246, 1),
-                                title: "Tìm kiếm",
-                                height: 45,
-                                width: 165,
-                                fontSize: 16,
-                                onPressed: () {},
-                              ),
-                            ),
-                            const Spacer(),
-                          ],
-                        )),
-                    const Expanded(
-                      flex: 3,
-                      child: SearchResult(),
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+          child: Column(
+            children: [
+              Expanded(
+                  flex: 1,
+                  child: AdvancedSearchForm(
+                    titleBarColor: const Color.fromRGBO(7, 25, 82, 1),
+                    titleColor: const Color.fromRGBO(238, 237, 235, 1),
+                    contentAreaColor: const Color.fromRGBO(55, 183, 195, 1),
+                    contentTitleColor: const Color.fromRGBO(7, 25, 82, 1),
+                    contentInputColor: const Color.fromRGBO(7, 25, 82, 1),
+                    contentInputFormFillColor: Colors.white,
+                    textFieldBorderColor: Colors.grey,
+                    fetchDataFunction: () {
+                      setState(() {
+                        fetchDataFromServer();
+                      });
+                    },
+                  )),
+              const Expanded(
+                flex: 1,
+                child: SearchResult(),
+              ),
+            ],
+          ),
         ));
   }
 }
