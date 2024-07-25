@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'advanced_search_widget.dart';
+import 'advanced_search_widgets.dart';
 import 'overall_screen_context_controller.dart';
 import 'mutual_widgets.dart';
 import 'setting.dart';
@@ -73,7 +73,7 @@ List<SearchCardData> rawDataList = [
   SearchCardData(
     orderNum: 5,
     title:
-        "Nói Chuyện Là Bản Năng, Giữ Miệng Là Tu Dưỡng, Im Lặng Là Trí Tuệ (Tái Bản)",
+    "Nói Chuyện Là Bản Năng, Giữ Miệng Là Tu Dưỡng, Im Lặng Là Trí Tuệ (Tái Bản)",
     genre: "Tiểu thuyết",
     author: "Trương Tiếu Hằng",
     quantity: 12,
@@ -109,6 +109,15 @@ List<SearchCardData> rawDataList = [
   ),
   SearchCardData(
     orderNum: 9,
+    title: "Hai Số Phận",
+    genre: "Tiểu thuyết",
+    author: "Jeffrey Archer",
+    quantity: 86,
+    price: 141000,
+    lastImportDate: DateTime(2024, 7, 24),
+  ),
+  SearchCardData(
+    orderNum: 10,
     title: "Hai Số Phận",
     genre: "Tiểu thuyết",
     author: "Jeffrey Archer",
@@ -192,12 +201,12 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
                 topLeft: Radius.circular(8), topRight: Radius.circular(8)),
             boxShadow: hasShadow
                 ? const [
-                    BoxShadow(
-                      offset: Offset(0, 4),
-                      color: Colors.grey,
-                      blurRadius: 4,
-                    )
-                  ]
+              BoxShadow(
+                offset: Offset(0, 4),
+                color: Colors.grey,
+                blurRadius: 4,
+              )
+            ]
                 : null,
           ),
           child: Align(
@@ -212,7 +221,7 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
           ),
         ),
         Container(
-            // content area
+          // content area
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
               color: widget.contentAreaColor,
@@ -222,12 +231,12 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
               ),
               boxShadow: hasShadow
                   ? const [
-                      BoxShadow(
-                        offset: Offset(0, 4),
-                        color: Colors.grey,
-                        blurRadius: 4,
-                      )
-                    ]
+                BoxShadow(
+                  offset: Offset(0, 4),
+                  color: Colors.grey,
+                  blurRadius: 4,
+                )
+              ]
                   : null,
             ),
             child: Column(
@@ -428,16 +437,16 @@ class _SearchResultState extends State<SearchResult> {
   List<Widget> buildResultCardsUI(List<SearchCardData> sortedList) {
     return sortedList
         .expand((element) => [
-              SearchCard(
-                orderNum: element.orderNum,
-                title: element.title,
-                genre: element.genre,
-                author: element.author,
-                quantity: element.quantity,
-                price: element.price,
-              ),
-              const SizedBox(height: 15),
-            ])
+      SearchCard(
+        orderNum: element.orderNum,
+        title: element.title,
+        genre: element.genre,
+        author: element.author,
+        quantity: element.quantity,
+        price: element.price,
+      ),
+      const SizedBox(height: 15),
+    ])
         .toList();
   }
 
@@ -460,7 +469,7 @@ class _SearchResultState extends State<SearchResult> {
   void bestToWorstSellerSort() {
     processedDataList.sort((a, b) {
       int comparison =
-          a.monthlySalesCountTotal.compareTo(b.monthlySalesCountTotal);
+      a.monthlySalesCountTotal.compareTo(b.monthlySalesCountTotal);
       if (comparison == 0) {
         return removeDiacritics(a.title).compareTo(removeDiacritics(b.title));
       } else {
@@ -635,10 +644,11 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-          child: Column(
-            children: [
-              Expanded(
-                  flex: 1,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 400,
                   child: AdvancedSearchForm(
                     titleBarColor: const Color.fromRGBO(7, 25, 82, 1),
                     titleColor: const Color.fromRGBO(238, 237, 235, 1),
@@ -652,12 +662,13 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                         fetchDataFromServer();
                       });
                     },
-                  )),
-              const Expanded(
-                flex: 1,
-                child: SearchResult(),
-              ),
-            ],
+                  ),
+                ),
+                const SizedBox(
+                    height: 450,
+                    child: SearchResult()),
+              ],
+            ),
           ),
         ));
   }
