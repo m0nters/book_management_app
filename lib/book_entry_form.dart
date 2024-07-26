@@ -179,14 +179,6 @@ class _BookEntryFormState extends State<BookEntryForm> {
           icon: const Icon(Icons.arrow_back),
           color: const Color.fromRGBO(12, 24, 68, 1),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                size: 29,
-              )),
-        ],
       ),
       body: FutureBuilder(
         future: _loadData(),

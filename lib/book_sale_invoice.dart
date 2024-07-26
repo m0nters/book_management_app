@@ -193,14 +193,6 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
             icon: const Icon(Icons.arrow_back),
             color: const Color.fromRGBO(120, 171, 168, 1),
           ),
-          actions: [
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.search,
-                  size: 29,
-                )),
-          ],
         ),
         body: FutureBuilder(
           future: _loadData(),

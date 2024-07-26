@@ -129,14 +129,6 @@ class _BookSaleInvoiceEditState extends State<BookSaleInvoiceEdit> {
             },
             icon: const Icon(Icons.arrow_back),
           ),
-          actions: [
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.search,
-                  size: 29,
-                )),
-          ],
         ),
         body: Padding(
             padding:
@@ -258,7 +250,7 @@ class _BookSaleInvoiceEditState extends State<BookSaleInvoiceEdit> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text('Ngày nhập',
+                                  Text('Ngày mua',
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -267,6 +259,7 @@ class _BookSaleInvoiceEditState extends State<BookSaleInvoiceEdit> {
                               ),
                               const SizedBox(height: 4),
                               Material(
+                                borderRadius: BorderRadius.circular(4),
                                 child: DatePickerBox(
                                   initialDate: DateFormat('dd/MM/yy')
                                       .parse(widget.editItem.purchaseDate),

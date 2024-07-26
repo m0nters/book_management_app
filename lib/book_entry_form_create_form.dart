@@ -405,12 +405,6 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
         actions: [
           IconButton(onPressed: _addForm, icon: const Icon(Icons.add_circle)),
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                size: 29,
-              )),
-          IconButton(
             onPressed: () {
               showDialog(
                 context: context,
