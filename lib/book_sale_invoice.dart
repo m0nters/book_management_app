@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'book_sale_invoice_create_invoice.dart';
+import 'book_sale_invoice_edit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:diacritic/diacritic.dart';
 
-class InvoiceData {
+class InvoiceDataForTicket {
   final String invoiceCode;
   final String customerName;
+  final String genre;
   final String bookName;
   final String purchaseDate;
   final int quantity;
   final int price;
 
-  InvoiceData({
+  InvoiceDataForTicket({
     required this.invoiceCode,
     required this.customerName,
+    required this.genre,
     required this.bookName,
     required this.purchaseDate,
     required this.quantity,
@@ -33,45 +37,64 @@ class InvoiceData {
   }
 }
 
+class InvoiceDataForForm {
+  String title;
+  String category;
+  int price;
+  int quantity;
+
+  InvoiceDataForForm({
+    required this.title,
+    required this.category,
+    required this.price,
+    required this.quantity,
+  });
+}
+
 // Fetch data from server to this list here
-List<InvoiceData> dataList = [
-  InvoiceData(
-    invoiceCode: 'HĐ22541252',
-    customerName: 'Trịnh Anh Tài',
-    bookName: 'Chiến tranh tiền tệ',
-    purchaseDate: '29/06/2024',
-    quantity: 3,
-    price: 155000,
-  ),
-  InvoiceData(
+List<InvoiceDataForTicket> dataList = [
+  InvoiceDataForTicket(
     invoiceCode: 'HĐ98242142',
     customerName: 'Trịnh Anh Tài',
     bookName: 'Mùa hè không tên',
+    genre: "Tiểu thuyết",
     purchaseDate: '30/06/2024',
     quantity: 1,
     price: 184000,
   ),
-  InvoiceData(
+  InvoiceDataForTicket(
+    invoiceCode: 'HĐ22541252',
+    customerName: 'Trịnh Anh Tài',
+    bookName: 'Chiến tranh tiền tệ',
+    genre: "Kinh tế",
+    purchaseDate: '30/06/2024',
+    quantity: 3,
+    price: 155000,
+  ),
+  InvoiceDataForTicket(
     invoiceCode: 'HĐ09284351',
     customerName: 'Nguyễn Đức Hưng',
     bookName: 'Mắt biếc',
+    genre: 'Truyện ngắn',
     purchaseDate: '30/06/2024',
     quantity: 1,
     price: 434600,
   ),
-  InvoiceData(
+  InvoiceDataForTicket(
     invoiceCode: 'HĐ12098417',
     customerName: 'Trần Nhật Huy',
     bookName: 'Đám Trẻ Ở Đại Dương Đen',
+    genre: 'Tiểu thuyết',
     purchaseDate: '28/06/2024',
     quantity: 1,
     price: 74250,
   ),
-  InvoiceData(
+  InvoiceDataForTicket(
     invoiceCode: 'HĐ73249129',
     customerName: 'Nguyễn Quốc Thuần',
     bookName:
         'Các Siêu Cường AI: Trung Quốc, Thung Lũng Silicon, Và Trật Tự Thế Giới Mới',
+    genre: 'Kinh tế',
     purchaseDate: '29/06/2024',
     quantity: 1,
     price: 112000,
@@ -81,11 +104,13 @@ List<InvoiceData> dataList = [
 /// Hóa đơn bán sách
 class BookSaleInvoice extends StatefulWidget {
   final VoidCallback backContextSwitcher;
+  final VoidCallback reloadContext;
   final Function(Widget) internalScreenContextSwitcher;
 
   const BookSaleInvoice(
       {super.key,
       required this.backContextSwitcher,
+      required this.reloadContext,
       required this.internalScreenContextSwitcher});
 
   @override
@@ -101,6 +126,7 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
   }
 
   void sortDates({required bool ascending}) {
+    // sort date => if dates equal, sort customers' names => if they are equal, sort books' names
     dataList.sort((a, b) {
       DateTime dateA = DateTime.parse(
           '${a.purchaseDate.split('/')[2]}-${a.purchaseDate.split('/')[1]}-${a.purchaseDate.split('/')[0]}');
@@ -112,13 +138,20 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
       if (dateComparison != 0) {
         return dateComparison;
       } else {
-        return a.customerName.compareTo(b.customerName);
+        int customerNameComparison = removeDiacritics(a.customerName)
+            .compareTo(removeDiacritics(b.customerName));
+        if (customerNameComparison != 0) {
+          return customerNameComparison;
+        } else {
+          return removeDiacritics(a.bookName)
+              .compareTo(removeDiacritics(b.bookName));
+        }
       }
     });
     setState(() {});
   }
 
-  List<Widget> buildUI(List<InvoiceData> dataList) {
+  List<Widget> buildResultTicketsUI(List<InvoiceDataForTicket> dataList) {
     return dataList.expand((dataItem) {
       return [
         BookSaleInvoiceInfoTicket(
@@ -128,7 +161,12 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
               .map((entry) => {'title': entry.key, 'content': entry.value})
               .toList(),
           backgroundImage: backgroundImageTicket,
-          onTap: () {},
+          onTap: () {
+            widget.internalScreenContextSwitcher(BookSaleInvoiceEdit(
+                backContextSwitcher: widget.backContextSwitcher,
+                reloadContext: widget.reloadContext,
+                editItem: dataItem));
+          },
         ),
         const SizedBox(height: 24),
       ];
@@ -156,13 +194,6 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
             color: const Color.fromRGBO(120, 171, 168, 1),
           ),
           actions: [
-            IconButton(
-                onPressed: () {
-                  widget.internalScreenContextSwitcher(
-                      BookSaleInvoiceCreateInvoice(
-                          backContextSwitcher: widget.backContextSwitcher));
-                },
-                icon: const Icon(Icons.add_circle)),
             IconButton(
                 onPressed: () {},
                 icon: const Icon(
@@ -261,9 +292,10 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
                             child: Material(
                               color: const Color.fromRGBO(241, 248, 232, 1),
                               child: ListView.builder(
-                                itemCount: buildUI(dataList).length,
+                                itemCount:
+                                    buildResultTicketsUI(dataList).length,
                                 itemBuilder: (context, index) {
-                                  return buildUI(dataList)[index];
+                                  return buildResultTicketsUI(dataList)[index];
                                 },
                               ),
                             ),

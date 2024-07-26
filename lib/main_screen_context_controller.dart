@@ -16,15 +16,15 @@ class MainFunctionsContextController extends StatefulWidget {
   createState() => _MainFunctionsContextControllerState();
 }
 
-
-
 class _MainFunctionsContextControllerState
     extends State<MainFunctionsContextController> {
   late int
       _selectedIndex; // ALWAYS need this to adjust selected item, colors,... for bottom bar's visualization
   late Widget _currentContext;
-  List<Map<int, Widget>> backButtonScreensHistory = []; // what were all of the last screens to navigate back
-  Map<int, Widget> bottomBarScreensHistory = {}; // what was the last screen of a specific item in bottom bar
+  List<Map<int, Widget>> backButtonScreensHistory =
+      []; // what were all of the last screens to navigate back
+  Map<int, Widget> bottomBarScreensHistory =
+      {}; // what was the last screen of a specific item in bottom bar
   static List<Widget> _mainContextsFirstPage =
       []; // don't know whether we should use static or not, this MainFunctionsContextController object's only used 1 time in `over_screen_context_controller.dart` anyway
 
@@ -73,10 +73,12 @@ class _MainFunctionsContextControllerState
       ),
       BookEntryForm(
         backContextSwitcher: goBack,
+        reloadContext: forceRestartToFirstScreenForInternalScreen,
         internalScreenContextSwitcher: internalContextSwitcher,
       ),
       BookSaleInvoice(
         backContextSwitcher: goBack,
+        reloadContext: forceRestartToFirstScreenForInternalScreen,
         internalScreenContextSwitcher: internalContextSwitcher,
       ),
       Bill(
@@ -94,18 +96,18 @@ class _MainFunctionsContextControllerState
   // this function is only for bottom bar navigation externally
   void externalContextSwitcher(int index) {
     setState(() {
-      if (index != _selectedIndex) { // in case user spams one item many times and it also saves in the history lol
+      if (index != _selectedIndex) {
+        // in case user spams one item many times and it also saves in the history lol
         backButtonScreensHistory.add({_selectedIndex: _currentContext});
 
         bottomBarScreensHistory[_selectedIndex] = _currentContext;
       }
-      
+
       _selectedIndex = index;
 
       // If the selected index has a screen history, use the last one
       if (bottomBarScreensHistory.containsKey(_selectedIndex)) {
-        _currentContext =
-            bottomBarScreensHistory[_selectedIndex]!;
+        _currentContext = bottomBarScreensHistory[_selectedIndex]!;
       } else {
         _currentContext = _mainContextsFirstPage[_selectedIndex];
       }
@@ -124,9 +126,9 @@ class _MainFunctionsContextControllerState
       _selectedIndex = recentHistory.keys.first;
       _currentContext = recentHistory.values.first;
 
-      // by logic, there's no way that when you back to home screen and the `widgetsHistory` list still has elements
-      // it all thanks to `switchMainContext` function above
-      // so no delete `widgetsHistory` list here!
+      // by logic, there's no way that when you back to home screen and the `backButtonScreensHistory` list still has elements
+      // it all thanks to `externalContextSwitcher` function above
+      // so no delete `backButtonScreensHistory` list here!
     });
   }
 
@@ -138,13 +140,21 @@ class _MainFunctionsContextControllerState
     });
   }
 
-  void forceRestartToFirstScreen(int index) { // in case there's many widget histories and you can't go back to first page
+  void forceRestartToFirstScreenForBottomBar(int index) {
+    // in case there's many widget histories and you can't go back to first page
     setState(() {
       // double tap other item will result nothing
       if (index == _selectedIndex) {
         _currentContext = _mainContextsFirstPage[_selectedIndex];
         bottomBarScreensHistory.remove(index);
       }
+    });
+  }
+
+  void forceRestartToFirstScreenForInternalScreen() {
+    setState(() {
+      _currentContext = _mainContextsFirstPage[_selectedIndex];
+      bottomBarScreensHistory.remove(_selectedIndex);
     });
   }
 
@@ -165,7 +175,7 @@ class _MainFunctionsContextControllerState
                 width: 360,
                 decoration: BoxDecoration(
                   color: _bottomNavigationBarBackgroundColorOptions[
-                  _selectedIndex],
+                      _selectedIndex],
                   borderRadius: const BorderRadius.all(Radius.circular(100)),
                 ),
                 child: BottomNavigationBar(
@@ -173,7 +183,8 @@ class _MainFunctionsContextControllerState
                   items: List.generate(5, (index) {
                     return BottomNavigationBarItem(
                       icon: GestureDetector(
-                        onDoubleTap: () => forceRestartToFirstScreen(index),
+                        onDoubleTap: () =>
+                            forceRestartToFirstScreenForBottomBar(index),
                         child: getIconForIndex(index),
                       ),
                       label: getLabelForIndex(index),
@@ -182,7 +193,7 @@ class _MainFunctionsContextControllerState
                   currentIndex: _selectedIndex,
                   selectedItemColor: _selectedItemColorOptions[_selectedIndex],
                   unselectedItemColor:
-                  _unselectedItemColorOptions[_selectedIndex],
+                      _unselectedItemColorOptions[_selectedIndex],
                   type: BottomNavigationBarType.fixed,
                   backgroundColor: Colors.transparent,
                   // don't need since we override the outer container for this

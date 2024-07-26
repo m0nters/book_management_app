@@ -1,23 +1,15 @@
 import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
+import 'book_entry_form.dart';
 import 'setting.dart';
+import 'package:flutter/services.dart'; // Import for FilteringTextInputFormatter
 
 late DateTime serverUploadedDateInputData;
-List<BookEntryInfo> serverUploadedBookEntriesData = [];
+List<EntryDataForForm> serverUploadedBookEntriesData = [];
 
-class BookEntryInfo {
-  String title;
-  String category;
-  String author;
-  int quantity;
+// group data in group for convenience
 
-  BookEntryInfo({
-    required this.title,
-    required this.category,
-    required this.author,
-    required this.quantity,
-  });
-}
+// =============================================================================
 
 // Book Input Form
 class BookEntryInputForm extends StatefulWidget {
@@ -53,17 +45,6 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
   final TextEditingController _quantityController = TextEditingController();
   String _genreController = '';
 
-  final List<String> _genres = [
-    'Tình cảm',
-    'Bí ẩn',
-    'Giả tưởng và khoa học viễn tưởng',
-    'Kinh dị, giật gân',
-    'Truyền cảm hứng',
-    'Tiểu sử, tự truyện và hồi ký',
-    'Truyện ngắn',
-    'Lịch sử',
-  ];
-
   @override
   void dispose() {
     _titleController.dispose();
@@ -98,18 +79,19 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
             // content area
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-                color: widget.contentAreaColor,
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(8),
-                    bottomRight: Radius.circular(8)
-                ),
-              boxShadow: hasShadow ? const [
-                BoxShadow(
-                  offset: Offset(0, 4),
-                  color: Colors.grey,
-                  blurRadius: 4,
-                )
-              ] : null,
+              color: widget.contentAreaColor,
+              borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(8),
+                  bottomRight: Radius.circular(8)),
+              boxShadow: hasShadow
+                  ? const [
+                      BoxShadow(
+                        offset: Offset(0, 4),
+                        color: Colors.grey,
+                        blurRadius: 4,
+                      )
+                    ]
+                  : null,
             ),
             child: Column(
               children: [
@@ -171,7 +153,7 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
                           ),
                           const SizedBox(height: 4),
                           CustomDropdownMenu(
-                            options: _genres,
+                            options: genres,
                             action: (genre) => _genreController = genre ?? '',
                             fillColor: widget.contentInputFormFillColor,
                             width: double.infinity,
@@ -244,6 +226,10 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
                           TextField(
                             controller: _quantityController,
                             keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9]')), // Allow only digits
+                            ],
                             decoration: InputDecoration(
                               isDense: true,
                               filled: true,
@@ -277,8 +263,8 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
     });
   }
 
-  BookEntryInfo getBookEntryData() {
-    return BookEntryInfo(
+  EntryDataForForm getBookEntryData() {
+    return EntryDataForForm(
       title: _titleController.text,
       category: _genreController,
       author: _authorController.text,
@@ -287,10 +273,14 @@ class _BookEntryInputFormState extends State<BookEntryInputForm> {
   }
 }
 
+// =============================================================================
+
 class BookEntryFormCreateForm extends StatefulWidget {
   final VoidCallback backContextSwitcher;
 
-  const BookEntryFormCreateForm({super.key, required this.backContextSwitcher});
+  const BookEntryFormCreateForm(
+      {super.key,
+      required this.backContextSwitcher,});
 
   @override
   State<BookEntryFormCreateForm> createState() =>
@@ -352,34 +342,41 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
       _isSaving = true; // Set saving state to true
     });
 
-    String dateSaved = (serverUploadedDateInputData.year == DateTime.now().year &&
-        serverUploadedDateInputData.month == DateTime.now().month &&
-        serverUploadedDateInputData.day == DateTime.now().day)
+    String dateSaved = (serverUploadedDateInputData.year ==
+                DateTime.now().year &&
+            serverUploadedDateInputData.month == DateTime.now().month &&
+            serverUploadedDateInputData.day == DateTime.now().day)
         ? "hôm nay"
         : "ngày ${serverUploadedDateInputData.day}/${serverUploadedDateInputData.month}/${serverUploadedDateInputData.year}";
 
     if (_formWidgets.isEmpty) {
-      _showSnackBar('Không có dữ liệu gì để lưu cho $dateSaved!', isError: true);
+      _showSnackBar('Không có dữ liệu gì để lưu cho $dateSaved!',
+          isError: true);
       return;
     }
 
     serverUploadedBookEntriesData =
         _formKeys.map((key) => key.currentState!.getBookEntryData()).toList();
 
-    // add the code to upload data to server here
+    // add the code to upload data to server here (backend)
 
     _showSnackBar('Đã lưu các phiếu nhập sách cho $dateSaved!');
   }
 
   void _showSnackBar(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message,
-            style: const TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
-        backgroundColor: isError ? const Color.fromRGBO(255, 105, 105, 1) : Colors.green,
-        duration: const Duration(seconds: 2),
-      ),
-    ).closed.then((reason) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+          SnackBar(
+            content: Text(message,
+                style:
+                    const TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
+            backgroundColor:
+                isError ? const Color.fromRGBO(255, 105, 105, 1) : Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        )
+        .closed
+        .then((reason) {
       setState(() {
         _isSaving = false; // Reset saving state after snack bar is closed
       });
@@ -413,6 +410,36 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
                 Icons.search,
                 size: 29,
               )),
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Lưu ý về nhập trùng dữ liệu",
+                        style: TextStyle(color: Color.fromRGBO(34, 12, 68, 1))),
+                    // Customize the title
+                    content: Text(
+                      "Nếu có nhiều hơn 1 phiếu nhập có cùng thông tin sách, dữ liệu về số lượng nhập ngày hôm đó cho cuốn sách đó khi lưu lại sẽ được cộng gộp các phiếu liên quan lại với nhau.",
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
+                    // Customize the content
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: const Text("Đã hiểu",
+                            style: TextStyle(
+                                color: Color.fromRGBO(255, 105, 105, 1))),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.info, size: 25),
+          )
         ],
       ),
       body: Padding(

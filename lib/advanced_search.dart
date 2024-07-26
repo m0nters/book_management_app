@@ -4,6 +4,8 @@ import 'overall_screen_context_controller.dart';
 import 'mutual_widgets.dart';
 import 'setting.dart';
 import 'package:diacritic/diacritic.dart';
+import 'package:flutter/services.dart'; // Import for FilteringTextInputFormatter
+
 
 late String serverUploadedTitleInputData;
 late String serverUploadedGenreInputData;
@@ -372,6 +374,9 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
                           TextField(
                             controller: _quantityController,
                             keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // Allow only digits
+                            ],
                             decoration: InputDecoration(
                               isDense: true,
                               filled: true,
@@ -510,19 +515,24 @@ class _SearchResultState extends State<SearchResult> {
     }
   }
 
-  void rebuildResultData() {
-    if (filterOptionSelected != null) {
-      filterStatus(filterOptionSelected); // get the processedDataList
-    }
-    // then sort on it
+  void sortOption(String? optionSelected) {
     if (sortOptionSelected == "Bán chạy tháng") {
       bestToWorstSellerSort();
     } else if (sortOptionSelected == "Mới nhất") {
       newestToOldestSort();
     } else if (sortOptionSelected == "Giá từ thấp tới cao") {
       sortPrices(ascending: true);
-    } else {
+    } else if (sortOptionSelected == "Giá từ cao tới thấp") {
       sortPrices(ascending: false);
+    }
+  }
+
+  void rebuildResultData() {
+    if (filterOptionSelected != null) {
+      filterStatus(filterOptionSelected);
+    }
+    if (sortOptionSelected != null) {
+      sortOption(sortOptionSelected);
     }
   }
 
@@ -617,7 +627,7 @@ class AdvancedSearch extends StatefulWidget {
 
 class _AdvancedSearchState extends State<AdvancedSearch> {
   void fetchDataFromServer() {
-    // your backend here
+    processedDataList.removeLast();
   }
 
   @override
@@ -648,7 +658,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 400,
+                  height: 330, // some phones get render overflowed if the value is below this
                   child: AdvancedSearchForm(
                     titleBarColor: const Color.fromRGBO(7, 25, 82, 1),
                     titleColor: const Color.fromRGBO(238, 237, 235, 1),
@@ -665,7 +675,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                   ),
                 ),
                 const SizedBox(
-                    height: 450,
+                    height: 500,
                     child: SearchResult()),
               ],
             ),

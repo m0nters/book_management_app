@@ -1,24 +1,12 @@
 import 'package:flutter/material.dart';
 import 'mutual_widgets.dart';
+import 'book_sale_invoice.dart';
 import 'setting.dart';
+import 'package:flutter/services.dart'; // Import for FilteringTextInputFormatter
 
 late DateTime serverUploadedDateInputData;
 late String serverUploadedCustomerNameInputData;
-List<BookSaleInfo> serverUploadedBookSaleInvoicesData = [];
-
-class BookSaleInfo {
-  String title;
-  String category;
-  int price;
-  int quantity;
-
-  BookSaleInfo({
-    required this.title,
-    required this.category,
-    required this.price,
-    required this.quantity,
-  });
-}
+List<InvoiceDataForForm> serverUploadedBookSaleInvoicesData = [];
 
 // Book Input Form
 class BookSaleInvoiceInputForm extends StatefulWidget {
@@ -53,17 +41,6 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
   String genreController = '';
-
-  final List<String> genres = [
-    'Tình cảm',
-    'Bí ẩn',
-    'Giả tưởng và khoa học viễn tưởng',
-    'Kinh dị, giật gân',
-    'Truyền cảm hứng',
-    'Tiểu sử, tự truyện và hồi ký',
-    'Truyện ngắn',
-    'Lịch sử',
-  ];
 
   @override
   void dispose() {
@@ -248,6 +225,10 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
                           TextField(
                             controller: _quantityController,
                             keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9]')), // Allow only digits
+                            ],
                             decoration: InputDecoration(
                               isDense: true,
                               filled: true,
@@ -281,8 +262,8 @@ class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
     });
   }
 
-  BookSaleInfo getBookSaleInvoiceData() {
-    return BookSaleInfo(
+  InvoiceDataForForm getBookSaleInvoiceData() {
+    return InvoiceDataForForm(
       title: _titleController.text,
       category: genreController,
       price: int.tryParse(_priceController.text) ?? 0,
@@ -438,6 +419,36 @@ class _BookSaleInvoiceCreateInvoiceState
                 Icons.search,
                 size: 29,
               )),
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    backgroundColor: const Color.fromRGBO(241, 248, 232, 1),
+                    title: const Text("Lưu ý về nhập trùng dữ liệu",
+                        style:
+                            TextStyle(color: Color.fromRGBO(120, 171, 168, 1))),
+                    // Customize the title
+                    content: Text(
+                        "Nếu có nhiều hơn 1 phiếu nhập có cùng thông tin sách, dữ liệu về số lượng nhập ngày hôm đó cho cuốn sách đó khi lưu lại sẽ được cộng gộp các phiếu liên quan lại với nhau.", style: TextStyle(color: Colors.grey[700]),),
+                    // Customize the content
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                        child: const Text("Đã hiểu",
+                            style: TextStyle(
+                                color: Color.fromRGBO(239, 156, 102, 1))),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.info, size: 25),
+          )
         ],
       ),
       body: Padding(
@@ -476,14 +487,16 @@ class _BookSaleInvoiceCreateInvoiceState
                 ),
                 Container(
                   width: 196,
-                  decoration: BoxDecoration (
-                    boxShadow: hasShadow ? const [
-                      BoxShadow(
-                        offset: Offset(0, 4),
-                        color: Colors.grey,
-                        blurRadius: 4,
-                      )
-                    ] : null,
+                  decoration: BoxDecoration(
+                    boxShadow: hasShadow
+                        ? const [
+                            BoxShadow(
+                              offset: Offset(0, 4),
+                              color: Colors.grey,
+                              blurRadius: 4,
+                            )
+                          ]
+                        : null,
                   ),
                   child: TextField(
                     controller: _customerNameController,
@@ -506,7 +519,7 @@ class _BookSaleInvoiceCreateInvoiceState
               ],
             ),
             const SizedBox(
-              height: 46,
+              height: 20,
             ),
             CustomRoundedButton(
               backgroundColor: const Color.fromRGBO(239, 156, 102, 1),
@@ -517,7 +530,7 @@ class _BookSaleInvoiceCreateInvoiceState
               fontSize: 24,
             ),
             const SizedBox(
-              height: 46,
+              height: 20,
             ),
             Expanded(
               // Make the forms scrollable

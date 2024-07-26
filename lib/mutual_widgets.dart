@@ -3,6 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'setting.dart';
 
+List<String> genres = [
+  'Tình cảm',
+  'Bí ẩn',
+  'Giả tưởng và khoa học viễn tưởng',
+  'Khoa học công nghệ',
+  'Kinh dị, giật gân',
+  'Kinh tế',
+  'Truyền cảm hứng',
+  'Tiểu thuyết',
+  'Tiểu sử, tự truyện và hồi ký',
+  'Truyện ngắn',
+  'Lịch sử',
+]; // backend fetch "Thể loại" from server to this list
+
 class CustomRoundedButton extends StatelessWidget {
   final Color backgroundColor;
   final Color foregroundColor;
