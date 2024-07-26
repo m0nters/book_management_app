@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'overall_screen_context_controller.dart';
-import 'home.dart';
-import 'book_entry_form.dart';
-import 'book_sale_invoice.dart';
-import 'bill.dart';
-import 'debt_report.dart';
+import '../screens/home/home.dart';
+import '../screens/book_entry_form/book_entry_form.dart';
+import '../screens/book_sale_invoice/book_sale_invoice.dart';
+import '../screens/bill/bill.dart';
+import '../screens/debt_report/debt_report.dart';
 
 class MainFunctionsContextController extends StatefulWidget {
   final Function(int) overallScreenContextSwitcher;

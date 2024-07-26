@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'setting.dart';
-import 'mutual_widgets.dart';
+import '../setting/setting.dart';
+import '../../controllers/mutual_widgets.dart';
 import 'book_entry_form.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart'; // Import for FilteringTextInputFormatter

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'main_screen_context_controller.dart';
-import 'advanced_search.dart';
-import 'setting.dart';
+import '../screens/advanced_search/advanced_search.dart';
+import '../screens/setting/setting.dart';
 
 enum MainFunctionsContexts {
   home,

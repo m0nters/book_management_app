@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'overall_screen_context_controller.dart';
-import 'setting.dart';
+import '../../controllers/overall_screen_context_controller.dart';
+import '../setting/setting.dart';
 
 /// The `controller` property is required and should be used to manage the
 /// text input. The `onSubmitted` callback is optional and can be used to

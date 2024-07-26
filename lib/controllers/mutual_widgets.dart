@@ -1,7 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'setting.dart';
+import '../screens/setting/setting.dart';
 
 List<String> genres = [
   'Tình cảm',

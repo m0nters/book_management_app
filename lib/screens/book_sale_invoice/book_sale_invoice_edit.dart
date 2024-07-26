@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'setting.dart';
-import 'mutual_widgets.dart';
+import '../setting/setting.dart';
+import '../../controllers/mutual_widgets.dart';
 import 'book_sale_invoice.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart'; // Import for FilteringTextInputFormatter
@@ -271,7 +271,7 @@ class _BookSaleInvoiceEditState extends State<BookSaleInvoiceEdit> {
                               )
                             ],
                           ),
-                          const SizedBox(height: 28),
+                          const SizedBox(height: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -279,9 +279,6 @@ class _BookSaleInvoiceEditState extends State<BookSaleInvoiceEdit> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Icon(Icons.people,
-                                      color: widget.contentTitleColor),
-                                  const SizedBox(width: 4),
                                   Text('Tên khách hàng',
                                       style: TextStyle(
                                           fontSize: 16,
@@ -290,25 +287,29 @@ class _BookSaleInvoiceEditState extends State<BookSaleInvoiceEdit> {
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              TextField(
-                                controller: _customerNameController,
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  filled: true,
-                                  fillColor:
-                                  widget.contentInputFormFillColor,
-                                  hintText: "Nhập tên khách hàng",
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(4),
+                              SizedBox(
+                                width: 300,
+                                child: TextField(
+                                  controller: _customerNameController,
+                                  decoration: InputDecoration(
+                                    suffixIcon: const Icon(Icons.people),
+                                    isDense: true,
+                                    filled: true,
+                                    fillColor:
+                                    widget.contentInputFormFillColor,
+                                    hintText: "Nhập tên khách hàng",
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: widget.textFieldBorderColor,
+                                          width: 1.0),
+                                    ),
                                   ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: widget.textFieldBorderColor,
-                                        width: 1.0),
-                                  ),
+                                  style: TextStyle(
+                                      color: widget.contentInputColor),
                                 ),
-                                style: TextStyle(
-                                    color: widget.contentInputColor),
                               )
                             ],
                           ),

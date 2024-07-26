@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'mutual_widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:diacritic/diacritic.dart';
+import '../../controllers/mutual_widgets.dart';
 import 'book_entry_form_create_form.dart';
 import 'book_entry_form_edit.dart';
 

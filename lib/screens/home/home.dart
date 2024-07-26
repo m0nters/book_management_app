@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_widgets.dart';
-import 'overall_screen_context_controller.dart';
+import '../../controllers/overall_screen_context_controller.dart';
 
 class Home extends StatelessWidget {
   final Function(int) mainScreenContextSwitcher;
