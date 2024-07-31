@@ -249,7 +249,7 @@ class _BookEntryFormEditState extends State<BookEntryFormEdit> {
                                 children: [
                                   Text('Ngày nhập',
                                       style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                           color: widget.contentTitleColor)),
                                 ],

@@ -429,7 +429,8 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
 // ============================================================================
 
 class SearchResult extends StatefulWidget {
-  const SearchResult({super.key});
+  final ScrollController searchResultScrollController;
+  const SearchResult({super.key, required this.searchResultScrollController});
 
   @override
   State<SearchResult> createState() => _SearchResultState();
@@ -537,8 +538,15 @@ class _SearchResultState extends State<SearchResult> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    sortOptionSelected = "Bán chạy tháng";
+    filterOptionSelected = "Tất cả";
     rebuildResultData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -564,16 +572,17 @@ class _SearchResultState extends State<SearchResult> {
               ),
             ),
             CustomDropdownMenu(
-              hintText: "Trống",
               options: const [
                 'Bán chạy tháng',
                 'Mới nhất',
                 'Giá từ thấp tới cao',
                 'Giá từ cao tới thấp'
               ],
+              initialValue: sortOptionSelected,
               action: (selected) {
                 setState(() {
                   sortOptionSelected = selected;
+                  rebuildResultData();
                 });
               },
               fillColor: Colors.white,
@@ -582,11 +591,12 @@ class _SearchResultState extends State<SearchResult> {
             ),
             const Spacer(),
             CustomDropdownMenu(
-              hintText: "Trống",
               options: const ['Tất cả', 'Còn hàng', 'Hết hàng'],
+              initialValue: filterOptionSelected,
               action: (status) {
                 setState(() {
                   filterOptionSelected = status;
+                  rebuildResultData();
                 });
               },
               fillColor: Colors.white,
@@ -602,6 +612,7 @@ class _SearchResultState extends State<SearchResult> {
           child: Material(
             color: const Color.fromRGBO(235, 244, 246, 1),
             child: ListView.builder(
+              controller: widget.searchResultScrollController,
               itemCount: buildResultCardsUI(processedDataList).length,
               itemBuilder: (context, index) {
                 return buildResultCardsUI(processedDataList)[index];
@@ -626,8 +637,38 @@ class AdvancedSearch extends StatefulWidget {
 }
 
 class _AdvancedSearchState extends State<AdvancedSearch> {
+  final ScrollController _totalScrollController = ScrollController();
+  final ScrollController _searchResultScrollController = ScrollController();
   void fetchDataFromServer() {
     processedDataList.removeLast();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to scroll changes in the result list view
+    _searchResultScrollController.addListener(() {
+      if (_searchResultScrollController.position.atEdge) {
+        if (_searchResultScrollController.position.pixels != 0) {
+          // If at the bottom, scroll the search form to the bottom as well
+          _totalScrollController.animateTo(
+            _totalScrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            // Adjust speed if needed
+            curve: Curves.easeOut,
+          );
+        }
+        else {
+          // If at the top, scroll the search form to the top as well
+          _totalScrollController.animateTo(
+            _totalScrollController.position.minScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            // Adjust speed if needed
+            curve: Curves.easeOut,
+          );
+        }
+      }
+    });
   }
 
   @override
@@ -654,31 +695,30 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 330, // some phones get render overflowed if the value is below this
-                  child: AdvancedSearchForm(
-                    titleBarColor: const Color.fromRGBO(7, 25, 82, 1),
-                    titleColor: const Color.fromRGBO(238, 237, 235, 1),
-                    contentAreaColor: const Color.fromRGBO(55, 183, 195, 1),
-                    contentTitleColor: const Color.fromRGBO(7, 25, 82, 1),
-                    contentInputColor: const Color.fromRGBO(7, 25, 82, 1),
-                    contentInputFormFillColor: Colors.white,
-                    textFieldBorderColor: Colors.grey,
-                    fetchDataFunction: () {
-                      setState(() {
-                        fetchDataFromServer();
-                      });
-                    },
-                  ),
+          child: ListView(
+            controller: _totalScrollController,
+            children: [
+              SizedBox(
+                height: 330, // some phones get render overflowed if the value is below this
+                child: AdvancedSearchForm(
+                  titleBarColor: const Color.fromRGBO(7, 25, 82, 1),
+                  titleColor: const Color.fromRGBO(238, 237, 235, 1),
+                  contentAreaColor: const Color.fromRGBO(55, 183, 195, 1),
+                  contentTitleColor: const Color.fromRGBO(7, 25, 82, 1),
+                  contentInputColor: const Color.fromRGBO(7, 25, 82, 1),
+                  contentInputFormFillColor: Colors.white,
+                  textFieldBorderColor: Colors.grey,
+                  fetchDataFunction: () {
+                    setState(() {
+                      fetchDataFromServer();
+                    });
+                  },
                 ),
-                const SizedBox(
-                    height: 500,
-                    child: SearchResult()),
-              ],
-            ),
+              ),
+              SizedBox(
+                  height: MediaQuery.of(context).size.height - 330,
+                  child: SearchResult(searchResultScrollController: _searchResultScrollController,)),
+            ],
           ),
         ));
   }

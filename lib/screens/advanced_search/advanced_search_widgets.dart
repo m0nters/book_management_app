@@ -50,7 +50,7 @@ class LowStockLabel extends AvailabilityLabel {
       : super(
       text: 'Còn ít hàng',
       backgroundColor: const Color.fromRGBO(239, 156, 102, 1),
-      message: "Số lượng it hơn 100");
+      message: "Số lượng ít hơn 100");
 }
 
 class OutOfStockLabel extends AvailabilityLabel {

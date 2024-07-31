@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'controllers/overall_screen_context_controller.dart';
-import 'debug_screen.dart';
 
 void main() {
   runApp(const BookstoreManagementApp());
@@ -19,7 +18,6 @@ class BookstoreManagementApp extends StatelessWidget {
         // highlightColor: Colors.transparent, // Disable highlight for long presses
       ),
       home: const SafeArea(child: MainScreenContextController()),
-      // home: const DebugScreen(),
     );
   }
 }

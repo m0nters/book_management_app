@@ -216,37 +216,49 @@ class _MainFunctionsContextControllerState
     );
   }
 
+  // can't use switch case since it only accepts `const int`, while these are `final` type
+  // we have to compensate the speed for the extensibility of the program, if we
+  // really have to use switch case, there won't be thing like `MainFunctionsContexts.home.index`
+  // but rather just magic number like `0`
   Widget getIconForIndex(int index) {
-    switch (index) {
-      case 0: // unfortunate we can't use `MainFunctionsContexts.home.index` since dart doesn't consider it as a `const`, in fact, it's `final`, please also notice this place too when changing order
-        return const Icon(Icons.home);
-      case 1:
-        return const Icon(Icons.input);
-      case 2:
-        return const Icon(Icons.receipt);
-      case 3:
-        return const Icon(Icons.monetization_on_outlined);
-      case 4:
-        return const Icon(Icons.assignment);
-      default:
-        return const Icon(Icons.home);
+    if (index == MainFunctionsContexts.home.index) {
+      return const Icon(Icons.home);
+    }
+    else if (index == MainFunctionsContexts.bookEntryForm.index) {
+      return const Icon(Icons.input);
+    }
+    else if (index == MainFunctionsContexts.bookSaleInvoice.index) {
+      return const Icon(Icons.receipt);
+    }
+    else if (index == MainFunctionsContexts.bill.index) {
+      return const Icon(Icons.monetization_on_outlined);
+    }
+    else if (index == MainFunctionsContexts.debtReport.index) {
+      return const Icon(Icons.assignment);
+    }
+    else {
+      return const Icon(Icons.error);
     }
   }
 
   String getLabelForIndex(int index) {
-    switch (index) {
-      case 0:
-        return 'Trang chủ';
-      case 1:
-        return 'Nhập sách';
-      case 2:
-        return 'Hóa đơn';
-      case 3:
-        return 'Thu tiền';
-      case 4:
-        return 'Báo cáo';
-      default:
-        return 'Trang chủ';
+    if (index == MainFunctionsContexts.home.index) {
+      return 'Trang chủ';
+    }
+    else if (index == MainFunctionsContexts.bookEntryForm.index) {
+      return 'Nhập sách';
+    }
+    else if (index == MainFunctionsContexts.bookSaleInvoice.index) {
+      return 'Hóa đơn';
+    }
+    else if (index == MainFunctionsContexts.bill.index) {
+      return 'Thu tiền';
+    }
+    else if (index == MainFunctionsContexts.debtReport.index) {
+      return 'Báo cáo';
+    }
+    else {
+      return 'Chưa cài đặt';
     }
   }
 }

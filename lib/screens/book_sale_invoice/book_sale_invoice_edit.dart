@@ -252,7 +252,7 @@ class _BookSaleInvoiceEditState extends State<BookSaleInvoiceEdit> {
                                 children: [
                                   Text('Ngày mua',
                                       style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                           color: widget.contentTitleColor)),
                                 ],
@@ -281,7 +281,7 @@ class _BookSaleInvoiceEditState extends State<BookSaleInvoiceEdit> {
                                 children: [
                                   Text('Tên khách hàng',
                                       style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold,
                                           color: widget.contentTitleColor)),
                                 ],
@@ -430,6 +430,7 @@ class _BookSaleInvoiceEditState extends State<BookSaleInvoiceEdit> {
                                               color: widget.textFieldBorderColor,
                                               width: 1.0),
                                         ),
+                                        suffixText: "VND",
                                       ),
                                       style: TextStyle(
                                           color: widget.contentInputColor),
