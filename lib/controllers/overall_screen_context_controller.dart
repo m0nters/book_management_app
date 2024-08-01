@@ -24,7 +24,7 @@ class _OverallScreenContextControllerState
     extends State<MainScreenContextController> {
   late int _selectedIndex;
 
-  static List<Widget> _contextOptions = [];
+  static late Map<int, Widget> _contextOptions;
 
   @override
   void initState() {
@@ -32,14 +32,15 @@ class _OverallScreenContextControllerState
     _selectedIndex = OverallScreenContexts.mainFunctions.index;
 
     // Initialize _contextOptions here to include the switchContext function
-    _contextOptions = [
-      MainFunctionsContextController(
+    _contextOptions = {
+      OverallScreenContexts.mainFunctions.index: MainFunctionsContextController(
           overallScreenContextSwitcher: switchContext),
-      AdvancedSearch(overallScreenContextSwitcher: switchContext),
-      Setting(
+      OverallScreenContexts.advancedSearch.index:
+          AdvancedSearch(overallScreenContextSwitcher: switchContext),
+      OverallScreenContexts.setting.index: Setting(
         overallScreenContextSwitcher: switchContext,
       ),
-    ];
+    };
   }
 
   void switchContext(int index) {
@@ -48,6 +49,6 @@ class _OverallScreenContextControllerState
 
   @override
   Widget build(BuildContext context) {
-    return _contextOptions[_selectedIndex];
+    return _contextOptions[_selectedIndex]!;
   }
 }

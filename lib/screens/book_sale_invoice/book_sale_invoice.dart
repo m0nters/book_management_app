@@ -183,15 +183,8 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
           title: const Text(
             "Hóa đơn bán sách",
             style: TextStyle(
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(120, 171, 168, 1)),
-          ),
-          leading: IconButton(
-            onPressed: () {
-              widget.backContextSwitcher();
-            },
-            icon: const Icon(Icons.arrow_back),
-            color: const Color.fromRGBO(120, 171, 168, 1),
           ),
         ),
         body: FutureBuilder(

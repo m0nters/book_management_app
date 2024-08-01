@@ -402,7 +402,7 @@ class _BookSaleInvoiceCreateInvoiceState
         title: const Text(
           "Lập hóa đơn",
           style: TextStyle(
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.bold,
           ),
         ),
         leading: IconButton(

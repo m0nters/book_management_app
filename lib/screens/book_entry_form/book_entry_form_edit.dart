@@ -116,7 +116,7 @@ class _BookEntryFormEditState extends State<BookEntryFormEdit> {
           title: const Text(
             "Chỉnh sửa",
             style: TextStyle(
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(12, 24, 68, 1)),
           ),
           leading: IconButton(

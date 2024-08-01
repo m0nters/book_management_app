@@ -393,7 +393,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
         title: const Text(
           "Lập phiếu",
           style: TextStyle(
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.bold,
           ),
         ),
         leading: IconButton(

@@ -17,7 +17,10 @@ class _SettingState extends State<Setting> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Cài đặt"),
+          title: const Text(
+            "Cài đặt",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           leading: IconButton(
               onPressed: () {
                 widget.overallScreenContextSwitcher(

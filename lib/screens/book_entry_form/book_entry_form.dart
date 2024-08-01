@@ -169,15 +169,8 @@ class _BookEntryFormState extends State<BookEntryForm> {
         title: const Text(
           "Phiếu nhập sách",
           style: TextStyle(
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.bold,
               color: Color.fromRGBO(12, 24, 68, 1)),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            widget.backContextSwitcher();
-          },
-          icon: const Icon(Icons.arrow_back),
-          color: const Color.fromRGBO(12, 24, 68, 1),
         ),
       ),
       body: FutureBuilder(

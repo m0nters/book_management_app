@@ -20,13 +20,8 @@ class _MainFunctionsContextControllerState
     extends State<MainFunctionsContextController> {
   late int
       _selectedIndex; // ALWAYS need this to adjust selected item, colors,... for bottom bar's visualization
+  late Map<int, List<Widget>> navigationStack;
   late Widget _currentContext;
-  List<Map<int, Widget>> backButtonScreensHistory =
-      []; // what were all of the last screens to navigate back
-  Map<int, Widget> bottomBarScreensHistory =
-      {}; // what was the last screen of a specific item in bottom bar
-  static List<Widget> _mainContextsFirstPage =
-      []; // don't know whether we should use static or not, this MainFunctionsContextController object's only used 1 time in `over_screen_context_controller.dart` anyway
 
   static const List<Color> _scaffoldBackgroundColorOptions = [
     Color.fromRGBO(235, 244, 246, 1),
@@ -66,95 +61,70 @@ class _MainFunctionsContextControllerState
     _selectedIndex = MainFunctionsContexts.home.index;
 
     // Initialize _contextOptions here to include the switchContext function
-    _mainContextsFirstPage = [
-      Home(
+    navigationStack = {
+      MainFunctionsContexts.home.index: [Home(
         mainScreenContextSwitcher: externalContextSwitcher,
         overallScreenContextSwitcher: widget.overallScreenContextSwitcher,
-      ),
-      BookEntryForm(
+      )],
+      MainFunctionsContexts.bookEntryForm.index: [BookEntryForm(
         backContextSwitcher: goBack,
-        reloadContext: forceRestartToFirstScreenForInternalScreen,
+        reloadContext: forceRestartToFirstScreen,
         internalScreenContextSwitcher: internalContextSwitcher,
-      ),
-      BookSaleInvoice(
+      )],
+      MainFunctionsContexts.bookSaleInvoice.index: [BookSaleInvoice(
         backContextSwitcher: goBack,
-        reloadContext: forceRestartToFirstScreenForInternalScreen,
+        reloadContext: forceRestartToFirstScreen,
         internalScreenContextSwitcher: internalContextSwitcher,
-      ),
-      Bill(
+      )],
+      MainFunctionsContexts.bill.index: [Bill(
         backContextSwitcher: goBack,
+        reloadContext: forceRestartToFirstScreen,
         internalScreenContextSwitcher: internalContextSwitcher,
-      ),
-      DebtReport(
+      )],
+      MainFunctionsContexts.debtReport.index: [DebtReport(
         backContextSwitcher: goBack,
-      ),
-    ];
+        reloadContext: forceRestartToFirstScreen,
+        internalScreenContextSwitcher: internalContextSwitcher,
+      )],
+    };
 
-    _currentContext = _mainContextsFirstPage[_selectedIndex];
+    _currentContext = navigationStack[_selectedIndex]!.removeLast();
   }
 
   // this function is only for bottom bar navigation externally
   void externalContextSwitcher(int index) {
     setState(() {
+      // Clicking the current item will result in no action
       if (index != _selectedIndex) {
-        // in case user spams one item many times and it also saves in the history lol
-        backButtonScreensHistory.add({_selectedIndex: _currentContext});
-
-        bottomBarScreensHistory[_selectedIndex] = _currentContext;
-      }
-
-      _selectedIndex = index;
-
-      // If the selected index has a screen history, use the last one
-      if (bottomBarScreensHistory.containsKey(_selectedIndex)) {
-        _currentContext = bottomBarScreensHistory[_selectedIndex]!;
-      } else {
-        _currentContext = _mainContextsFirstPage[_selectedIndex];
-      }
-
-      // because home screen doesn't have back button so every widget history
-      // must be deleted to minimalize the space occupied
-      if (index == MainFunctionsContexts.home.index) {
-        backButtonScreensHistory.clear();
+        navigationStack[_selectedIndex]!.add(_currentContext);
+        _selectedIndex = index;
+        _currentContext = navigationStack[_selectedIndex]!.removeLast();
       }
     });
   }
 
   void goBack() {
     setState(() {
-      var recentHistory = backButtonScreensHistory.removeLast();
-      _selectedIndex = recentHistory.keys.first;
-      _currentContext = recentHistory.values.first;
-
-      // by logic, there's no way that when you back to home screen and the `backButtonScreensHistory` list still has elements
-      // it all thanks to `externalContextSwitcher` function above
-      // so no delete `backButtonScreensHistory` list here!
+      _currentContext = navigationStack[_selectedIndex]!.removeLast();
     });
   }
 
-  // this function is only for switching screen in one selected index internally
+  // this function is only for switching screens in one selected index internally
   void internalContextSwitcher(Widget screen) {
     setState(() {
-      backButtonScreensHistory.add({_selectedIndex: _currentContext});
+      navigationStack[_selectedIndex]!.add(_currentContext);
       _currentContext = screen;
     });
   }
 
-  void forceRestartToFirstScreenForBottomBar(int index) {
-    // in case there's many widget histories and you can't go back to first page
+  void forceRestartToFirstScreen({int? index}) {
     setState(() {
-      // double tap other item will result nothing
-      if (index == _selectedIndex) {
-        _currentContext = _mainContextsFirstPage[_selectedIndex];
-        bottomBarScreensHistory.remove(index);
-      }
-    });
-  }
+      final currentIndex = index ?? _selectedIndex; // guard to check whether user double taps on other item or not
 
-  void forceRestartToFirstScreenForInternalScreen() {
-    setState(() {
-      _currentContext = _mainContextsFirstPage[_selectedIndex];
-      bottomBarScreensHistory.remove(_selectedIndex);
+      if (currentIndex == _selectedIndex) {
+        _currentContext = navigationStack[_selectedIndex]!.first;
+        navigationStack[_selectedIndex] = [_currentContext];
+      }
     });
   }
 
@@ -183,8 +153,7 @@ class _MainFunctionsContextControllerState
                   items: List.generate(5, (index) {
                     return BottomNavigationBarItem(
                       icon: GestureDetector(
-                        onDoubleTap: () =>
-                            forceRestartToFirstScreenForBottomBar(index),
+                        onDoubleTap: () => forceRestartToFirstScreen(index: index), // double tap on other item will result nothing
                         child: getIconForIndex(index),
                       ),
                       label: getLabelForIndex(index),
