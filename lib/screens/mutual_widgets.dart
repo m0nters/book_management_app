@@ -1,7 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../screens/setting/setting.dart';
+import 'setting/setting.dart';
 
 List<String> genres = [
   'Tình cảm',
@@ -492,3 +492,38 @@ class _DatePickerBoxState extends State<DatePickerBox> {
   }
 }
 // ============================================================================
+
+class NotFound extends StatelessWidget {
+  final Color? color;
+  final String errorText;
+  final double paddingTop;
+  final double paddingLeft;
+
+  const NotFound({
+    super.key,
+    this.color = const Color.fromRGBO(123, 123, 123, 1),
+    this.errorText = "Chưa có gì ở đây...",
+
+    // sometimes the logo and text looks disheveled because of human's visual illusion
+    // therefore we may need this to readjust things by our eyes only
+    this.paddingTop = 0,
+    this.paddingLeft = 0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: paddingLeft, top: paddingTop),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.search_off_rounded, size: 150, color: color),
+          Text(
+            errorText,
+            style: TextStyle(fontSize: 25, color: color),
+          )
+        ],
+      ),
+    );
+  }
+}

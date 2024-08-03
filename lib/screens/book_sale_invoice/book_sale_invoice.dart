@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../controllers/mutual_widgets.dart';
+import '../mutual_widgets.dart';
 import 'book_sale_invoice_create_invoice.dart';
 import 'book_sale_invoice_edit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -53,52 +53,52 @@ class InvoiceDataForForm {
 
 // Fetch data from server to this list here
 List<InvoiceDataForTicket> dataList = [
-  InvoiceDataForTicket(
-    invoiceCode: 'HĐ98242142',
-    customerName: 'Trịnh Anh Tài',
-    bookName: 'Mùa hè không tên',
-    genre: "Tiểu thuyết",
-    purchaseDate: '30/06/2024',
-    quantity: 1,
-    price: 184000,
-  ),
-  InvoiceDataForTicket(
-    invoiceCode: 'HĐ22541252',
-    customerName: 'Trịnh Anh Tài',
-    bookName: 'Chiến tranh tiền tệ',
-    genre: "Kinh tế",
-    purchaseDate: '30/06/2024',
-    quantity: 3,
-    price: 155000,
-  ),
-  InvoiceDataForTicket(
-    invoiceCode: 'HĐ09284351',
-    customerName: 'Nguyễn Đức Hưng',
-    bookName: 'Mắt biếc',
-    genre: 'Truyện ngắn',
-    purchaseDate: '30/06/2024',
-    quantity: 1,
-    price: 434600,
-  ),
-  InvoiceDataForTicket(
-    invoiceCode: 'HĐ12098417',
-    customerName: 'Trần Nhật Huy',
-    bookName: 'Đám Trẻ Ở Đại Dương Đen',
-    genre: 'Tiểu thuyết',
-    purchaseDate: '28/06/2024',
-    quantity: 1,
-    price: 74250,
-  ),
-  InvoiceDataForTicket(
-    invoiceCode: 'HĐ73249129',
-    customerName: 'Nguyễn Quốc Thuần',
-    bookName:
-        'Các Siêu Cường AI: Trung Quốc, Thung Lũng Silicon, Và Trật Tự Thế Giới Mới',
-    genre: 'Kinh tế',
-    purchaseDate: '29/06/2024',
-    quantity: 1,
-    price: 112000,
-  ),
+  // InvoiceDataForTicket(
+  //   invoiceCode: 'HĐ98242142',
+  //   customerName: 'Trịnh Anh Tài',
+  //   bookName: 'Mùa hè không tên',
+  //   genre: "Tiểu thuyết",
+  //   purchaseDate: '30/06/2024',
+  //   quantity: 1,
+  //   price: 184000,
+  // ),
+  // InvoiceDataForTicket(
+  //   invoiceCode: 'HĐ22541252',
+  //   customerName: 'Trịnh Anh Tài',
+  //   bookName: 'Chiến tranh tiền tệ',
+  //   genre: "Kinh tế",
+  //   purchaseDate: '30/06/2024',
+  //   quantity: 3,
+  //   price: 155000,
+  // ),
+  // InvoiceDataForTicket(
+  //   invoiceCode: 'HĐ09284351',
+  //   customerName: 'Nguyễn Đức Hưng',
+  //   bookName: 'Mắt biếc',
+  //   genre: 'Truyện ngắn',
+  //   purchaseDate: '30/06/2024',
+  //   quantity: 1,
+  //   price: 434600,
+  // ),
+  // InvoiceDataForTicket(
+  //   invoiceCode: 'HĐ12098417',
+  //   customerName: 'Trần Nhật Huy',
+  //   bookName: 'Đám Trẻ Ở Đại Dương Đen',
+  //   genre: 'Tiểu thuyết',
+  //   purchaseDate: '28/06/2024',
+  //   quantity: 1,
+  //   price: 74250,
+  // ),
+  // InvoiceDataForTicket(
+  //   invoiceCode: 'HĐ73249129',
+  //   customerName: 'Nguyễn Quốc Thuần',
+  //   bookName:
+  //       'Các Siêu Cường AI: Trung Quốc, Thung Lũng Silicon, Và Trật Tự Thế Giới Mới',
+  //   genre: 'Kinh tế',
+  //   purchaseDate: '29/06/2024',
+  //   quantity: 1,
+  //   price: 112000,
+  // ),
 ];
 
 /// Hóa đơn bán sách
@@ -120,6 +120,7 @@ class BookSaleInvoice extends StatefulWidget {
 class _BookSaleInvoiceState extends State<BookSaleInvoice> {
   static const String backgroundImageTicket =
       "assets/images/book_sale_invoice_ticket.png";
+  bool isHistoryEmpty = dataList.isEmpty ? true : false;
 
   Future<void> _loadData() async {
     // replace this line by the function where you fetch data from server
@@ -244,46 +245,60 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
                                     color: Color.fromRGBO(120, 171, 168, 1)),
                               ),
                               const Spacer(),
-                              IconButton(
-                                onPressed: () {
-                                  sortDates(ascending: false);
-                                },
-                                icon: Tooltip(
-                                  message: 'Mới đến cũ',
-                                  child: SvgPicture.asset(
-                                    'assets/icons/new_to_old_2.svg',
-                                    width: 30,
-                                    height: 30,
-                                  ),
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  sortDates(ascending: true);
-                                },
-                                icon: Tooltip(
-                                  message: 'Cũ đến mới',
-                                  child: SvgPicture.asset(
-                                    'assets/icons/old_to_new_2.svg',
-                                    width: 30,
-                                    height: 30,
-                                  ),
-                                ),
-                              ),
+                              Row(
+                                children: isHistoryEmpty
+                                    ? []
+                                    : [
+                                        IconButton(
+                                          onPressed: () {
+                                            sortDates(ascending: false);
+                                          },
+                                          icon: Tooltip(
+                                            message: 'Mới đến cũ',
+                                            child: SvgPicture.asset(
+                                              'assets/icons/new_to_old_2.svg',
+                                              width: 30,
+                                              height: 30,
+                                            ),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            sortDates(ascending: true);
+                                          },
+                                          icon: Tooltip(
+                                            message: 'Cũ đến mới',
+                                            child: SvgPicture.asset(
+                                              'assets/icons/old_to_new_2.svg',
+                                              width: 30,
+                                              height: 30,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                              )
                             ],
                           ),
                           const SizedBox(height: 15),
                           Expanded(
-                            child: Material(
-                              color: const Color.fromRGBO(241, 248, 232, 1),
-                              child: ListView.builder(
-                                itemCount:
-                                    buildResultTicketsUI(dataList).length,
-                                itemBuilder: (context, index) {
-                                  return buildResultTicketsUI(dataList)[index];
-                                },
-                              ),
-                            ),
+                            child: isHistoryEmpty
+                                ? NotFound(
+                                    color: Colors.grey[500],
+                                    paddingTop: 50,
+                                    paddingLeft: 20,
+                                  )
+                                : Material(
+                                    color:
+                                        const Color.fromRGBO(241, 248, 232, 1),
+                                    child: ListView.builder(
+                                      itemCount:
+                                          buildResultTicketsUI(dataList).length,
+                                      itemBuilder: (context, index) {
+                                        return buildResultTicketsUI(
+                                            dataList)[index];
+                                      },
+                                    ),
+                                  ),
                           ),
                         ],
                       ),

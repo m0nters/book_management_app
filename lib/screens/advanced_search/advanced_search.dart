@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../controllers/overall_screen_context_controller.dart';
-import '../../controllers/mutual_widgets.dart';
+import '../mutual_widgets.dart';
 import '../setting/setting.dart';
 import 'advanced_search_widgets.dart';
 import 'package:diacritic/diacritic.dart';
@@ -681,7 +681,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
           title: const Text(
             "Tìm kiếm nâng cao",
             style: TextStyle(
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(7, 25, 82, 1)),
           ),
           leading: IconButton(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:diacritic/diacritic.dart';
-import '../../controllers/mutual_widgets.dart';
+import '../mutual_widgets.dart';
 import 'book_entry_form_create_form.dart';
 import 'book_entry_form_edit.dart';
 
@@ -50,46 +50,46 @@ class EntryDataForForm {
 
 // Fetch data from server to this list here
 List<EntryDataForTicket> dataList = [
-  EntryDataForTicket(
-    entryCode: 'PNS0124512',
-    bookName: 'Mắt biếc',
-    genre: 'Truyện ngắn',
-    author: 'Nguyễn Nhật Ánh',
-    entryDate: '30/06/2024',
-    quantity: 133,
-  ),
-  EntryDataForTicket(
-    entryCode: 'PNS3252655',
-    bookName: 'Thép đã tôi thế đấy',
-    genre: 'Tiểu thuyết',
-    author: 'Nikolai Ostrovsky',
-    entryDate: '29/06/2024',
-    quantity: 12,
-  ),
-  EntryDataForTicket(
-    entryCode: 'PNS9884712',
-    bookName: 'Homo Deus - Lược Sử Tương Lai',
-    genre: 'Lịch sử',
-    author: 'Yuval Noah Harari',
-    entryDate: '29/06/2024',
-    quantity: 12,
-  ),
-  EntryDataForTicket(
-    entryCode: 'PNS2252363',
-    bookName: 'Con chim xanh biếc bay về trời',
-    genre: 'Truyện ngắn',
-    author: 'Nguyễn Nhật Ánh',
-    entryDate: '26/06/2024',
-    quantity: 124,
-  ),
-  EntryDataForTicket(
-    entryCode: 'PNS2252363',
-    bookName: 'Chip War - Cuộc Chiến Vi Mạch',
-    genre: 'Khoa học công nghệ',
-    author: 'Chris Miller',
-    entryDate: '26/06/2024',
-    quantity: 12,
-  ),
+  // EntryDataForTicket(
+  //   entryCode: 'PNS0124512',
+  //   bookName: 'Mắt biếc',
+  //   genre: 'Truyện ngắn',
+  //   author: 'Nguyễn Nhật Ánh',
+  //   entryDate: '30/06/2024',
+  //   quantity: 133,
+  // ),
+  // EntryDataForTicket(
+  //   entryCode: 'PNS3252655',
+  //   bookName: 'Thép đã tôi thế đấy',
+  //   genre: 'Tiểu thuyết',
+  //   author: 'Nikolai Ostrovsky',
+  //   entryDate: '29/06/2024',
+  //   quantity: 12,
+  // ),
+  // EntryDataForTicket(
+  //   entryCode: 'PNS9884712',
+  //   bookName: 'Homo Deus - Lược Sử Tương Lai',
+  //   genre: 'Lịch sử',
+  //   author: 'Yuval Noah Harari',
+  //   entryDate: '29/06/2024',
+  //   quantity: 12,
+  // ),
+  // EntryDataForTicket(
+  //   entryCode: 'PNS2252363',
+  //   bookName: 'Con chim xanh biếc bay về trời',
+  //   genre: 'Truyện ngắn',
+  //   author: 'Nguyễn Nhật Ánh',
+  //   entryDate: '26/06/2024',
+  //   quantity: 124,
+  // ),
+  // EntryDataForTicket(
+  //   entryCode: 'PNS2252363',
+  //   bookName: 'Chip War - Cuộc Chiến Vi Mạch',
+  //   genre: 'Khoa học công nghệ',
+  //   author: 'Chris Miller',
+  //   entryDate: '26/06/2024',
+  //   quantity: 12,
+  // ),
 ];
 
 /// Phiếu nhập sách
@@ -111,6 +111,7 @@ class BookEntryForm extends StatefulWidget {
 class _BookEntryFormState extends State<BookEntryForm> {
   static const String backgroundImageTicket =
       "assets/images/book_entry_form_ticket.png";
+  bool isHistoryEmpty = dataList.isEmpty ? true : false;
 
   Future<void> _loadData() async {
     // replace this line by the function where you fetch data from server
@@ -231,45 +232,58 @@ class _BookEntryFormState extends State<BookEntryForm> {
                                   color: Color.fromRGBO(12, 24, 68, 1)),
                             ),
                             const Spacer(),
-                            IconButton(
-                              onPressed: () {
-                                sortDates(ascending: false);
-                              },
-                              icon: Tooltip(
-                                message: 'Mới đến cũ',
-                                child: SvgPicture.asset(
-                                  'assets/icons/new_to_old_1.svg',
-                                  width: 30,
-                                  height: 30,
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                sortDates(ascending: true);
-                              },
-                              icon: Tooltip(
-                                message: 'Cũ đến mới',
-                                child: SvgPicture.asset(
-                                  'assets/icons/old_to_new_1.svg',
-                                  width: 30,
-                                  height: 30,
-                                ),
-                              ),
-                            ),
+                            Row(
+                              children: isHistoryEmpty
+                                  ? []
+                                  : [
+                                      IconButton(
+                                        onPressed: () {
+                                          sortDates(ascending: false);
+                                        },
+                                        icon: Tooltip(
+                                          message: 'Mới đến cũ',
+                                          child: SvgPicture.asset(
+                                            'assets/icons/new_to_old_1.svg',
+                                            width: 30,
+                                            height: 30,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          sortDates(ascending: true);
+                                        },
+                                        icon: Tooltip(
+                                          message: 'Cũ đến mới',
+                                          child: SvgPicture.asset(
+                                            'assets/icons/old_to_new_1.svg',
+                                            width: 30,
+                                            height: 30,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                            )
                           ],
                         ),
                         const SizedBox(height: 15),
                         Expanded(
-                          child: Material(
-                            color: const Color.fromRGBO(225, 227, 234, 1),
-                            child: ListView.builder(
-                              itemCount: buildResultTicketsUI(dataList).length,
-                              itemBuilder: (context, index) {
-                                return buildResultTicketsUI(dataList)[index];
-                              },
-                            ),
-                          ),
+                          child: isHistoryEmpty
+                              ? const NotFound(
+                                  paddingTop: 50,
+                                  paddingLeft: 20,
+                                )
+                              : Material(
+                                  color: const Color.fromRGBO(225, 227, 234, 1),
+                                  child: ListView.builder(
+                                    itemCount:
+                                        buildResultTicketsUI(dataList).length,
+                                    itemBuilder: (context, index) {
+                                      return buildResultTicketsUI(
+                                          dataList)[index];
+                                    },
+                                  ),
+                                ),
                         ),
                       ],
                     ),
