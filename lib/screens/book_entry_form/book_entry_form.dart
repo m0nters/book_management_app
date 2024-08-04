@@ -50,46 +50,46 @@ class EntryDataForForm {
 
 // Fetch data from server to this list here
 List<EntryDataForTicket> dataList = [
-  // EntryDataForTicket(
-  //   entryCode: 'PNS0124512',
-  //   bookName: 'Mắt biếc',
-  //   genre: 'Truyện ngắn',
-  //   author: 'Nguyễn Nhật Ánh',
-  //   entryDate: '30/06/2024',
-  //   quantity: 133,
-  // ),
-  // EntryDataForTicket(
-  //   entryCode: 'PNS3252655',
-  //   bookName: 'Thép đã tôi thế đấy',
-  //   genre: 'Tiểu thuyết',
-  //   author: 'Nikolai Ostrovsky',
-  //   entryDate: '29/06/2024',
-  //   quantity: 12,
-  // ),
-  // EntryDataForTicket(
-  //   entryCode: 'PNS9884712',
-  //   bookName: 'Homo Deus - Lược Sử Tương Lai',
-  //   genre: 'Lịch sử',
-  //   author: 'Yuval Noah Harari',
-  //   entryDate: '29/06/2024',
-  //   quantity: 12,
-  // ),
-  // EntryDataForTicket(
-  //   entryCode: 'PNS2252363',
-  //   bookName: 'Con chim xanh biếc bay về trời',
-  //   genre: 'Truyện ngắn',
-  //   author: 'Nguyễn Nhật Ánh',
-  //   entryDate: '26/06/2024',
-  //   quantity: 124,
-  // ),
-  // EntryDataForTicket(
-  //   entryCode: 'PNS2252363',
-  //   bookName: 'Chip War - Cuộc Chiến Vi Mạch',
-  //   genre: 'Khoa học công nghệ',
-  //   author: 'Chris Miller',
-  //   entryDate: '26/06/2024',
-  //   quantity: 12,
-  // ),
+  EntryDataForTicket(
+    entryCode: 'PNS0124512',
+    bookName: 'Mắt biếc',
+    genre: 'Truyện ngắn',
+    author: 'Nguyễn Nhật Ánh',
+    entryDate: '30/06/2024',
+    quantity: 133,
+  ),
+  EntryDataForTicket(
+    entryCode: 'PNS3252655',
+    bookName: 'Thép đã tôi thế đấy',
+    genre: 'Tiểu thuyết',
+    author: 'Nikolai Ostrovsky',
+    entryDate: '29/06/2024',
+    quantity: 12,
+  ),
+  EntryDataForTicket(
+    entryCode: 'PNS9884712',
+    bookName: 'Homo Deus - Lược Sử Tương Lai',
+    genre: 'Lịch sử',
+    author: 'Yuval Noah Harari',
+    entryDate: '29/06/2024',
+    quantity: 12,
+  ),
+  EntryDataForTicket(
+    entryCode: 'PNS2252363',
+    bookName: 'Con chim xanh biếc bay về trời',
+    genre: 'Truyện ngắn',
+    author: 'Nguyễn Nhật Ánh',
+    entryDate: '26/06/2024',
+    quantity: 124,
+  ),
+  EntryDataForTicket(
+    entryCode: 'PNS2252363',
+    bookName: 'Chip War - Cuộc Chiến Vi Mạch',
+    genre: 'Khoa học công nghệ',
+    author: 'Chris Miller',
+    entryDate: '26/06/2024',
+    quantity: 12,
+  ),
 ];
 
 /// Phiếu nhập sách

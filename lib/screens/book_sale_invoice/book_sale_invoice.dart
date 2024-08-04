@@ -53,52 +53,52 @@ class InvoiceDataForForm {
 
 // Fetch data from server to this list here
 List<InvoiceDataForTicket> dataList = [
-  // InvoiceDataForTicket(
-  //   invoiceCode: 'HĐ98242142',
-  //   customerName: 'Trịnh Anh Tài',
-  //   bookName: 'Mùa hè không tên',
-  //   genre: "Tiểu thuyết",
-  //   purchaseDate: '30/06/2024',
-  //   quantity: 1,
-  //   price: 184000,
-  // ),
-  // InvoiceDataForTicket(
-  //   invoiceCode: 'HĐ22541252',
-  //   customerName: 'Trịnh Anh Tài',
-  //   bookName: 'Chiến tranh tiền tệ',
-  //   genre: "Kinh tế",
-  //   purchaseDate: '30/06/2024',
-  //   quantity: 3,
-  //   price: 155000,
-  // ),
-  // InvoiceDataForTicket(
-  //   invoiceCode: 'HĐ09284351',
-  //   customerName: 'Nguyễn Đức Hưng',
-  //   bookName: 'Mắt biếc',
-  //   genre: 'Truyện ngắn',
-  //   purchaseDate: '30/06/2024',
-  //   quantity: 1,
-  //   price: 434600,
-  // ),
-  // InvoiceDataForTicket(
-  //   invoiceCode: 'HĐ12098417',
-  //   customerName: 'Trần Nhật Huy',
-  //   bookName: 'Đám Trẻ Ở Đại Dương Đen',
-  //   genre: 'Tiểu thuyết',
-  //   purchaseDate: '28/06/2024',
-  //   quantity: 1,
-  //   price: 74250,
-  // ),
-  // InvoiceDataForTicket(
-  //   invoiceCode: 'HĐ73249129',
-  //   customerName: 'Nguyễn Quốc Thuần',
-  //   bookName:
-  //       'Các Siêu Cường AI: Trung Quốc, Thung Lũng Silicon, Và Trật Tự Thế Giới Mới',
-  //   genre: 'Kinh tế',
-  //   purchaseDate: '29/06/2024',
-  //   quantity: 1,
-  //   price: 112000,
-  // ),
+  InvoiceDataForTicket(
+    invoiceCode: 'HĐ98242142',
+    customerName: 'Trịnh Anh Tài',
+    bookName: 'Mùa hè không tên',
+    genre: "Tiểu thuyết",
+    purchaseDate: '30/06/2024',
+    quantity: 1,
+    price: 184000,
+  ),
+  InvoiceDataForTicket(
+    invoiceCode: 'HĐ22541252',
+    customerName: 'Trịnh Anh Tài',
+    bookName: 'Chiến tranh tiền tệ',
+    genre: "Kinh tế",
+    purchaseDate: '30/06/2024',
+    quantity: 3,
+    price: 155000,
+  ),
+  InvoiceDataForTicket(
+    invoiceCode: 'HĐ09284351',
+    customerName: 'Nguyễn Đức Hưng',
+    bookName: 'Mắt biếc',
+    genre: 'Truyện ngắn',
+    purchaseDate: '30/06/2024',
+    quantity: 1,
+    price: 434600,
+  ),
+  InvoiceDataForTicket(
+    invoiceCode: 'HĐ12098417',
+    customerName: 'Trần Nhật Huy',
+    bookName: 'Đám Trẻ Ở Đại Dương Đen',
+    genre: 'Tiểu thuyết',
+    purchaseDate: '28/06/2024',
+    quantity: 1,
+    price: 74250,
+  ),
+  InvoiceDataForTicket(
+    invoiceCode: 'HĐ73249129',
+    customerName: 'Nguyễn Quốc Thuần',
+    bookName:
+        'Các Siêu Cường AI: Trung Quốc, Thung Lũng Silicon, Và Trật Tự Thế Giới Mới',
+    genre: 'Kinh tế',
+    purchaseDate: '29/06/2024',
+    quantity: 1,
+    price: 112000,
+  ),
 ];
 
 /// Hóa đơn bán sách

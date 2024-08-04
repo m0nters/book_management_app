@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  carousel_slider:
+    dependency: "direct main"
+    description:
+      name: carousel_slider
+      sha256: "9c695cc963bf1d04a47bd6021f68befce8970bcd61d24938e1fb0918cf5d9c42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.1"
   characters:
     dependency: transitive
     description:
@@ -69,10 +77,18 @@ packages:
     dependency: transitive
     description:
       name: cross_file
-      sha256: "55d7b444feb71301ef6b8838dbc1ae02e63dd48c8773f3810ff53bb1e2945b32"
+      sha256: "7caf6a750a0c04effbb52a676dce9a4a592e10ad35c34d6d2d0e4811160d5670"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.4+1"
+    version: "0.3.4+2"
+  css_colors:
+    dependency: "direct main"
+    description:
+      name: css_colors
+      sha256: "20aa72e1418ba66b22415f5ab13853d773ef2dfda261c901652f261f57b59efd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.5"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -105,6 +121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.2"
+  expandable:
+    dependency: "direct main"
+    description:
+      name: expandable
+      sha256: "9604d612d4d1146dafa96c6d8eec9c2ff0994658d6d09fed720ab788c7f5afc2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -241,10 +265,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_for_web
-      sha256: "5d6eb13048cd47b60dbf1a5495424dea226c5faf3950e20bf8120a58efb5b5f3"
+      sha256: "65d94623e15372c5c51bebbcb820848d7bcb323836e12dfdba60b5d3a8b39e50"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.4"
+    version: "3.0.5"
   image_picker_ios:
     dependency: transitive
     description:
@@ -365,6 +389,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  month_year_picker:
+    dependency: "direct main"
+    description:
+      name: month_year_picker
+      sha256: "74218f304251dad943457b437d0f9a697efd1d40f917f872e3899bd21434fb78"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0+1"
   nested:
     dependency: transitive
     description:
@@ -474,6 +506,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smooth_page_indicator:
+    dependency: "direct main"
+    description:
+      name: smooth_page_indicator
+      sha256: "3b28b0c545fa67ed9e5997d9f9720d486f54c0c607e056a1094544e36934dff3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0+3"
   source_span:
     dependency: transitive
     description:

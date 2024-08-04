@@ -4,7 +4,7 @@ import '../screens/home/home.dart';
 import '../screens/book_entry_form/book_entry_form.dart';
 import '../screens/book_sale_invoice/book_sale_invoice.dart';
 import '../screens/bill/bill.dart';
-import '../screens/debt_report/debt_report.dart';
+import '../screens/monthly_report/outstanding_report/outstanding_report.dart';
 
 class MainFunctionsContextController extends StatefulWidget {
   final Function(int) overallScreenContextSwitcher;
@@ -81,7 +81,7 @@ class _MainFunctionsContextControllerState
         reloadContext: forceRestartToFirstScreen,
         internalScreenContextSwitcher: internalContextSwitcher,
       )],
-      MainFunctionsContexts.debtReport.index: [DebtReport(
+      MainFunctionsContexts.outstandingReport.index: [OutstandingReport(
         backContextSwitcher: goBack,
         reloadContext: forceRestartToFirstScreen,
         internalScreenContextSwitcher: internalContextSwitcher,
@@ -202,7 +202,7 @@ class _MainFunctionsContextControllerState
     else if (index == MainFunctionsContexts.bill.index) {
       return const Icon(Icons.monetization_on_outlined);
     }
-    else if (index == MainFunctionsContexts.debtReport.index) {
+    else if (index == MainFunctionsContexts.outstandingReport.index) {
       return const Icon(Icons.assignment);
     }
     else {
@@ -223,7 +223,7 @@ class _MainFunctionsContextControllerState
     else if (index == MainFunctionsContexts.bill.index) {
       return 'Thu tiền';
     }
-    else if (index == MainFunctionsContexts.debtReport.index) {
+    else if (index == MainFunctionsContexts.outstandingReport.index) {
       return 'Báo cáo';
     }
     else {

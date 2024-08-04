@@ -61,7 +61,7 @@ class Home extends StatelessWidget {
               HomeFunctionButton(
                 text: 'Báo cáo tháng',
                 onPressed: () {
-                  mainScreenContextSwitcher(MainFunctionsContexts.debtReport.index);
+                  mainScreenContextSwitcher(MainFunctionsContexts.outstandingReport.index);
                 },
               ),
               const SizedBox(height: 36.0),
@@ -75,7 +75,9 @@ class Home extends StatelessWidget {
               const SizedBox(height: 16.0),
               HomeFunctionButton(
                 text: 'Thay đổi quy định',
-                onPressed: () {},
+                onPressed: () {
+                  overallScreenContextSwitcher(OverallScreenContexts.editRegulation.index);
+                },
               ),
             ],
           ),

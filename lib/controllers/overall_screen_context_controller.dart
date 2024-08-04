@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled2/screens/edit_regulation/edit_regulation.dart';
 import 'main_screen_context_controller.dart';
 import '../screens/advanced_search/advanced_search.dart';
 import '../screens/setting/setting.dart';
@@ -8,10 +9,10 @@ enum MainFunctionsContexts {
   bookEntryForm,
   bookSaleInvoice,
   bill,
-  debtReport,
+  outstandingReport,
 }
 
-enum OverallScreenContexts { mainFunctions, advancedSearch, setting }
+enum OverallScreenContexts { mainFunctions, advancedSearch, editRegulation, setting }
 
 class MainScreenContextController extends StatefulWidget {
   const MainScreenContextController({super.key});
@@ -36,7 +37,9 @@ class _OverallScreenContextControllerState
       OverallScreenContexts.mainFunctions.index: MainFunctionsContextController(
           overallScreenContextSwitcher: switchContext),
       OverallScreenContexts.advancedSearch.index:
-          AdvancedSearch(overallScreenContextSwitcher: switchContext),
+      AdvancedSearch(overallScreenContextSwitcher: switchContext),
+      OverallScreenContexts.editRegulation.index:
+      EditRegulation(overallScreenContextSwitcher: switchContext),
       OverallScreenContexts.setting.index: Setting(
         overallScreenContextSwitcher: switchContext,
       ),
