@@ -136,7 +136,6 @@ class _BookEntryFormState extends State<BookEntryForm> {
                   backContextSwitcher: widget.backContextSwitcher,
                   internalScreenContextSwitcher:
                       widget.internalScreenContextSwitcher,
-                  initialDate: stdDateFormat.parse('12/7/2022'),
                 ));
               },
               icon: const Icon(

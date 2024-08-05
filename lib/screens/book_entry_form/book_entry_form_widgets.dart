@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../mutual_widgets.dart';
 import '../setting/setting.dart';
 import 'package:flutter/services.dart'; // Import for FilteringTextInputFormatter
-
-DateFormat stdDateFormat = DateFormat('dd/MM/yyyy');
 
 // =============================================================================
 class EntryData {
@@ -57,6 +54,7 @@ class BookEntryInputForm extends StatefulWidget {
   final Color contentInputColor;
   final Color contentInputFormFillColor;
   final Color textFieldBorderColor;
+  /// Call this when you want to edit an existing information through form, otherwise it means you are creating new form to create new information
   final EntryData? reference;
   final ValueChanged<BookEntryInputFormState>? onStateCreated;
 

@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'home_widgets.dart';
 import '../../controllers/overall_screen_context_controller.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final Function(int) mainScreenContextSwitcher;
   final Function(int) overallScreenContextSwitcher;
 
   const Home({super.key, required this.mainScreenContextSwitcher, required this.overallScreenContextSwitcher});
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +22,7 @@ class Home extends StatelessWidget {
         backgroundColor: const Color.fromRGBO(235, 244, 246, 1),
         actions: [
           IconButton(onPressed: (){
-            overallScreenContextSwitcher(OverallScreenContexts.setting.index);
+            widget.overallScreenContextSwitcher(OverallScreenContexts.setting.index);
           }, icon: const Icon(Icons.settings)),
         ],
       ),
@@ -26,7 +32,7 @@ class Home extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HomeSearchBar(mainFunctionsContextSwitcher: mainScreenContextSwitcher, mainScreenContextSwitcher: overallScreenContextSwitcher,),
+              HomeSearchBar(mainFunctionsContextSwitcher: widget.mainScreenContextSwitcher, mainScreenContextSwitcher: widget.overallScreenContextSwitcher,),
               const SizedBox(height: 20.0),
               const Text(
                 'CHỨC NĂNG CHÍNH',
@@ -39,28 +45,28 @@ class Home extends StatelessWidget {
               HomeFunctionButton(
                 text: 'Phiếu nhập sách',
                 onPressed: () {
-                  mainScreenContextSwitcher(MainFunctionsContexts.bookEntryForm.index);
+                  widget.mainScreenContextSwitcher(MainFunctionsContexts.bookEntryForm.index);
                 },
               ),
               const SizedBox(height: 16.0),
               HomeFunctionButton(
                 text: 'Hóa đơn bán sách',
                 onPressed: () {
-                  mainScreenContextSwitcher(MainFunctionsContexts.bookSaleInvoice.index);
+                  widget.mainScreenContextSwitcher(MainFunctionsContexts.bookSaleInvoice.index);
                 },
               ),
               const SizedBox(height: 16.0),
               HomeFunctionButton(
                 text: 'Phiếu thu tiền',
                 onPressed: () {
-                  mainScreenContextSwitcher(MainFunctionsContexts.bill.index);
+                  widget.mainScreenContextSwitcher(MainFunctionsContexts.bill.index);
                 },
               ),
               const SizedBox(height: 16.0),
               HomeFunctionButton(
                 text: 'Báo cáo tháng',
                 onPressed: () {
-                  mainScreenContextSwitcher(MainFunctionsContexts.outstandingReport.index);
+                  widget.mainScreenContextSwitcher(MainFunctionsContexts.outstandingReport.index);
                 },
               ),
               const SizedBox(height: 36.0),
@@ -75,7 +81,7 @@ class Home extends StatelessWidget {
               HomeFunctionButton(
                 text: 'Thay đổi quy định',
                 onPressed: () {
-                  overallScreenContextSwitcher(OverallScreenContexts.editRegulation.index);
+                  widget.overallScreenContextSwitcher(OverallScreenContexts.editRegulation.index);
                 },
               ),
             ],

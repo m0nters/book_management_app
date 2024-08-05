@@ -4,7 +4,6 @@ import 'book_entry_form_widgets.dart';
 import '../mutual_widgets.dart';
 import 'book_entry_form_edit_search.dart';
 
-late DateTime dateChosen;
 List<EntryData> serverFetchedBookEntriesData = [
   EntryData(
       title: 'Tôi thấy hoa vàng ở trên cỏ xanh',
@@ -26,7 +25,7 @@ List<EntryData> serverFetchedBookEntriesData = [
       genre: 'Truyện ngắn',
       author: 'Ngô Thùy Linh',
       quantity: 21),
-];
+]; // backend fetch data from here
 
 class BookEntryFormSearch extends StatefulWidget {
   final VoidCallback backContextSwitcher;
@@ -44,6 +43,7 @@ class BookEntryFormSearch extends StatefulWidget {
 }
 
 class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
+  late DateTime dateChosen;
   bool hasPickedDate = false;
   bool allSelected =
       false; // Variable to track the state of the "Select All" checkbox
@@ -177,7 +177,9 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
 
     widget.internalScreenContextSwitcher(BookEntryFormEditSearch(
         editedItems: editedItems,
-        backContextSwitcher: widget.backContextSwitcher));
+        backContextSwitcher: widget.backContextSwitcher,
+        editedDate: dateChosen,
+    ));
   }
 
   @override

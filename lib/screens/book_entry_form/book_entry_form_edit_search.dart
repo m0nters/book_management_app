@@ -7,11 +7,13 @@ List<EntryData> serverUploadedBookEntriesData = [];
 class BookEntryFormEditSearch extends StatefulWidget {
   final VoidCallback backContextSwitcher;
   final List<EntryData> editedItems;
+  final DateTime editedDate;
 
   const BookEntryFormEditSearch({
     super.key,
     required this.editedItems,
     required this.backContextSwitcher,
+    required this.editedDate,
   });
 
   @override
@@ -55,6 +57,26 @@ class _BookEntryFormEditSearchState extends State<BookEntryFormEditSearch> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
         child: Column(
           children: [
+            const SizedBox(
+              height: 25,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text(
+                  "Ngày đang chỉnh sửa: ",
+                  style: TextStyle(
+                      fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                ),
+                DatePickerBox(
+                  initialDate: widget.editedDate,
+                  backgroundColor: const Color.fromRGBO(255, 245, 225, 1),
+                  foregroundColor: const Color.fromRGBO(12, 24, 68, 1),
+                  isEnabled: false,
+                  errorMessageWhenDisabled: 'Ngày chỉnh sửa đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu',
+                )
+              ],
+            ),
             const SizedBox(
               height: 46,
             ),

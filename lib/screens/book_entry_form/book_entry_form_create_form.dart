@@ -23,7 +23,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
       []; // Corresponding keys
   final ScrollController _scrollController =
       ScrollController(); // Scroll controller
-  bool _isSaving = false; // Track save button state
+  bool _isShowing = false; // Track snack bar state
 
   @override
   void dispose() {
@@ -67,10 +67,10 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
   }
 
   void _onSavePressed() {
-    if (_isSaving) return; // Prevent spamming button
+    if (_isShowing) return; // Prevent spamming button
 
     setState(() {
-      _isSaving = true; // Set saving state to true
+      _isShowing = true; // Set saving state to true
     });
 
     String dateSaved = (serverUploadedDateInputData.year ==
@@ -109,7 +109,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
         .closed
         .then((reason) {
       setState(() {
-        _isSaving = false; // Reset saving state after snack bar is closed
+        _isShowing = false; // Reset saving state after snack bar is closed
       });
     });
   }

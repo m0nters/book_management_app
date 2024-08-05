@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'setting/setting.dart';
 
+DateFormat stdDateFormat = DateFormat('dd/MM/yyyy');
+
 List<String> genres = [
   'Tình cảm',
   'Bí ẩn',
@@ -330,7 +332,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
               child: Text(
                 option,
                 style: TextStyle(
-                    fontSize: widget.fontSize, color: widget.contentColor),
+                    fontSize: widget.fontSize, color: widget.contentColor, fontWeight: FontWeight.w400),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -353,14 +355,18 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
 
 class DatePickerBox extends StatefulWidget {
   final DateTime? initialDate; // Nullable initial selected date
-  final ValueChanged<DateTime> onDateChanged; // Callback for date changes
+  final ValueChanged<DateTime>? onDateChanged; // Callback for date changes
   final Color backgroundColor;
+  final Color disabledBackgroundColor;
   final Color foregroundColor;
+  final Color disabledForegroundColor;
   final Color borderColor;
   final Color hintColor; // New parameter for hint text color
   final double fontSize;
   final double iconSize;
   final double borderRadius;
+  final bool isEnabled;
+  final String errorMessageWhenDisabled;
 
   /// A customizable date picker widget for Flutter.
   ///
@@ -401,14 +407,18 @@ class DatePickerBox extends StatefulWidget {
   const DatePickerBox({
     super.key,
     this.initialDate, // Nullable initial date
-    required this.onDateChanged,
+    this.onDateChanged,
     this.backgroundColor = Colors.white,
+    this.disabledBackgroundColor = Colors.grey,
     this.foregroundColor = Colors.black,
+    this.disabledForegroundColor = Colors.black,
     this.borderColor = Colors.grey,
     this.hintColor = Colors.grey, // Default hint color
     this.fontSize = 16,
     this.iconSize = 20,
     this.borderRadius = 4,
+    this.isEnabled = true,
+    this.errorMessageWhenDisabled = 'Việc chỉnh sửa ngày đã bị vô hiệu hóa',
   });
 
   @override
@@ -418,6 +428,7 @@ class DatePickerBox extends StatefulWidget {
 class _DatePickerBoxState extends State<DatePickerBox> {
   late DateTime _selectedDate;
   bool _dateSelected = false;
+  bool _isShowing = false; // Track snack bar state
 
   @override
   void initState() {
@@ -427,7 +438,7 @@ class _DatePickerBoxState extends State<DatePickerBox> {
       _dateSelected = true;
       // Ensure the system automatically records the today as selected date right at the beginning
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        widget.onDateChanged(_selectedDate);
+        widget.onDateChanged!(_selectedDate);
       });
     }
   }
@@ -435,8 +446,10 @@ class _DatePickerBoxState extends State<DatePickerBox> {
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _dateSelected ? _selectedDate : DateTime.now(), // Set to current date if not selected
-      firstDate: DateTime(1900), // Adjust if needed
+      initialDate: _dateSelected ? _selectedDate : DateTime.now(),
+      // Set to current date if not selected
+      firstDate: DateTime(1900),
+      // Adjust if needed
       lastDate: DateTime(2100), // Adjust if needed
     );
 
@@ -444,7 +457,7 @@ class _DatePickerBoxState extends State<DatePickerBox> {
       setState(() {
         _selectedDate = picked;
         _dateSelected = true;
-        widget.onDateChanged(picked);
+        widget.onDateChanged!(picked);
       });
     }
   }
@@ -452,7 +465,7 @@ class _DatePickerBoxState extends State<DatePickerBox> {
   @override
   Widget build(BuildContext context) {
     final formattedDate = _dateSelected
-        ? DateFormat('dd/MM/yyyy').format(_selectedDate)
+        ? stdDateFormat.format(_selectedDate)
         : 'Chọn ngày tra cứu'; // Hint text if no date selected
     final isToday = _dateSelected &&
         _selectedDate.year == DateTime.now().year &&
@@ -460,22 +473,44 @@ class _DatePickerBoxState extends State<DatePickerBox> {
         _selectedDate.day == DateTime.now().day;
     final todayLabel = isToday ? ' (hôm nay)' : '';
 
+    void showError(BuildContext context) {
+      if (_isShowing) return; // Prevent spamming button
+
+      setState(() {
+        _isShowing = true; // Set saving state to true
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(widget.errorMessageWhenDisabled),
+          duration: const Duration(seconds: 2), // Adjust duration as needed
+          behavior: SnackBarBehavior.floating, // Optional: make the Snackbar float
+        ),
+      ).closed
+          .then((reason) {
+        setState(() {
+          _isShowing = false; // Reset saving state after snack bar is closed
+        });
+      });
+    }
+
+
     return InkWell(
-      onTap: () => _selectDate(context),
+      onTap: () => widget.isEnabled ? _selectDate(context) : showError(context),
       borderRadius: BorderRadius.circular(widget.borderRadius),
       child: Ink(
         padding: const EdgeInsets.all(10), // Adjust padding
         decoration: BoxDecoration(
-          color: widget.backgroundColor,
+          color: widget.isEnabled ? widget.backgroundColor : widget.disabledBackgroundColor,
           border: Border.all(color: widget.borderColor, width: 1),
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          boxShadow: const [
-            BoxShadow(
+          boxShadow: (hasShadow && widget.isEnabled) ? [
+            const BoxShadow(
               offset: Offset(0, 4),
               color: Colors.grey,
               blurRadius: 4,
             ),
-          ],
+          ] : [],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -483,12 +518,14 @@ class _DatePickerBoxState extends State<DatePickerBox> {
             Text('$formattedDate$todayLabel',
                 style: TextStyle(
                     fontSize: widget.fontSize,
-                    color: _dateSelected ? widget.foregroundColor : widget.hintColor)), // Use hint color for hint text
+                    color: _dateSelected
+                        ? (widget.isEnabled ? widget.foregroundColor : widget.disabledForegroundColor)
+                        : widget.hintColor)), // Use hint color for hint text
             const SizedBox(width: 4), // Spacing
             Icon(
               Icons.calendar_month_sharp,
               size: widget.iconSize,
-              color: widget.foregroundColor,
+              color: widget.isEnabled ? widget.foregroundColor : widget.disabledForegroundColor,
             ), // Calendar icon
           ],
         ),
