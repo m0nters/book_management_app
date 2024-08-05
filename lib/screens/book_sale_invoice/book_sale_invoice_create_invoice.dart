@@ -425,7 +425,9 @@ class _BookSaleInvoiceCreateInvoiceState
                             TextStyle(color: Color.fromRGBO(120, 171, 168, 1))),
                     // Customize the title
                     content: Text(
-                        "Nếu có nhiều hơn 1 phiếu nhập có cùng thông tin sách, dữ liệu về số lượng nhập ngày hôm đó cho cuốn sách đó khi lưu lại sẽ được cộng gộp các phiếu liên quan lại với nhau.", style: TextStyle(color: Colors.grey[700]),),
+                      "Nếu có nhiều hơn 1 phiếu nhập có cùng thông tin sách, dữ liệu về số lượng nhập ngày hôm đó cho cuốn sách đó khi lưu lại sẽ được cộng gộp các phiếu liên quan lại với nhau.",
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
                     // Customize the content
                     actions: <Widget>[
                       TextButton(
@@ -535,23 +537,74 @@ class _BookSaleInvoiceCreateInvoiceState
                   return Column(
                     children: [
                       Dismissible(
-                        // Wrap the form in Dismissible
                         key: UniqueKey(),
-                        // Unique key for Dismissible
                         direction: DismissDirection.endToStart,
+                        confirmDismiss: (direction) async {
+                          return await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: const Color.fromRGBO(241, 248, 232, 1),
+                                title: const Text('Xác nhận xóa',),
+                                content: const Text(
+                                    "Bạn có chắc chắn muốn xóa hóa đơn bán sách này?"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(
+                                          false); // Dismisses the dialog and does not delete the form
+                                    },
+                                    child: const Text("Không", style: TextStyle(color: Color.fromRGBO(120, 171, 168, 1)),),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(
+                                          true); // Dismisses the dialog and confirms deletion
+                                    },
+                                    style: TextButton.styleFrom(
+                                      foregroundColor:
+                                          Colors.red, // Color for delete button
+                                    ),
+                                    child: const Text(
+                                      'Xóa',
+                                      style: TextStyle(color: Color.fromRGBO(239, 156, 102, 1)),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
                         // Swipe left to delete
                         onDismissed: (direction) {
                           setState(() {
                             _formWidgets.removeAt(index);
                             _formKeys.removeAt(index);
-
-                            // Update order numbers of remaining forms behind
-                            for (int i = index; i < _formWidgets.length; i++) {
-                              (_formWidgets[i].key as GlobalKey<
-                                      _BookSaleInvoiceInputFormState>)
-                                  .currentState!
-                                  .updateOrderNumber(i + 1);
-                            }
+                          });
+                          if (_formWidgets.isNotEmpty) {
+                            _showSnackBar(
+                                'Đã xóa phiếu nhập sách ở STT ${index + 1}!',
+                                isError: true);
+                          } else {
+                            _showSnackBar('Đã xóa toàn bộ phiếu hôm nay!',
+                                isError: true);
+                          }
+                          // Use addPostFrameCallback to update order numbers after the build is complete
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setState(() {
+                              for (int i = 0; i < _formWidgets.length; i++) {
+                                try {
+                                  _formKeys[i]
+                                      .currentState!
+                                      .updateOrderNumber(i + 1);
+                                  print(i + 1);
+                                  print(_formKeys[i].currentState);
+                                } catch (e) {
+                                  print(
+                                      'Error updating order number: $e'); // Catch and log any errors
+                                }
+                              }
+                            });
                           });
                         },
                         background: Container(
@@ -570,7 +623,7 @@ class _BookSaleInvoiceCreateInvoiceState
                   );
                 },
               ),
-            ),
+            )
           ],
         ),
       ),

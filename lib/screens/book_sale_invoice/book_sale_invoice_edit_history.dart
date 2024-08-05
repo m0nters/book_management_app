@@ -9,7 +9,7 @@ late DateTime serverUploadedDateInputData;
 late String serverUploadedCustomerNameInputData;
 late InvoiceDataForForm serverUploadedBookEntryData;
 
-class BookSaleInvoiceEdit extends StatefulWidget {
+class BookSaleInvoiceEditHistory extends StatefulWidget {
   final VoidCallback backContextSwitcher;
   final VoidCallback reloadContext;
   final InvoiceDataForTicket editItem;
@@ -22,7 +22,7 @@ class BookSaleInvoiceEdit extends StatefulWidget {
   final Color contentInputFormFillColor;
   final Color textFieldBorderColor;
 
-  const BookSaleInvoiceEdit({
+  const BookSaleInvoiceEditHistory({
     super.key,
     required this.backContextSwitcher,
     required this.reloadContext,
@@ -37,10 +37,10 @@ class BookSaleInvoiceEdit extends StatefulWidget {
   });
 
   @override
-  State<BookSaleInvoiceEdit> createState() => _BookSaleInvoiceEditState();
+  State<BookSaleInvoiceEditHistory> createState() => _BookSaleInvoiceEditHistoryState();
 }
 
-class _BookSaleInvoiceEditState extends State<BookSaleInvoiceEdit> {
+class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory> {
   final TextEditingController _customerNameController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   String _genreController = '';

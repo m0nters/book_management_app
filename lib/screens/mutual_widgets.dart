@@ -352,11 +352,12 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
 // ============================================================================
 
 class DatePickerBox extends StatefulWidget {
-  final DateTime initialDate; // Initial selected date
+  final DateTime? initialDate; // Nullable initial selected date
   final ValueChanged<DateTime> onDateChanged; // Callback for date changes
   final Color backgroundColor;
   final Color foregroundColor;
   final Color borderColor;
+  final Color hintColor; // New parameter for hint text color
   final double fontSize;
   final double iconSize;
   final double borderRadius;
@@ -367,9 +368,9 @@ class DatePickerBox extends StatefulWidget {
   ///
   /// **Key Features:**
   ///
-  /// - **Initial Date:** Sets the `initialDate` to be displayed when the widget is first rendered.
+  /// - **Initial Date:** Sets the `initialDate` to be displayed when the widget is first rendered. If not provided, defaults to null and shows hint text.
   /// - **On Date Changed Callback:** Triggers the `onDateChanged` callback function whenever the user selects a new date, passing the selected `DateTime` as an argument.
-  /// - **Customizable Colors:** Allows you to customize the `backgroundColor`, `foregroundColor`, and `borderColor` of the box.
+  /// - **Customizable Colors:** Allows you to customize the `backgroundColor`, `foregroundColor`, `borderColor`, and `hintColor` of the box.
   /// - **Customizable Font and Icon Size:** Adjust the size of the displayed date and the calendar icon using `fontSize` and `iconSize`.
   /// - **Formatted Date Display:** Shows the selected date in the format 'dd/MM/yyyy' and appends "(hôm nay)" if it's the current date.
   /// - **Calendar Icon:** Includes a calendar icon for visual clarity.
@@ -385,6 +386,7 @@ class DatePickerBox extends StatefulWidget {
   ///   backgroundColor: Colors.blue[100],  // Light blue background
   ///   foregroundColor: Colors.blue[900], // Dark blue text
   ///   borderColor: Colors.blue,           // Blue border
+  ///   hintColor: Colors.grey,             // Color for hint text
   ///   fontSize: 18.0,                     // Larger font size for the date
   ///   iconSize: 24.0,                     // Larger calendar icon
   /// ),
@@ -398,11 +400,12 @@ class DatePickerBox extends StatefulWidget {
   /// - The `fontSize` and `iconSize` are passed down to the Text and Icon widgets, respectively.
   const DatePickerBox({
     super.key,
-    required this.initialDate, // input Date(year,day,month)
+    this.initialDate, // Nullable initial date
     required this.onDateChanged,
     this.backgroundColor = Colors.white,
     this.foregroundColor = Colors.black,
     this.borderColor = Colors.grey,
+    this.hintColor = Colors.grey, // Default hint color
     this.fontSize = 16,
     this.iconSize = 20,
     this.borderRadius = 4,
@@ -414,31 +417,33 @@ class DatePickerBox extends StatefulWidget {
 
 class _DatePickerBoxState extends State<DatePickerBox> {
   late DateTime _selectedDate;
+  bool _dateSelected = false;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.initialDate;
-
-    // ensure the system automatically record the today as selected date right at the beginning
-    // otherwise you need to tap into the date picker (formally), while do nothing then but
-    // that's the only way for the system to know your selected date
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.onDateChanged(_selectedDate);
-    });
+    if (widget.initialDate != null) {
+      _selectedDate = widget.initialDate!;
+      _dateSelected = true;
+      // Ensure the system automatically records the today as selected date right at the beginning
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.onDateChanged(_selectedDate);
+      });
+    }
   }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
+      initialDate: _dateSelected ? _selectedDate : DateTime.now(), // Set to current date if not selected
       firstDate: DateTime(1900), // Adjust if needed
       lastDate: DateTime(2100), // Adjust if needed
     );
 
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null) {
       setState(() {
         _selectedDate = picked;
+        _dateSelected = true;
         widget.onDateChanged(picked);
       });
     }
@@ -446,8 +451,11 @@ class _DatePickerBoxState extends State<DatePickerBox> {
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = DateFormat('dd/MM/yyyy').format(_selectedDate);
-    final isToday = _selectedDate.year == DateTime.now().year &&
+    final formattedDate = _dateSelected
+        ? DateFormat('dd/MM/yyyy').format(_selectedDate)
+        : 'Chọn ngày tra cứu'; // Hint text if no date selected
+    final isToday = _dateSelected &&
+        _selectedDate.year == DateTime.now().year &&
         _selectedDate.month == DateTime.now().month &&
         _selectedDate.day == DateTime.now().day;
     final todayLabel = isToday ? ' (hôm nay)' : '';
@@ -459,26 +467,23 @@ class _DatePickerBoxState extends State<DatePickerBox> {
         padding: const EdgeInsets.all(10), // Adjust padding
         decoration: BoxDecoration(
           color: widget.backgroundColor,
-          // Background color
           border: Border.all(color: widget.borderColor, width: 1),
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          // Border radius
-          boxShadow: hasShadow
-              ? const [
-                  BoxShadow(
-                    offset: Offset(0, 4),
-                    color: Colors.grey,
-                    blurRadius: 4,
-                  )
-                ]
-              : null,
+          boxShadow: const [
+            BoxShadow(
+              offset: Offset(0, 4),
+              color: Colors.grey,
+              blurRadius: 4,
+            ),
+          ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('$formattedDate$todayLabel',
                 style: TextStyle(
-                    fontSize: widget.fontSize, color: widget.foregroundColor)),
+                    fontSize: widget.fontSize,
+                    color: _dateSelected ? widget.foregroundColor : widget.hintColor)), // Use hint color for hint text
             const SizedBox(width: 4), // Spacing
             Icon(
               Icons.calendar_month_sharp,

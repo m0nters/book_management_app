@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../mutual_widgets.dart';
 import 'book_sale_invoice_create_invoice.dart';
-import 'book_sale_invoice_edit.dart';
+import 'book_sale_invoice_edit_history.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:diacritic/diacritic.dart';
 
@@ -163,7 +163,7 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
               .toList(),
           backgroundImage: backgroundImageTicket,
           onTap: () {
-            widget.internalScreenContextSwitcher(BookSaleInvoiceEdit(
+            widget.internalScreenContextSwitcher(BookSaleInvoiceEditHistory(
                 backContextSwitcher: widget.backContextSwitcher,
                 reloadContext: widget.reloadContext,
                 editItem: dataItem));
@@ -187,6 +187,9 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
                 fontWeight: FontWeight.bold,
                 color: Color.fromRGBO(120, 171, 168, 1)),
           ),
+          actions: [
+            IconButton(onPressed: (){}, icon: const Icon(Icons.search_rounded, size: 30,))
+          ],
         ),
         body: FutureBuilder(
           future: _loadData(),

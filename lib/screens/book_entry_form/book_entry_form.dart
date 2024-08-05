@@ -3,91 +3,50 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:diacritic/diacritic.dart';
 import '../mutual_widgets.dart';
 import 'book_entry_form_create_form.dart';
-import 'book_entry_form_edit.dart';
-
-class EntryDataForTicket {
-  final String entryCode;
-  final String bookName;
-  final String genre;
-  final String author;
-  final String entryDate;
-  final int quantity;
-
-  EntryDataForTicket({
-    required this.entryCode,
-    required this.bookName,
-    required this.genre,
-    required this.author,
-    required this.entryDate,
-    required this.quantity,
-  });
-
-  // Method to convert to map for compatibility with InfoTicket
-  Map<String, String> toMap() {
-    return {
-      'Mã phiếu': entryCode,
-      'Sách': bookName,
-      'Tác giả': author,
-      'Ngày nhập': entryDate,
-      'Số lượng': quantity.toString(),
-    };
-  }
-}
-
-class EntryDataForForm {
-  String title;
-  String category;
-  String author;
-  int quantity;
-
-  EntryDataForForm({
-    required this.title,
-    required this.category,
-    required this.author,
-    required this.quantity,
-  });
-} // for book_entry_form_create_form.dart
+import 'book_entry_form_edit_history.dart';
+import 'book_entry_form_search.dart';
+import 'book_entry_form_widgets.dart';
 
 // Fetch data from server to this list here
-List<EntryDataForTicket> dataList = [
-  EntryDataForTicket(
+List<EntryData> dataList = [
+  EntryData(
     entryCode: 'PNS0124512',
-    bookName: 'Mắt biếc',
+    title: 'Mắt biếc',
     genre: 'Truyện ngắn',
     author: 'Nguyễn Nhật Ánh',
-    entryDate: '30/06/2024',
+    entryDate: stdDateFormat.parse('30/06/2024'),
     quantity: 133,
   ),
-  EntryDataForTicket(
+  EntryData(
     entryCode: 'PNS3252655',
-    bookName: 'Thép đã tôi thế đấy',
+    title: 'Thép đã tôi thế đấy',
     genre: 'Tiểu thuyết',
     author: 'Nikolai Ostrovsky',
-    entryDate: '29/06/2024',
+    entryDate: stdDateFormat.parse('29/06/2024'),
     quantity: 12,
   ),
-  EntryDataForTicket(
+  EntryData(
     entryCode: 'PNS9884712',
-    bookName: 'Homo Deus - Lược Sử Tương Lai',
+    title: 'Homo Deus - Lược Sử Tương Lai',
     genre: 'Lịch sử',
     author: 'Yuval Noah Harari',
-    entryDate: '29/06/2024',
+    entryDate: stdDateFormat.parse('29/06/2024'),
     quantity: 12,
   ),
-  EntryDataForTicket(
+  EntryData(
     entryCode: 'PNS2252363',
-    bookName: 'Con chim xanh biếc bay về trời',
+    title: 'Con chim xanh biếc bay về trời',
     genre: 'Truyện ngắn',
     author: 'Nguyễn Nhật Ánh',
-    entryDate: '26/06/2024',
+    entryDate: stdDateFormat.parse('26/06/2024'),
     quantity: 124,
   ),
-  EntryDataForTicket(
+  EntryData(
     entryCode: 'PNS2252363',
-    bookName: 'Chip War - Cuộc Chiến Vi Mạch',
+    title: 'Chip War - Cuộc Chiến Vi Mạch',
     genre: 'Khoa học công nghệ',
     author: 'Chris Miller',
-    entryDate: '26/06/2024',
+    entryDate: stdDateFormat.parse('26/06/2024'),
     quantity: 12,
   ),
 ];
@@ -120,24 +79,21 @@ class _BookEntryFormState extends State<BookEntryForm> {
   void sortDates({required bool ascending}) {
     // sort date => if dates equal, sort books' names
     dataList.sort((a, b) {
-      DateTime dateA = DateTime.parse(
-          '${a.entryDate.split('/')[2]}-${a.entryDate.split('/')[1]}-${a.entryDate.split('/')[0]}');
-      DateTime dateB = DateTime.parse(
-          '${b.entryDate.split('/')[2]}-${b.entryDate.split('/')[1]}-${b.entryDate.split('/')[0]}');
+      DateTime dateA = a.entryDate!;
+      DateTime dateB = b.entryDate!;
 
       int dateComparison =
           ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
       if (dateComparison != 0) {
         return dateComparison;
       } else {
-        return removeDiacritics(a.bookName)
-            .compareTo(removeDiacritics(b.bookName));
+        return removeDiacritics(a.title!).compareTo(removeDiacritics(b.title!));
       }
     });
     setState(() {});
   }
 
-  List<Widget> buildResultTicketsUI(List<EntryDataForTicket> dataList) {
+  List<Widget> buildResultTicketsUI(List<EntryData> dataList) {
     return dataList.expand((dataItem) {
       return [
         BookEntryFormInfoTicket(
@@ -148,7 +104,7 @@ class _BookEntryFormState extends State<BookEntryForm> {
               .toList(),
           backgroundImage: backgroundImageTicket,
           onTap: () {
-            widget.internalScreenContextSwitcher(BookEntryFormEdit(
+            widget.internalScreenContextSwitcher(BookEntryFormEditHistory(
               backContextSwitcher: widget.backContextSwitcher,
               reloadContext: widget.reloadContext,
               editItem: dataItem,
@@ -173,6 +129,21 @@ class _BookEntryFormState extends State<BookEntryForm> {
               fontWeight: FontWeight.bold,
               color: Color.fromRGBO(12, 24, 68, 1)),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                widget.internalScreenContextSwitcher(BookEntryFormSearch(
+                  backContextSwitcher: widget.backContextSwitcher,
+                  internalScreenContextSwitcher:
+                      widget.internalScreenContextSwitcher,
+                  initialDate: stdDateFormat.parse('12/7/2022'),
+                ));
+              },
+              icon: const Icon(
+                Icons.search_rounded,
+                size: 30,
+              ))
+        ],
       ),
       body: FutureBuilder(
         future: _loadData(),
@@ -296,13 +267,4 @@ class _BookEntryFormState extends State<BookEntryForm> {
       ),
     );
   }
-}
-
-class BookEntryFormInfoTicket extends InfoTicket {
-  // Basically nothing has changed, this is just a form, to synchronize with book_sale_invoice.dart
-  const BookEntryFormInfoTicket(
-      {super.key,
-      required super.fields,
-      required super.backgroundImage,
-      required super.onTap});
 }

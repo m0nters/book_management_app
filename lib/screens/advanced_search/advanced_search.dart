@@ -672,6 +672,13 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
   }
 
   @override
+  void dispose() {
+    _totalScrollController.dispose();
+    _searchResultScrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color.fromRGBO(235, 244, 246, 1),

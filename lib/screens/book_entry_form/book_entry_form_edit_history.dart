@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import '../setting/setting.dart';
 import '../mutual_widgets.dart';
-import 'book_entry_form.dart';
-import 'package:intl/intl.dart';
+import 'book_entry_form_widgets.dart';
 import 'package:flutter/services.dart'; // Import for FilteringTextInputFormatter
 
 late DateTime serverUploadedDateInputData;
-late EntryDataForForm serverUploadedBookEntryData;
+late EntryData serverUploadedBookEntryData;
 
-class BookEntryFormEdit extends StatefulWidget {
+class BookEntryFormEditHistory extends StatefulWidget {
   final VoidCallback backContextSwitcher;
   final VoidCallback reloadContext;
-  final EntryDataForTicket editItem;
+  final EntryData editItem;
 
   final Color titleBarColor;
   final Color titleColor;
@@ -21,7 +20,7 @@ class BookEntryFormEdit extends StatefulWidget {
   final Color contentInputFormFillColor;
   final Color textFieldBorderColor;
 
-  const BookEntryFormEdit({
+  const BookEntryFormEditHistory({
     super.key,
     required this.backContextSwitcher,
     required this.reloadContext,
@@ -36,10 +35,10 @@ class BookEntryFormEdit extends StatefulWidget {
   });
 
   @override
-  State<BookEntryFormEdit> createState() => _BookEntryFormEditState();
+  State<BookEntryFormEditHistory> createState() => _BookEntryFormEditHistoryState();
 }
 
-class _BookEntryFormEditState extends State<BookEntryFormEdit> {
+class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
   late DateTime _dateController;
   final TextEditingController _titleController = TextEditingController();
   String _genreController = '';
@@ -49,10 +48,10 @@ class _BookEntryFormEditState extends State<BookEntryFormEdit> {
   @override
   void initState() {
     super.initState();
-    _titleController.text = widget.editItem.bookName;
-    _authorController.text = widget.editItem.author;
+    _titleController.text = widget.editItem.title ?? '';
+    _authorController.text = widget.editItem.author ?? '';
     _quantityController.text = widget.editItem.quantity.toString();
-    _genreController = widget.editItem.genre;
+    _genreController = widget.editItem.genre ?? '';
   }
 
   bool _isSaving = false;
@@ -64,10 +63,8 @@ class _BookEntryFormEditState extends State<BookEntryFormEdit> {
       _isSaving = true; // Set saving state to true
     });
 
-    if (_dateController ==
-            DateFormat('dd/MM/yy').parse(widget.editItem.entryDate) &&
-
-        _titleController.text == widget.editItem.bookName &&
+    if (_dateController == widget.editItem.entryDate &&
+        _titleController.text == widget.editItem.title &&
         _genreController == widget.editItem.genre &&
         _authorController.text == widget.editItem.author &&
         _quantityController.text == widget.editItem.quantity.toString()) {
@@ -257,8 +254,7 @@ class _BookEntryFormEditState extends State<BookEntryFormEdit> {
                               Material(
                                 borderRadius: BorderRadius.circular(4),
                                 child: DatePickerBox(
-                                  initialDate: DateFormat('dd/MM/yy')
-                                      .parse(widget.editItem.entryDate),
+                                  initialDate: widget.editItem.entryDate,
                                   onDateChanged: (date) => _dateController = date,
                                   backgroundColor:
                                       widget.contentInputFormFillColor,
@@ -441,10 +437,10 @@ class _BookEntryFormEditState extends State<BookEntryFormEdit> {
             )));
   }
 
-  EntryDataForForm getBookEntryData() {
-    return EntryDataForForm(
+  EntryData getBookEntryData() {
+    return EntryData(
       title: _titleController.text,
-      category: _genreController,
+      genre: _genreController,
       author: _authorController.text,
       quantity: int.tryParse(_quantityController.text) ?? 0,
     );
