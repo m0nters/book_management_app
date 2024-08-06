@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'controllers/overall_screen_context_controller.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensure binding is initialized
-
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
-
   runApp(const BookstoreManagementApp());
 }
 

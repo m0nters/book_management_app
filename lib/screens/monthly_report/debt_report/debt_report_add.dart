@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 
 class DebtReportAdd extends StatefulWidget {
@@ -19,6 +20,11 @@ class _DebtReportAddState extends State<DebtReportAdd> {
   @override
   void initState() {
     super.initState();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     _addItem();
   }
 

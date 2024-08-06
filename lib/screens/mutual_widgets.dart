@@ -354,7 +354,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
 // ============================================================================
 
 class DatePickerBox extends StatefulWidget {
-  final DateTime? initialDate; // Nullable initial selected date
+  late DateTime? initialDate; // Nullable initial selected date
   final ValueChanged<DateTime>? onDateChanged; // Callback for date changes
   final Color backgroundColor;
   final Color disabledBackgroundColor;
@@ -404,7 +404,7 @@ class DatePickerBox extends StatefulWidget {
   /// - The widget uses `InkWell` for tap interactions, providing visual feedback (ripples) when tapped.
   /// - You can further customize the appearance using additional `BoxDecoration` properties (e.g., shadows).
   /// - The `fontSize` and `iconSize` are passed down to the Text and Icon widgets, respectively.
-  const DatePickerBox({
+  DatePickerBox({
     super.key,
     this.initialDate, // Nullable initial date
     this.onDateChanged,
@@ -426,27 +426,27 @@ class DatePickerBox extends StatefulWidget {
 }
 
 class _DatePickerBoxState extends State<DatePickerBox> {
-  late DateTime _selectedDate;
-  bool _dateSelected = false;
-  bool _isShowing = false; // Track snack bar state
+  bool _isSelectedDate = false;
+  bool _isShowingSnackBar = false; // Track snack bar state
 
   @override
   void initState() {
     super.initState();
     if (widget.initialDate != null) {
-      _selectedDate = widget.initialDate!;
-      _dateSelected = true;
+      _isSelectedDate = true;
       // Ensure the system automatically records the today as selected date right at the beginning
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        widget.onDateChanged!(_selectedDate);
-      });
+      if (widget.onDateChanged != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          widget.onDateChanged!(widget.initialDate!);
+        });
+      }
     }
   }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _dateSelected ? _selectedDate : DateTime.now(),
+      initialDate: _isSelectedDate ? widget.initialDate : DateTime.now(),
       // Set to current date if not selected
       firstDate: DateTime(1900),
       // Adjust if needed
@@ -455,29 +455,31 @@ class _DatePickerBoxState extends State<DatePickerBox> {
 
     if (picked != null) {
       setState(() {
-        _selectedDate = picked;
-        _dateSelected = true;
-        widget.onDateChanged!(picked);
+        widget.initialDate = picked;
+        _isSelectedDate = true;
+        if (widget.onDateChanged != null) {
+          widget.onDateChanged!(picked);
+        }
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = _dateSelected
-        ? stdDateFormat.format(_selectedDate)
+    final placeholderText = _isSelectedDate
+        ? stdDateFormat.format(widget.initialDate!)
         : 'Chọn ngày tra cứu'; // Hint text if no date selected
-    final isToday = _dateSelected &&
-        _selectedDate.year == DateTime.now().year &&
-        _selectedDate.month == DateTime.now().month &&
-        _selectedDate.day == DateTime.now().day;
-    final todayLabel = isToday ? ' (hôm nay)' : '';
+    final isToday = _isSelectedDate &&
+        widget.initialDate!.year == DateTime.now().year &&
+        widget.initialDate!.month == DateTime.now().month &&
+        widget.initialDate!.day == DateTime.now().day;
+    final todayLabel = isToday ? ' (hôm nay)' : ''; // for more detail UX
 
     void showError(BuildContext context) {
-      if (_isShowing) return; // Prevent spamming button
+      if (_isShowingSnackBar) return; // Prevent spamming button
 
       setState(() {
-        _isShowing = true; // Set saving state to true
+        _isShowingSnackBar = true; // Set saving state to true
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -489,7 +491,7 @@ class _DatePickerBoxState extends State<DatePickerBox> {
       ).closed
           .then((reason) {
         setState(() {
-          _isShowing = false; // Reset saving state after snack bar is closed
+          _isShowingSnackBar = false; // Reset saving state after snack bar is closed
         });
       });
     }
@@ -515,10 +517,10 @@ class _DatePickerBoxState extends State<DatePickerBox> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('$formattedDate$todayLabel',
+            Text('$placeholderText$todayLabel',
                 style: TextStyle(
                     fontSize: widget.fontSize,
-                    color: _dateSelected
+                    color: _isSelectedDate
                         ? (widget.isEnabled ? widget.foregroundColor : widget.disabledForegroundColor)
                         : widget.hintColor)), // Use hint color for hint text
             const SizedBox(width: 4), // Spacing

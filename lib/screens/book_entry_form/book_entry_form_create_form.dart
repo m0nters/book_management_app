@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../mutual_widgets.dart';
 import 'book_entry_form_widgets.dart';
 
@@ -8,9 +9,10 @@ List<EntryData> serverUploadedBookEntriesData = [];
 class BookEntryFormCreateForm extends StatefulWidget {
   final VoidCallback backContextSwitcher;
 
-  const BookEntryFormCreateForm(
-      {super.key,
-      required this.backContextSwitcher,});
+  const BookEntryFormCreateForm({
+    super.key,
+    required this.backContextSwitcher,
+  });
 
   @override
   State<BookEntryFormCreateForm> createState() =>
@@ -18,7 +20,8 @@ class BookEntryFormCreateForm extends StatefulWidget {
 }
 
 class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
-  final List<BookEntryInputForm> _formWidgets = []; // Dynamic list of form widgets
+  final List<BookEntryInputForm> _formWidgets =
+      []; // Dynamic list of form widgets
   final List<GlobalKey<BookEntryInputFormState>> _formKeys =
       []; // Corresponding keys
   final ScrollController _scrollController =
@@ -34,6 +37,10 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     _addForm(); // Add one form initially
   }
 
@@ -41,7 +48,6 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
     setState(() {
       final formKey = GlobalKey<BookEntryInputFormState>();
       _formKeys.add(formKey); // Add the key to the list
-      print(formKey);
 
       _formWidgets.add(
         BookEntryInputForm(
@@ -69,9 +75,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
   void _onSavePressed() {
     if (_isShowing) return; // Prevent spamming button
 
-    setState(() {
-      _isShowing = true; // Set saving state to true
-    });
+    _isShowing = true; // Set saving state to true
 
     String dateSaved = (serverUploadedDateInputData.year ==
                 DateTime.now().year &&
@@ -108,9 +112,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
         )
         .closed
         .then((reason) {
-      setState(() {
-        _isShowing = false; // Reset saving state after snack bar is closed
-      });
+      _isShowing = false; // Reset saving state after snack bar is closed
     });
   }
 
@@ -220,25 +222,39 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                backgroundColor: const Color.fromRGBO(225, 227, 234, 1),
-                                title: const Text('Xác nhận xóa', style: TextStyle(color: Color.fromRGBO(12, 24, 68, 1))),
+                                backgroundColor:
+                                    const Color.fromRGBO(225, 227, 234, 1),
+                                title: Text(
+                                    _formWidgets.length != 1
+                                        ? 'Xác nhận xóa'
+                                        : "ĐÂY LÀ PHIẾU NHẬP SÁCH CUỐI CÙNG!",
+                                    style: const TextStyle(
+                                        color: Color.fromRGBO(12, 24, 68, 1))),
                                 content: const Text(
                                     "Bạn có chắc chắn muốn xóa phiếu nhập sách này?"),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(context).pop(false); // Dismisses the dialog and does not delete the form
+                                      Navigator.of(context).pop(
+                                          false); // Dismisses the dialog and does not delete the form
                                     },
                                     child: const Text("Không"),
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(context).pop(true); // Dismisses the dialog and confirms deletion
+                                      Navigator.of(context).pop(
+                                          true); // Dismisses the dialog and confirms deletion
                                     },
                                     style: TextButton.styleFrom(
-                                      foregroundColor: Colors.red, // Color for delete button
+                                      foregroundColor:
+                                          Colors.red, // Color for delete button
                                     ),
-                                    child: const Text('Xóa', style: TextStyle(color: Color.fromRGBO(255, 105, 105, 1)),),
+                                    child: const Text(
+                                      'Xóa',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromRGBO(255, 105, 105, 1)),
+                                    ),
                                   ),
                                 ],
                               );
@@ -253,22 +269,23 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
                           });
 
                           if (_formWidgets.isNotEmpty) {
-                            _showSnackBar('Đã xóa phiếu nhập sách ở STT ${index + 1}!', isError: true);
+                            _showSnackBar(
+                                'Đã xóa phiếu nhập sách ở STT ${index + 1}!',
+                                isError: true);
                           } else {
-                            _showSnackBar('Đã xóa toàn bộ phiếu hôm nay!', isError: true);
+                            _showSnackBar('Đã xóa toàn bộ phiếu hôm nay!',
+                                isError: true);
                           }
 
                           // Use addPostFrameCallback to update order numbers after the build is complete
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             setState(() {
-                              for (int i = 0; i < _formWidgets.length; i++) {
-                                try {
-                                  _formKeys[i].currentState!.updateOrderNumber(i + 1);
-                                  print(i + 1);
-                                  print(_formKeys[i].currentState);
-                                } catch (e) {
-                                  print('Error updating order number: $e'); // Catch and log any errors
-                                }
+                              for (int i = index;
+                                  i < _formWidgets.length;
+                                  i++) {
+                                _formKeys[i]
+                                    .currentState!
+                                    .updateOrderNumber(i + 1);
                               }
                             });
                           });

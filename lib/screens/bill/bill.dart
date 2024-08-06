@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:untitled2/screens/bill/bill_edit.dart';
 import 'package:untitled2/screens/bill/bill_search.dart';
 import '../../controllers/main_screen_context_controller.dart';
@@ -36,6 +37,14 @@ class Bill extends StatefulWidget {
 class _BillState extends State<Bill> {
   DateTime? _selectedDate;
 
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    super.initState();
+  }
+
   Future<void> _pickDate({
     required BuildContext context,
   }) async {
@@ -51,7 +60,6 @@ class _BillState extends State<Bill> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

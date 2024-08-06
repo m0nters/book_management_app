@@ -669,6 +669,10 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
         }
       }
     });
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
   }
 
   @override

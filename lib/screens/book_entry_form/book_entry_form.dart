@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:diacritic/diacritic.dart';
 import '../mutual_widgets.dart';
@@ -11,7 +12,7 @@ import 'book_entry_form_widgets.dart';
 List<EntryData> dataList = [
   EntryData(
     entryCode: 'PNS0124512',
-    title: 'Mắt biếc',
+    bookName: 'Mắt biếc',
     genre: 'Truyện ngắn',
     author: 'Nguyễn Nhật Ánh',
     entryDate: stdDateFormat.parse('30/06/2024'),
@@ -19,7 +20,7 @@ List<EntryData> dataList = [
   ),
   EntryData(
     entryCode: 'PNS3252655',
-    title: 'Thép đã tôi thế đấy',
+    bookName: 'Thép đã tôi thế đấy',
     genre: 'Tiểu thuyết',
     author: 'Nikolai Ostrovsky',
     entryDate: stdDateFormat.parse('29/06/2024'),
@@ -27,7 +28,7 @@ List<EntryData> dataList = [
   ),
   EntryData(
     entryCode: 'PNS9884712',
-    title: 'Homo Deus - Lược Sử Tương Lai',
+    bookName: 'Homo Deus - Lược Sử Tương Lai',
     genre: 'Lịch sử',
     author: 'Yuval Noah Harari',
     entryDate: stdDateFormat.parse('29/06/2024'),
@@ -35,7 +36,7 @@ List<EntryData> dataList = [
   ),
   EntryData(
     entryCode: 'PNS2252363',
-    title: 'Con chim xanh biếc bay về trời',
+    bookName: 'Con chim xanh biếc bay về trời',
     genre: 'Truyện ngắn',
     author: 'Nguyễn Nhật Ánh',
     entryDate: stdDateFormat.parse('26/06/2024'),
@@ -43,7 +44,7 @@ List<EntryData> dataList = [
   ),
   EntryData(
     entryCode: 'PNS2252363',
-    title: 'Chip War - Cuộc Chiến Vi Mạch',
+    bookName: 'Chip War - Cuộc Chiến Vi Mạch',
     genre: 'Khoa học công nghệ',
     author: 'Chris Miller',
     entryDate: stdDateFormat.parse('26/06/2024'),
@@ -72,6 +73,14 @@ class _BookEntryFormState extends State<BookEntryForm> {
       "assets/images/book_entry_form_ticket.png";
   bool isHistoryEmpty = dataList.isEmpty ? true : false;
 
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    super.initState();
+  }
+
   Future<void> _loadData() async {
     // replace this line by the function where you fetch data from server
   }
@@ -87,7 +96,8 @@ class _BookEntryFormState extends State<BookEntryForm> {
       if (dateComparison != 0) {
         return dateComparison;
       } else {
-        return removeDiacritics(a.title!).compareTo(removeDiacritics(b.title!));
+        return removeDiacritics(a.bookName!)
+            .compareTo(removeDiacritics(b.bookName!));
       }
     });
     setState(() {});
@@ -126,8 +136,8 @@ class _BookEntryFormState extends State<BookEntryForm> {
         title: const Text(
           "Phiếu nhập sách",
           style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color.fromRGBO(12, 24, 68, 1)),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
           IconButton(

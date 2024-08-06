@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import 'bill_edit.dart';
@@ -26,6 +27,14 @@ class BillSearch extends StatefulWidget {
 class _BillSearchState extends State<BillSearch> {
   DateTime? _selectedDate;
 
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    super.initState();
+  }
+
   Future<void> _pickDate({
     required BuildContext context,
   }) async {
@@ -41,7 +50,6 @@ class _BillSearchState extends State<BillSearch> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

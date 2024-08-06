@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class BillEdit extends StatefulWidget {
   final VoidCallback backContextSwitcher;
@@ -10,8 +11,15 @@ class BillEdit extends StatefulWidget {
 }
 
 class _BillEditState extends State<BillEdit> {
-
   DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    super.initState();
+  }
 
   Future<void> _pickDate({
     required BuildContext context,
@@ -28,7 +36,6 @@ class _BillEditState extends State<BillEdit> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

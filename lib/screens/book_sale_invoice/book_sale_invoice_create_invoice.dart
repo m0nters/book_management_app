@@ -1,276 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../mutual_widgets.dart';
-import 'book_sale_invoice.dart';
+import 'book_sale_invoice_widgets.dart';
 import '../setting/setting.dart';
-import 'package:flutter/services.dart'; // Import for FilteringTextInputFormatter
 
 late DateTime serverUploadedDateInputData;
 late String serverUploadedCustomerNameInputData;
-List<InvoiceDataForForm> serverUploadedBookSaleInvoicesData = [];
-
-// Book Input Form
-class BookSaleInvoiceInputForm extends StatefulWidget {
-  late int
-      orderNum; // this cannot be `final` since we may remove a form and other forms behind it must update their `orderNum`s
-  final Color titleBarColor;
-  final Color titleColor;
-  final Color contentAreaColor;
-  final Color contentTitleColor;
-  final Color contentInputColor;
-  final Color contentInputFormFillColor;
-  final Color textFieldBorderColor;
-
-  BookSaleInvoiceInputForm({
-    super.key,
-    required this.orderNum,
-    this.titleBarColor = const Color.fromRGBO(252, 220, 148, 1),
-    this.titleColor = const Color.fromRGBO(120, 171, 168, 1),
-    this.contentAreaColor = const Color.fromRGBO(120, 171, 168, 1),
-    this.contentTitleColor = const Color.fromRGBO(241, 248, 232, 1),
-    this.contentInputColor = const Color.fromRGBO(12, 24, 68, 1),
-    this.contentInputFormFillColor = const Color.fromRGBO(241, 248, 232, 1),
-    this.textFieldBorderColor = Colors.grey,
-  });
-
-  @override
-  createState() => _BookSaleInvoiceInputFormState();
-}
-
-class _BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _quantityController = TextEditingController();
-  String genreController = '';
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _priceController.dispose();
-    _quantityController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          // title bar
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-          decoration: BoxDecoration(
-              color: widget.titleBarColor,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(8), topRight: Radius.circular(8))),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'STT ${widget.orderNum}',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: widget.titleColor),
-            ),
-          ),
-        ),
-        Container(
-            // content area
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(
-              color: widget.contentAreaColor,
-              borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(8),
-                  bottomRight: Radius.circular(8)),
-              boxShadow: hasShadow
-                  ? const [
-                      BoxShadow(
-                        offset: Offset(0, 4),
-                        color: Colors.grey,
-                        blurRadius: 4,
-                      )
-                    ]
-                  : null,
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.book, color: widget.contentTitleColor),
-                              const SizedBox(width: 4),
-                              Text('Tên sách',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: widget.contentTitleColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          TextField(
-                            controller: _titleController,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              filled: true,
-                              fillColor: widget.contentInputFormFillColor,
-                              hintText: "Nhập tên sách",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: widget.textFieldBorderColor,
-                                    width: 1.0),
-                              ),
-                            ),
-                            style: TextStyle(color: widget.contentInputColor),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.category,
-                                  color: widget.contentTitleColor),
-                              const SizedBox(width: 4),
-                              Text('Thể loại',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: widget.contentTitleColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          CustomDropdownMenu(
-                            options: genres,
-                            action: (genre) => genreController = genre ?? '',
-                            fillColor: widget.contentInputFormFillColor,
-                            width: double.infinity,
-                            hintText: 'Chọn một thể loại',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 28),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.money,
-                                  color: widget.contentTitleColor),
-                              const SizedBox(width: 4),
-                              Text('Đơn giá',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: widget.contentTitleColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          TextField(
-                            controller: _priceController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              filled: true,
-                              fillColor: widget.contentInputFormFillColor,
-                              hintText: "Nhập đơn giá",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: widget.textFieldBorderColor,
-                                    width: 1.0),
-                              ),
-                              suffixText: "VND",
-                            ),
-                            style: TextStyle(color: widget.contentInputColor),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.production_quantity_limits,
-                                  color: widget.contentTitleColor),
-                              const SizedBox(width: 4),
-                              Text('Số lượng',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: widget.contentTitleColor)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          TextField(
-                            controller: _quantityController,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]')), // Allow only digits
-                            ],
-                            decoration: InputDecoration(
-                              isDense: true,
-                              filled: true,
-                              fillColor: widget.contentInputFormFillColor,
-                              hintText: "Nhập số lượng",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: widget.textFieldBorderColor,
-                                    width: 1.0),
-                              ),
-                            ),
-                            style: TextStyle(color: widget.contentInputColor),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ))
-      ],
-    );
-  }
-
-  void updateOrderNumber(int newOrderNum) {
-    setState(() {
-      widget.orderNum = newOrderNum;
-    });
-  }
-
-  InvoiceDataForForm getBookSaleInvoiceData() {
-    return InvoiceDataForForm(
-      title: _titleController.text,
-      category: genreController,
-      price: int.tryParse(_priceController.text) ?? 0,
-      quantity: int.tryParse(_quantityController.text) ?? 0,
-    );
-  }
-}
+List<InvoiceData> serverUploadedBookSaleInvoicesData = [];
 
 class BookSaleInvoiceCreateInvoice extends StatefulWidget {
   final VoidCallback backContextSwitcher;
@@ -286,12 +22,12 @@ class BookSaleInvoiceCreateInvoice extends StatefulWidget {
 class _BookSaleInvoiceCreateInvoiceState
     extends State<BookSaleInvoiceCreateInvoice> {
   final List<Widget> _formWidgets = []; // Dynamic list of form widgets
-  final List<GlobalKey<_BookSaleInvoiceInputFormState>> _formKeys =
+  final List<GlobalKey<BookSaleInvoiceInputFormState>> _formKeys =
       []; // Corresponding keys
   final ScrollController _scrollController =
       ScrollController(); // Scroll controller
   final TextEditingController _customerNameController = TextEditingController();
-  bool _isShowing = false; // Track snack bar state
+  bool _isShowingSnackBar = false; // Track snack bar state
 
   @override
   void dispose() {
@@ -303,12 +39,17 @@ class _BookSaleInvoiceCreateInvoiceState
   @override
   void initState() {
     super.initState();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     _addForm(); // Add one form initially
   }
 
   void _addForm() {
     setState(() {
-      final formKey = GlobalKey<_BookSaleInvoiceInputFormState>();
+      final formKey = GlobalKey<BookSaleInvoiceInputFormState>();
       _formKeys.add(formKey); // Add the key to the list
 
       _formWidgets.add(
@@ -347,11 +88,9 @@ class _BookSaleInvoiceCreateInvoiceState
   }
 
   void _onSavePressed() {
-    if (_isShowing) return; // Prevent spamming button
+    if (_isShowingSnackBar) return; // Prevent spamming button
 
-    setState(() {
-      _isShowing = true; // Set saving state to true
-    });
+    _isShowingSnackBar = true; // Set saving state to true
 
     String dateSaved = (serverUploadedDateInputData.year ==
                 DateTime.now().year &&
@@ -386,9 +125,8 @@ class _BookSaleInvoiceCreateInvoiceState
         )
         .closed
         .then((reason) {
-      setState(() {
-        _isShowing = false; // Reset saving state after snack bar is closed
-      });
+      _isShowingSnackBar =
+          false; // Reset saving state after snack bar is closed
     });
   }
 
@@ -544,8 +282,13 @@ class _BookSaleInvoiceCreateInvoiceState
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                backgroundColor: const Color.fromRGBO(241, 248, 232, 1),
-                                title: const Text('Xác nhận xóa',),
+                                backgroundColor:
+                                    const Color.fromRGBO(241, 248, 232, 1),
+                                title: Text(
+                                  _formWidgets.length != 1
+                                      ? 'Xác nhận xóa'
+                                      : "ĐÂY LÀ HÓA ĐƠN BÁN SÁCH CUỐI CÙNG!",
+                                ),
                                 content: const Text(
                                     "Bạn có chắc chắn muốn xóa hóa đơn bán sách này?"),
                                 actions: <Widget>[
@@ -554,7 +297,12 @@ class _BookSaleInvoiceCreateInvoiceState
                                       Navigator.of(context).pop(
                                           false); // Dismisses the dialog and does not delete the form
                                     },
-                                    child: const Text("Không", style: TextStyle(color: Color.fromRGBO(120, 171, 168, 1)),),
+                                    child: const Text(
+                                      "Không",
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromRGBO(120, 171, 168, 1)),
+                                    ),
                                   ),
                                   TextButton(
                                     onPressed: () {
@@ -567,7 +315,9 @@ class _BookSaleInvoiceCreateInvoiceState
                                     ),
                                     child: const Text(
                                       'Xóa',
-                                      style: TextStyle(color: Color.fromRGBO(239, 156, 102, 1)),
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromRGBO(239, 156, 102, 1)),
                                     ),
                                   ),
                                 ],
@@ -593,16 +343,9 @@ class _BookSaleInvoiceCreateInvoiceState
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             setState(() {
                               for (int i = 0; i < _formWidgets.length; i++) {
-                                try {
-                                  _formKeys[i]
-                                      .currentState!
-                                      .updateOrderNumber(i + 1);
-                                  print(i + 1);
-                                  print(_formKeys[i].currentState);
-                                } catch (e) {
-                                  print(
-                                      'Error updating order number: $e'); // Catch and log any errors
-                                }
+                                _formKeys[i]
+                                    .currentState!
+                                    .updateOrderNumber(i + 1);
                               }
                             });
                           });

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../controllers/overall_screen_context_controller.dart';
 
 bool hasShadow = true;
@@ -13,6 +14,14 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +44,7 @@ class _SettingState extends State<Setting> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  "Bật/tắt hiệu ứng đổ bóng",
+                  "Hiệu ứng đổ bóng",
                   style: TextStyle(fontSize: 18),
                 ),
                 const Spacer(),

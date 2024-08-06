@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../controllers/main_screen_context_controller.dart';
 
 class DebtReport extends StatefulWidget {
@@ -17,6 +18,14 @@ class DebtReport extends StatefulWidget {
 }
 
 class _DebtReportState extends State<DebtReport> {
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -62,43 +62,55 @@ class _MainFunctionsContextControllerState
 
     // Initialize _contextOptions here to include the switchContext function
     navigationStack = {
-      MainFunctionsContexts.home.index: [Home(
-        mainScreenContextSwitcher: externalContextSwitcher,
-        overallScreenContextSwitcher: widget.overallScreenContextSwitcher,
-      )],
-      MainFunctionsContexts.bookEntryForm.index: [BookEntryForm(
-        backContextSwitcher: goBack,
-        reloadContext: forceRestartToFirstScreen,
-        internalScreenContextSwitcher: internalContextSwitcher,
-      )],
-      MainFunctionsContexts.bookSaleInvoice.index: [BookSaleInvoice(
-        backContextSwitcher: goBack,
-        reloadContext: forceRestartToFirstScreen,
-        internalScreenContextSwitcher: internalContextSwitcher,
-      )],
-      MainFunctionsContexts.bill.index: [Bill(
-        backContextSwitcher: goBack,
-        reloadContext: forceRestartToFirstScreen,
-        internalScreenContextSwitcher: internalContextSwitcher,
-      )],
-      MainFunctionsContexts.outstandingReport.index: [OutstandingReport(
-        backContextSwitcher: goBack,
-        reloadContext: forceRestartToFirstScreen,
-        internalScreenContextSwitcher: internalContextSwitcher,
-      )],
+      MainFunctionsContexts.home.index: [
+        Home(
+          mainScreenContextSwitcher: externalContextSwitcher,
+          overallScreenContextSwitcher: widget.overallScreenContextSwitcher,
+        )
+      ],
+      MainFunctionsContexts.bookEntryForm.index: [
+        BookEntryForm(
+          backContextSwitcher: goBack,
+          reloadContext: forceRestartToFirstScreen,
+          internalScreenContextSwitcher: internalContextSwitcher,
+        )
+      ],
+      MainFunctionsContexts.bookSaleInvoice.index: [
+        BookSaleInvoice(
+          backContextSwitcher: goBack,
+          reloadContext: forceRestartToFirstScreen,
+          internalScreenContextSwitcher: internalContextSwitcher,
+        )
+      ],
+      MainFunctionsContexts.bill.index: [
+        Bill(
+          backContextSwitcher: goBack,
+          reloadContext: forceRestartToFirstScreen,
+          internalScreenContextSwitcher: internalContextSwitcher,
+        )
+      ],
+      MainFunctionsContexts.outstandingReport.index: [
+        OutstandingReport(
+          backContextSwitcher: goBack,
+          reloadContext: forceRestartToFirstScreen,
+          internalScreenContextSwitcher: internalContextSwitcher,
+        )
+      ],
     };
 
     _currentContext = navigationStack[_selectedIndex]!.removeLast();
   }
 
-  // this function is only for bottom bar navigation externally
+  // this function is only for bottom bar navigation for external items or restart
+  // the current item in bottom bar to first page
   void externalContextSwitcher(int index) {
     setState(() {
-      // Clicking the current item will result in no action
       if (index != _selectedIndex) {
         navigationStack[_selectedIndex]!.add(_currentContext);
         _selectedIndex = index;
         _currentContext = navigationStack[_selectedIndex]!.removeLast();
+      } else {
+        forceRestartToFirstScreen();
       }
     });
   }
@@ -117,14 +129,10 @@ class _MainFunctionsContextControllerState
     });
   }
 
-  void forceRestartToFirstScreen({int? index}) {
+  void forceRestartToFirstScreen() {
     setState(() {
-      final currentIndex = index ?? _selectedIndex; // guard to check whether user double taps on other item or not
-
-      if (currentIndex == _selectedIndex) {
-        _currentContext = navigationStack[_selectedIndex]!.first;
-        navigationStack[_selectedIndex] = [_currentContext];
-      }
+      _currentContext = navigationStack[_selectedIndex]!.first;
+      navigationStack[_selectedIndex] = [_currentContext];
     });
   }
 
@@ -152,10 +160,7 @@ class _MainFunctionsContextControllerState
                   elevation: 0,
                   items: List.generate(5, (index) {
                     return BottomNavigationBarItem(
-                      icon: GestureDetector(
-                        onDoubleTap: () => forceRestartToFirstScreen(index: index), // double tap on other item will result nothing
-                        child: getIconForIndex(index),
-                      ),
+                      icon: getIconForIndex(index),
                       label: getLabelForIndex(index),
                     );
                   }),
@@ -192,20 +197,15 @@ class _MainFunctionsContextControllerState
   Widget getIconForIndex(int index) {
     if (index == MainFunctionsContexts.home.index) {
       return const Icon(Icons.home);
-    }
-    else if (index == MainFunctionsContexts.bookEntryForm.index) {
+    } else if (index == MainFunctionsContexts.bookEntryForm.index) {
       return const Icon(Icons.input);
-    }
-    else if (index == MainFunctionsContexts.bookSaleInvoice.index) {
+    } else if (index == MainFunctionsContexts.bookSaleInvoice.index) {
       return const Icon(Icons.receipt);
-    }
-    else if (index == MainFunctionsContexts.bill.index) {
+    } else if (index == MainFunctionsContexts.bill.index) {
       return const Icon(Icons.monetization_on_outlined);
-    }
-    else if (index == MainFunctionsContexts.outstandingReport.index) {
+    } else if (index == MainFunctionsContexts.outstandingReport.index) {
       return const Icon(Icons.assignment);
-    }
-    else {
+    } else {
       return const Icon(Icons.error);
     }
   }
@@ -213,20 +213,15 @@ class _MainFunctionsContextControllerState
   String getLabelForIndex(int index) {
     if (index == MainFunctionsContexts.home.index) {
       return 'Trang chủ';
-    }
-    else if (index == MainFunctionsContexts.bookEntryForm.index) {
+    } else if (index == MainFunctionsContexts.bookEntryForm.index) {
       return 'Nhập sách';
-    }
-    else if (index == MainFunctionsContexts.bookSaleInvoice.index) {
+    } else if (index == MainFunctionsContexts.bookSaleInvoice.index) {
       return 'Hóa đơn';
-    }
-    else if (index == MainFunctionsContexts.bill.index) {
+    } else if (index == MainFunctionsContexts.bill.index) {
       return 'Thu tiền';
-    }
-    else if (index == MainFunctionsContexts.outstandingReport.index) {
+    } else if (index == MainFunctionsContexts.outstandingReport.index) {
       return 'Báo cáo';
-    }
-    else {
+    } else {
       return 'Chưa cài đặt';
     }
   }

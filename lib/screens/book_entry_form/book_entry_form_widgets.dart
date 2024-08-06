@@ -6,7 +6,7 @@ import 'package:flutter/services.dart'; // Import for FilteringTextInputFormatte
 // =============================================================================
 class EntryData {
   String? entryCode;
-  String? title;
+  String? bookName;
   String? genre;
   String? author;
   int? quantity;
@@ -14,7 +14,7 @@ class EntryData {
 
   EntryData({
     this.entryCode = '',
-    this.title = '',
+    this.bookName = '',
     this.genre = '',
     this.author = '',
     this.quantity = 0,
@@ -24,9 +24,9 @@ class EntryData {
   // Method to convert to map for compatibility with InfoTicket (for UI)
   Map<String, String> toMap() {
     return {
-      'Mã phiếu': entryCode ?? '',
-      'Sách': title ?? '',
-      'Tác giả': author ?? '',
+      'Mã phiếu': entryCode!,
+      'Sách': bookName!,
+      'Tác giả': author!,
       'Ngày nhập': entryDate != null ? stdDateFormat.format(entryDate!) : '',
       'Số lượng': quantity.toString(), // Convert quantity to String
     };
@@ -77,7 +77,7 @@ class BookEntryInputForm extends StatefulWidget {
 }
 
 class BookEntryInputFormState extends State<BookEntryInputForm> {
-  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _bookNameController = TextEditingController();
   final TextEditingController _authorController = TextEditingController();
   String _genreController = '';
   final TextEditingController _quantityController = TextEditingController();
@@ -89,7 +89,7 @@ class BookEntryInputFormState extends State<BookEntryInputForm> {
       widget.onStateCreated!(this);
     }
 
-    _titleController.text = widget.reference?.title ?? '';
+    _bookNameController.text = widget.reference?.bookName ?? '';
     _authorController.text = widget.reference?.author ?? '';
     _quantityController.text = widget.reference?.quantity.toString() ?? '';
     _genreController = widget.reference?.genre ?? '';
@@ -98,7 +98,7 @@ class BookEntryInputFormState extends State<BookEntryInputForm> {
 
   @override
   void dispose() {
-    _titleController.dispose();
+    _bookNameController.dispose();
     _authorController.dispose();
     _quantityController.dispose();
     super.dispose();
@@ -165,7 +165,7 @@ class BookEntryInputFormState extends State<BookEntryInputForm> {
                           ),
                           const SizedBox(height: 4),
                           TextField(
-                            controller: _titleController,
+                            controller: _bookNameController,
                             decoration: InputDecoration(
                               isDense: true,
                               filled: true,
@@ -319,7 +319,7 @@ class BookEntryInputFormState extends State<BookEntryInputForm> {
 
   EntryData getBookEntryData() {
     return EntryData(
-      title: _titleController.text,
+      bookName: _bookNameController.text,
       genre: _genreController,
       author: _authorController.text,
       quantity: int.tryParse(_quantityController.text) ?? 0,

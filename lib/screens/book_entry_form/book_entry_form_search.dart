@@ -6,22 +6,22 @@ import 'book_entry_form_edit_search.dart';
 
 List<EntryData> serverFetchedBookEntriesData = [
   EntryData(
-      title: 'Tôi thấy hoa vàng ở trên cỏ xanh',
+      bookName: 'Tôi thấy hoa vàng ở trên cỏ xanh',
       genre: 'Tiểu thuyết',
       author: 'Nguyễn Nhật Ánh',
       quantity: 29),
   EntryData(
-      title: 'Cho tôi biển mặn',
+      bookName: 'Cho tôi biển mặn',
       genre: 'Truyện ngắn',
       author: 'Việt',
       quantity: 12),
   EntryData(
-      title: 'Cho tôi biến mất một ngày',
+      bookName: 'Cho tôi biến mất một ngày',
       genre: 'Tình cảm',
       author: 'Việt',
       quantity: 25),
   EntryData(
-      title: 'Hai con mèo ngồi bên cửa sổ',
+      bookName: 'Hai con mèo ngồi bên cửa sổ',
       genre: 'Truyện ngắn',
       author: 'Ngô Thùy Linh',
       quantity: 21),
@@ -30,9 +30,9 @@ List<EntryData> serverFetchedBookEntriesData = [
 class BookEntryFormSearch extends StatefulWidget {
   final VoidCallback backContextSwitcher;
   final Function(Widget) internalScreenContextSwitcher;
-  final DateTime? initialDate;
+  late DateTime? initialDate;
 
-  const BookEntryFormSearch(
+  BookEntryFormSearch(
       {super.key,
       required this.backContextSwitcher,
       required this.internalScreenContextSwitcher,
@@ -43,7 +43,6 @@ class BookEntryFormSearch extends StatefulWidget {
 }
 
 class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
-  late DateTime dateChosen;
   bool hasPickedDate = false;
   bool allSelected =
       false; // Variable to track the state of the "Select All" checkbox
@@ -83,7 +82,6 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
 
     if (widget.initialDate != null) {
       hasPickedDate = true;
-      dateChosen = widget.initialDate!;
     }
 
     _selectedItems =
@@ -92,10 +90,6 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
 
   @override
   void dispose() {
-    // Reset orientation when leaving this screen
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
     _totalScrollController.dispose();
     _searchResultScrollController.dispose();
     super.dispose();
@@ -103,9 +97,10 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
 
   void onDateChange(DateTime date) {
     setState(() {
-      dateChosen = date;
+      widget.initialDate = date;
       hasPickedDate = true;
-      isEmptyBecauseOfDeletion = false;
+      isEmptyBecauseOfDeletion =
+          false; // meaning if there's no result for desired date, it's not because of deletion
       // backend code for fetch data into serverFetchedBookEntriesData for that date
     });
   }
@@ -176,15 +171,16 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
     ];
 
     widget.internalScreenContextSwitcher(BookEntryFormEditSearch(
-        editedItems: editedItems,
-        backContextSwitcher: widget.backContextSwitcher,
-        editedDate: dateChosen,
+      editedItems: editedItems,
+      backContextSwitcher: widget.backContextSwitcher,
+      editedDate: widget.initialDate!,
     ));
   }
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = hasPickedDate ? stdDateFormat.format(dateChosen) : '';
+    final formattedDate =
+        hasPickedDate ? stdDateFormat.format(widget.initialDate!) : '';
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(225, 227, 234, 1),
@@ -194,8 +190,8 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
         title: const Text(
           "Tra cứu phiếu nhập sách",
           style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Color.fromRGBO(12, 24, 68, 1)),
+            fontWeight: FontWeight.bold,
+          ),
         ),
         leading: IconButton(
           onPressed: () {
@@ -384,7 +380,7 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                               decoration: BoxDecoration(
                                 color: _selectedItems[index]
                                     ? const Color.fromRGBO(255, 245, 225, 1)
-                                    : Colors.white,
+                                    : Colors.grey[100],
                                 borderRadius: isLastItem
                                     ? const BorderRadius.only(
                                         bottomLeft: Radius.circular(8),
@@ -417,7 +413,7 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                                   Expanded(
                                       flex: 3,
                                       child: Center(
-                                          child: Text(entry.title!,
+                                          child: Text(entry.bookName!,
                                               style: const TextStyle(
                                                 color: Color.fromRGBO(
                                                     12, 24, 68, 1),

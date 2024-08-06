@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 
 class DebtReportEdit extends StatefulWidget {
@@ -14,6 +15,15 @@ class DebtReportEdit extends StatefulWidget {
 
 class _DebtReportEditState extends State<DebtReportEdit> {
   DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    super.initState();
+  }
+
   Future<void> _pickDate({
     required BuildContext context,
   }) async {

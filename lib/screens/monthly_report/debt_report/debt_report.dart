@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:expandable/expandable.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -31,6 +32,14 @@ class BaoCaoCongNo extends StatefulWidget {
 
 class _BaoCaoCongNoState extends State<BaoCaoCongNo> {
   DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    super.initState();
+  }
 
   Future<void> _pickDate({
     required BuildContext context,

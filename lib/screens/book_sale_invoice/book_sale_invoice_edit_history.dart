@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import '../setting/setting.dart';
 import '../mutual_widgets.dart';
-import 'book_sale_invoice.dart';
-import 'package:intl/intl.dart';
+import 'book_sale_invoice_widgets.dart';
 import 'package:flutter/services.dart'; // Import for FilteringTextInputFormatter
 
 late DateTime serverUploadedDateInputData;
 late String serverUploadedCustomerNameInputData;
-late InvoiceDataForForm serverUploadedBookEntryData;
+late InvoiceData serverUploadedBookEntryData;
 
 class BookSaleInvoiceEditHistory extends StatefulWidget {
   final VoidCallback backContextSwitcher;
   final VoidCallback reloadContext;
-  final InvoiceDataForTicket editItem;
+  final InvoiceData editItem;
 
   final Color titleBarColor;
   final Color titleColor;
@@ -37,10 +36,12 @@ class BookSaleInvoiceEditHistory extends StatefulWidget {
   });
 
   @override
-  State<BookSaleInvoiceEditHistory> createState() => _BookSaleInvoiceEditHistoryState();
+  State<BookSaleInvoiceEditHistory> createState() =>
+      _BookSaleInvoiceEditHistoryState();
 }
 
-class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory> {
+class _BookSaleInvoiceEditHistoryState
+    extends State<BookSaleInvoiceEditHistory> {
   final TextEditingController _customerNameController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   String _genreController = '';
@@ -51,29 +52,31 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
   @override
   void initState() {
     super.initState();
-    _customerNameController.text = widget.editItem.customerName;
-    _titleController.text = widget.editItem.bookName;
-    _genreController = widget.editItem.genre;
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
+    _customerNameController.text = widget.editItem.customerName!;
+    _titleController.text = widget.editItem.bookName!;
+    _genreController = widget.editItem.genre!;
     _quantityController.text = widget.editItem.quantity.toString();
     _priceController.text = widget.editItem.price.toString();
   }
 
-  bool _isSaving = false;
+  bool _isShowingSnackBar = false;
 
   void _onUpdatePressed() {
-    if (_isSaving) return; // Prevent spamming button
+    if (_isShowingSnackBar) return; // Prevent spamming button
 
-    setState(() {
-      _isSaving = true; // Set saving state to true
-    });
+    _isShowingSnackBar = true; // Set saving state to true
 
-    if (_dateController ==
-        DateFormat('dd/MM/yy').parse(widget.editItem.purchaseDate) &&
+    if (_dateController == widget.editItem.purchaseDate &&
         _customerNameController.text == widget.editItem.customerName &&
         _titleController.text == widget.editItem.bookName &&
         _genreController == widget.editItem.genre &&
         _quantityController.text == widget.editItem.quantity.toString() &&
-        _priceController.text == widget.editItem.price.toString()){
+        _priceController.text == widget.editItem.price.toString()) {
       _showSnackBar('Không có dữ liệu gì thay đổi!', isError: true);
       return;
     }
@@ -93,20 +96,19 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
   void _showSnackBar(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context)
         .showSnackBar(
-      SnackBar(
-        content: Text(message,
-            style:
-            const TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
-        backgroundColor:
-        isError ? const Color.fromRGBO(255, 105, 105, 1) : Colors.green,
-        duration: const Duration(seconds: 2),
-      ),
-    )
+          SnackBar(
+            content: Text(message,
+                style:
+                    const TextStyle(color: Color.fromRGBO(215, 227, 234, 1))),
+            backgroundColor:
+                isError ? const Color.fromRGBO(255, 105, 105, 1) : Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        )
         .closed
         .then((reason) {
-      setState(() {
-        _isSaving = false; // Reset saving state after snack bar is closed
-      });
+      _isShowingSnackBar =
+          false; // Reset saving state after snack bar is closed
     });
   }
 
@@ -120,8 +122,8 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
           title: const Text(
             "Chỉnh sửa",
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(120, 171, 168, 1)),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           leading: IconButton(
             onPressed: () {
@@ -132,7 +134,7 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
         ),
         body: Padding(
             padding:
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -163,12 +165,12 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                           topRight: Radius.circular(8)),
                       boxShadow: hasShadow
                           ? const [
-                        BoxShadow(
-                          offset: Offset(0, 4),
-                          color: Colors.grey,
-                          blurRadius: 4,
-                        )
-                      ]
+                              BoxShadow(
+                                offset: Offset(0, 4),
+                                color: Colors.grey,
+                                blurRadius: 4,
+                              )
+                            ]
                           : null,
                     ),
                     child: Align(
@@ -192,12 +194,11 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                                   return AlertDialog(
                                     title: Text("Thông tin",
                                         style: TextStyle(
-                                            color:
-                                            widget.titleColor)),
+                                            color: widget.titleColor)),
                                     content: Text(
                                         "Mã hóa đơn là khóa chính để định danh bản thân hóa đơn trên cơ sở dữ liệu, do đó ta không (thể) chỉnh sửa nó.",
                                         style:
-                                        TextStyle(color: Colors.grey[700])),
+                                            TextStyle(color: Colors.grey[700])),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
@@ -216,16 +217,16 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                             icon: Icon(Icons.info_outline,
                                 size: 23,
                                 color:
-                                widget.titleColor), // Adjust size as needed
+                                    widget.titleColor), // Adjust size as needed
                           ),
                         ],
                       ),
                     ),
                   ),
                   Container(
-                    // content area
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      // content area
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 8),
                       decoration: BoxDecoration(
                         color: widget.contentAreaColor,
                         borderRadius: const BorderRadius.only(
@@ -233,12 +234,12 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                             bottomRight: Radius.circular(8)),
                         boxShadow: hasShadow
                             ? const [
-                          BoxShadow(
-                            offset: Offset(0, 4),
-                            color: Colors.grey,
-                            blurRadius: 4,
-                          )
-                        ]
+                                BoxShadow(
+                                  offset: Offset(0, 4),
+                                  color: Colors.grey,
+                                  blurRadius: 4,
+                                )
+                              ]
                             : null,
                       ),
                       child: Column(
@@ -261,11 +262,11 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                               Material(
                                 borderRadius: BorderRadius.circular(4),
                                 child: DatePickerBox(
-                                  initialDate: DateFormat('dd/MM/yy')
-                                      .parse(widget.editItem.purchaseDate),
-                                  onDateChanged: (date) => _dateController = date,
+                                  initialDate: widget.editItem.purchaseDate,
+                                  onDateChanged: (date) =>
+                                      _dateController = date,
                                   backgroundColor:
-                                  widget.contentInputFormFillColor,
+                                      widget.contentInputFormFillColor,
                                   foregroundColor: widget.contentInputColor,
                                 ),
                               )
@@ -295,8 +296,7 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                                     suffixIcon: const Icon(Icons.people),
                                     isDense: true,
                                     filled: true,
-                                    fillColor:
-                                    widget.contentInputFormFillColor,
+                                    fillColor: widget.contentInputFormFillColor,
                                     hintText: "Nhập tên khách hàng",
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(4),
@@ -329,7 +329,8 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: widget.contentTitleColor)),
+                                                color:
+                                                    widget.contentTitleColor)),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
@@ -339,14 +340,16 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                                         isDense: true,
                                         filled: true,
                                         fillColor:
-                                        widget.contentInputFormFillColor,
+                                            widget.contentInputFormFillColor,
                                         hintText: "Nhập tên sách",
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: widget.textFieldBorderColor,
+                                              color:
+                                                  widget.textFieldBorderColor,
                                               width: 1.0),
                                         ),
                                       ),
@@ -370,15 +373,17 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: widget.contentTitleColor)),
+                                                color:
+                                                    widget.contentTitleColor)),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
                                     CustomDropdownMenu(
                                       options: genres,
                                       action: (genre) =>
-                                      _genreController = genre ?? '',
-                                      fillColor: widget.contentInputFormFillColor,
+                                          _genreController = genre ?? '',
+                                      fillColor:
+                                          widget.contentInputFormFillColor,
                                       width: double.infinity,
                                       hintText: 'Chọn một thể loại',
                                       initialValue: widget.editItem.genre,
@@ -404,7 +409,8 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: widget.contentTitleColor)),
+                                                color:
+                                                    widget.contentTitleColor)),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
@@ -420,14 +426,16 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                                         isDense: true,
                                         filled: true,
                                         fillColor:
-                                        widget.contentInputFormFillColor,
+                                            widget.contentInputFormFillColor,
                                         hintText: "Nhập đơn giá",
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: widget.textFieldBorderColor,
+                                              color:
+                                                  widget.textFieldBorderColor,
                                               width: 1.0),
                                         ),
                                         suffixText: "VND",
@@ -452,7 +460,8 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: widget.contentTitleColor)),
+                                                color:
+                                                    widget.contentTitleColor)),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
@@ -468,14 +477,16 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                                         isDense: true,
                                         filled: true,
                                         fillColor:
-                                        widget.contentInputFormFillColor,
+                                            widget.contentInputFormFillColor,
                                         hintText: "Nhập số lượng",
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: widget.textFieldBorderColor,
+                                              color:
+                                                  widget.textFieldBorderColor,
                                               width: 1.0),
                                         ),
                                       ),
@@ -485,7 +496,6 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
                                   ],
                                 ),
                               ),
-
                             ],
                           ),
                         ],
@@ -495,10 +505,10 @@ class _BookSaleInvoiceEditHistoryState extends State<BookSaleInvoiceEditHistory>
             )));
   }
 
-  InvoiceDataForForm getBookEntryData() {
-    return InvoiceDataForForm(
-      title: _titleController.text,
-      category: _genreController,
+  InvoiceData getBookEntryData() {
+    return InvoiceData(
+      bookName: _titleController.text,
+      genre: _genreController,
       price: int.tryParse(_priceController.text) ?? 0,
       quantity: int.tryParse(_quantityController.text) ?? 0,
     );

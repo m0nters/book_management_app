@@ -35,7 +35,8 @@ class BookEntryFormEditHistory extends StatefulWidget {
   });
 
   @override
-  State<BookEntryFormEditHistory> createState() => _BookEntryFormEditHistoryState();
+  State<BookEntryFormEditHistory> createState() =>
+      _BookEntryFormEditHistoryState();
 }
 
 class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
@@ -44,27 +45,29 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
   String _genreController = '';
   final TextEditingController _authorController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
+  bool _isShowingSnackBar = false;
 
   @override
   void initState() {
     super.initState();
-    _titleController.text = widget.editItem.title ?? '';
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
+    _titleController.text = widget.editItem.bookName ?? '';
     _authorController.text = widget.editItem.author ?? '';
     _quantityController.text = widget.editItem.quantity.toString();
     _genreController = widget.editItem.genre ?? '';
   }
 
-  bool _isSaving = false;
-
   void _onUpdatePressed() {
-    if (_isSaving) return; // Prevent spamming button
+    if (_isShowingSnackBar) return; // Prevent spamming button
 
-    setState(() {
-      _isSaving = true; // Set saving state to true
-    });
+    _isShowingSnackBar = true; // Set saving state to true
 
     if (_dateController == widget.editItem.entryDate &&
-        _titleController.text == widget.editItem.title &&
+        _titleController.text == widget.editItem.bookName &&
         _genreController == widget.editItem.genre &&
         _authorController.text == widget.editItem.author &&
         _quantityController.text == widget.editItem.quantity.toString()) {
@@ -96,9 +99,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
         )
         .closed
         .then((reason) {
-      setState(() {
-        _isSaving = false; // Reset saving state after snack bar is closed
-      });
+      _isShowingSnackBar =
+          false; // Reset saving state after snack bar is closed
     });
   }
 
@@ -112,15 +114,14 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
           title: const Text(
             "Chỉnh sửa",
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color.fromRGBO(12, 24, 68, 1)),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           leading: IconButton(
             onPressed: () {
               widget.backContextSwitcher();
             },
             icon: const Icon(Icons.arrow_back),
-            color: const Color.fromRGBO(12, 24, 68, 1),
           ),
         ),
         body: Padding(
@@ -185,8 +186,7 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                   return AlertDialog(
                                     title: Text("Thông tin",
                                         style: TextStyle(
-                                            color:
-                                                widget.titleBarColor)),
+                                            color: widget.titleBarColor)),
                                     content: Text(
                                         "Mã phiếu là khóa chính để định danh bản thân phiếu trên cơ sở dữ liệu, do đó ta không (thể) chỉnh sửa nó.",
                                         style:
@@ -217,8 +217,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                   ),
                   Container(
                       // content area
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 8),
                       decoration: BoxDecoration(
                         color: widget.contentAreaColor,
                         borderRadius: const BorderRadius.only(
@@ -255,7 +255,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                 borderRadius: BorderRadius.circular(4),
                                 child: DatePickerBox(
                                   initialDate: widget.editItem.entryDate,
-                                  onDateChanged: (date) => _dateController = date,
+                                  onDateChanged: (date) =>
+                                      _dateController = date,
                                   backgroundColor:
                                       widget.contentInputFormFillColor,
                                   foregroundColor: widget.contentTitleColor,
@@ -279,7 +280,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: widget.contentTitleColor)),
+                                                color:
+                                                    widget.contentTitleColor)),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
@@ -292,11 +294,13 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                             widget.contentInputFormFillColor,
                                         hintText: "Nhập tên sách",
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: widget.textFieldBorderColor,
+                                              color:
+                                                  widget.textFieldBorderColor,
                                               width: 1.0),
                                         ),
                                       ),
@@ -320,7 +324,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: widget.contentTitleColor)),
+                                                color:
+                                                    widget.contentTitleColor)),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
@@ -328,7 +333,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                       options: genres,
                                       action: (genre) =>
                                           _genreController = genre ?? '',
-                                      fillColor: widget.contentInputFormFillColor,
+                                      fillColor:
+                                          widget.contentInputFormFillColor,
                                       width: double.infinity,
                                       hintText: 'Chọn một thể loại',
                                       initialValue: widget.editItem.genre,
@@ -354,7 +360,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: widget.contentTitleColor)),
+                                                color:
+                                                    widget.contentTitleColor)),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
@@ -367,11 +374,13 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                             widget.contentInputFormFillColor,
                                         hintText: "Nhập tác giả",
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: widget.textFieldBorderColor,
+                                              color:
+                                                  widget.textFieldBorderColor,
                                               width: 1.0),
                                         ),
                                       ),
@@ -395,7 +404,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                             style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: widget.contentTitleColor)),
+                                                color:
+                                                    widget.contentTitleColor)),
                                       ],
                                     ),
                                     const SizedBox(height: 4),
@@ -414,11 +424,13 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                             widget.contentInputFormFillColor,
                                         hintText: "Nhập số lượng",
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(4),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                              color: widget.textFieldBorderColor,
+                                              color:
+                                                  widget.textFieldBorderColor,
                                               width: 1.0),
                                         ),
                                       ),
@@ -439,7 +451,7 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
 
   EntryData getBookEntryData() {
     return EntryData(
-      title: _titleController.text,
+      bookName: _titleController.text,
       genre: _genreController,
       author: _authorController.text,
       quantity: int.tryParse(_quantityController.text) ?? 0,
