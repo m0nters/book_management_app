@@ -25,7 +25,7 @@ List<InvoiceData> serverFetchedBookSaleInvoicesData = [
       bookName: 'Hai con mèo ngồi bên cửa sổ',
       genre: 'Truyện ngắn',
       price: 12000,
-      quantity: 21),
+      quantity: 21000),
 ]; // backend fetch data from here
 
 class BookSaleInvoiceSearch extends StatefulWidget {
@@ -84,6 +84,11 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
     if (widget.initialDate != null) {
       hasPickedDate = true;
     }
+    if (widget.customerName != null && widget.customerName != '') {
+      // the second condition is easily to be ignored and when it's ignored it becomes a very insidious bug to detect
+      hasInputtedCustomerName = true;
+      _customerNameController.text = widget.customerName!.trim();
+    }
 
     _selectedItems = List.generate(
         serverFetchedBookSaleInvoicesData.length, (index) => false);
@@ -102,18 +107,27 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
       if (date != null) {
         hasPickedDate = true;
         widget.initialDate = date;
-      }
-      else {
+      } else {
         hasPickedDate = false;
       }
+
       if (customerName != null && customerName != '') {
         hasInputtedCustomerName = true;
         widget.customerName = customerName;
-      }
-      else {
+      } else {
         hasInputtedCustomerName = false;
       }
-      hasEnoughInfo = hasPickedDate & hasInputtedCustomerName;
+
+      if (hasEnoughInfo = hasPickedDate & hasInputtedCustomerName) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _totalScrollController.animateTo(
+            _totalScrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            // Adjust speed if needed
+            curve: Curves.easeOut,
+          );
+        });
+      }
 
       isEmptyBecauseOfDeletion = false;
       // backend code for fetch data into serverFetchedBookEntriesData for that date
@@ -203,7 +217,8 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
   Widget build(BuildContext context) {
     final formattedDate =
         hasPickedDate ? stdDateFormat.format(widget.initialDate!) : '';
-    final customerName = hasInputtedCustomerName ? widget.customerName!.trim() : '';
+    final customerName =
+        hasInputtedCustomerName ? widget.customerName!.trim() : '';
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(241, 248, 232, 1),
@@ -234,14 +249,16 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                 const Text(
                   "Ngày tra: ",
                   style: TextStyle(
-                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1)),
+                      fontSize: 16,
+                      color: Color.fromRGBO(120, 171, 168, 1),
+                      fontWeight: FontWeight.bold),
                 ),
                 DatePickerBox(
                   initialDate: widget.initialDate,
                   onDateChanged: (date) =>
                       onInfoChange(date, widget.customerName),
                   backgroundColor: const Color.fromRGBO(200, 207, 160, 1),
-                  foregroundColor: Colors.black,
+                  foregroundColor: const Color.fromRGBO(12, 24, 68, 1),
                   hintColor: const Color.fromRGBO(122, 122, 122, 1),
                 )
               ],
@@ -255,7 +272,9 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                 const Text(
                   "Họ tên khách hàng: ",
                   style: TextStyle(
-                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1)),
+                      fontSize: 16,
+                      color: Color.fromRGBO(120, 171, 168, 1),
+                      fontWeight: FontWeight.bold),
                 ),
                 Container(
                   width: 196,
@@ -309,7 +328,7 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                             ),
                             children: [
                               const TextSpan(
-                                text: "Hóa đơn bán sách ngày ",
+                                text: "Hóa đơn ngày ",
                                 style: TextStyle(
                                   color: Color.fromRGBO(120, 171, 168, 1),
                                   fontWeight: FontWeight.bold,
@@ -323,14 +342,16 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                                 ),
                               ),
                               const TextSpan(
-                                text: " cho ",
+                                text: " cho khách hàng ",
                                 style: TextStyle(
                                   color: Color.fromRGBO(120, 171, 168, 1),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               TextSpan(
-                                text: customerName,
+                                text: customerName.length < 20
+                                    ? customerName
+                                    : '${customerName.substring(0, 17)}...',
                                 style: const TextStyle(
                                   color: Color.fromRGBO(239, 156, 102, 1),
                                   fontWeight: FontWeight.bold,
@@ -415,40 +436,45 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                               child: Center(
                                   child: Text('STT',
                                       style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                        color: Color.fromRGBO(12, 24, 68, 1),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       )))),
                           const Expanded(
                               flex: 3,
                               child: Center(
                                   child: Text('Tên sách',
                                       style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                        color: Color.fromRGBO(12, 24, 68, 1),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       )))),
                           const Expanded(
                               flex: 2,
                               child: Center(
                                   child: Text('Thể loại',
                                       style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                        color: Color.fromRGBO(12, 24, 68, 1),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       )))),
                           const Expanded(
                               flex: 2,
                               child: Center(
                                   child: Text('Đơn giá',
                                       style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                        color: Color.fromRGBO(12, 24, 68, 1),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       )))),
                           const Expanded(
                               flex: 1,
                               child: Center(
                                   child: Text('Số lượng',
                                       style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
+                                        color: Color.fromRGBO(12, 24, 68, 1),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       )))),
                         ],
                       ),
@@ -507,8 +533,10 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                                               style: TextStyle(
                                                 color: _selectedItems[index]
                                                     ? Colors.white
-                                                    : Colors.black,
+                                                    : const Color.fromRGBO(
+                                                        12, 24, 68, 1),
                                                 fontSize: 16,
+                                                fontWeight: FontWeight.bold,
                                               )))),
                                   Expanded(
                                       flex: 3,
@@ -517,7 +545,8 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                                               style: TextStyle(
                                                 color: _selectedItems[index]
                                                     ? Colors.white
-                                                    : Colors.black,
+                                                    : const Color.fromRGBO(
+                                                        12, 24, 68, 1),
                                                 fontSize: 16,
                                               )))),
                                   Expanded(
@@ -527,27 +556,30 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                                               style: TextStyle(
                                                 color: _selectedItems[index]
                                                     ? Colors.white
-                                                    : Colors.black,
+                                                    : const Color.fromRGBO(
+                                                        12, 24, 68, 1),
                                                 fontSize: 16,
                                               )))),
                                   Expanded(
                                       flex: 2,
                                       child: Center(
-                                          child: Text('${entry.price} VND',
+                                          child: Text('${stdNumFormat.format(entry.price)} VND',
                                               style: TextStyle(
                                                 color: _selectedItems[index]
                                                     ? Colors.white
-                                                    : Colors.black,
+                                                    : const Color.fromRGBO(
+                                                        12, 24, 68, 1),
                                                 fontSize: 16,
                                               )))),
                                   Expanded(
                                       flex: 1,
                                       child: Center(
-                                          child: Text('${entry.quantity}',
+                                          child: Text(stdNumFormat.format(entry.quantity),
                                               style: TextStyle(
                                                 color: _selectedItems[index]
                                                     ? Colors.white
-                                                    : Colors.black,
+                                                    : const Color.fromRGBO(
+                                                        12, 24, 68, 1),
                                                 fontSize: 16,
                                               )))),
                                 ],

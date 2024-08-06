@@ -28,7 +28,7 @@ class EntryData {
       'Sách': bookName!,
       'Tác giả': author!,
       'Ngày nhập': entryDate != null ? stdDateFormat.format(entryDate!) : '',
-      'Số lượng': quantity.toString(), // Convert quantity to String
+      'Số lượng': stdNumFormat.format(quantity), // Convert quantity to String
     };
   }
 }
@@ -91,7 +91,7 @@ class BookEntryInputFormState extends State<BookEntryInputForm> {
 
     _bookNameController.text = widget.reference?.bookName ?? '';
     _authorController.text = widget.reference?.author ?? '';
-    _quantityController.text = widget.reference?.quantity.toString() ?? '';
+    _quantityController.text = stdNumFormat.format(widget.reference?.quantity);
     _genreController = widget.reference?.genre ?? '';
     super.initState();
   }
@@ -278,9 +278,8 @@ class BookEntryInputFormState extends State<BookEntryInputForm> {
                           TextField(
                             controller: _quantityController,
                             keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]')), // Allow only digits
+                            inputFormatters: [
+                              ThousandsSeparatorInputFormatter(), // Apply custom formatter
                             ],
                             decoration: InputDecoration(
                               isDense: true,

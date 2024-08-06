@@ -1,10 +1,11 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'setting/setting.dart';
 
-DateFormat stdDateFormat = DateFormat('dd/MM/yyyy');
-
+// ============================================================================
+// Global variables
 List<String> genres = [
   'Tình cảm',
   'Bí ẩn',
@@ -18,6 +19,42 @@ List<String> genres = [
   'Truyện ngắn',
   'Lịch sử',
 ]; // backend fetch "Thể loại" from server to this list
+
+// ============================================================================
+// Some standard formats
+DateFormat stdDateFormat = DateFormat('dd/MM/yyyy');
+NumberFormat stdNumFormat = NumberFormat('#,###', 'vi_VN');
+/// For `keyboardType: TextInputType.number`'s TextField
+class ThousandsSeparatorInputFormatter extends TextInputFormatter {
+  final NumberFormat _numberFormat;
+
+  ThousandsSeparatorInputFormatter({String locale = 'vi_VN'})
+      : _numberFormat = NumberFormat('#,###', locale);
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue.copyWith(text: '');
+    }
+
+    // Remove all non-digit characters
+    String newText = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Format the new text
+    String formattedText = _numberFormat.format(int.parse(newText));
+
+    // Preserve the cursor position after formatting
+    int selectionIndex = formattedText.length;
+    return newValue.copyWith(
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: selectionIndex),
+    );
+  }
+}
+
+
+// ============================================================================
 
 class CustomRoundedButton extends StatelessWidget {
   final Color backgroundColor;

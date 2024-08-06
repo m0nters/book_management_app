@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
+import '../mutual_widgets.dart';
 import '../setting/setting.dart';
 
 class AvailabilityLabel extends StatelessWidget {
@@ -298,7 +299,7 @@ class _SearchCardState extends State<SearchCard> {
                       ),
                       const SizedBox(width: 15),
                       Text(
-                        _formatText(widget.quantity.toString(), contentStyle,),
+                        _formatText(stdNumFormat.format(widget.quantity), contentStyle,),
                         style: contentStyle,
                       ),
                     ],
@@ -312,7 +313,7 @@ class _SearchCardState extends State<SearchCard> {
                       ),
                       const SizedBox(width: 22),
                       Text(
-                        "${_formatText(widget.price.toString(), contentStyle,
+                        "${_formatText(stdNumFormat.format(widget.price), contentStyle,
                             maxWidth: 100)} VND",
                         style: contentStyle,
                       ),

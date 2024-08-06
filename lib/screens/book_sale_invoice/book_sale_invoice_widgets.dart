@@ -30,8 +30,8 @@ class InvoiceData {
       'Tên sách': bookName!,
       'Ngày mua':
           purchaseDate != null ? stdDateFormat.format(purchaseDate!) : '',
-      'Số lượng': quantity.toString(),
-      'Đơn giá': "$price VND",
+      'Số lượng': stdNumFormat.format(quantity),
+      'Đơn giá': "${stdNumFormat.format(price)} VND",
     };
   }
 }
@@ -99,8 +99,8 @@ class BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
     }
 
     _bookNameController.text = widget.reference?.bookName ?? '';
-    _priceController.text = widget.reference?.price.toString() ?? '';
-    _quantityController.text = widget.reference?.quantity.toString() ?? '';
+    _priceController.text = stdNumFormat.format(widget.reference?.price);
+    _quantityController.text = stdNumFormat.format(widget.reference?.quantity);
     _genreController = widget.reference?.genre ?? '';
     super.initState();
   }
@@ -247,6 +247,9 @@ class BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
                           TextField(
                             controller: _priceController,
                             keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              ThousandsSeparatorInputFormatter(), // Apply custom formatter
+                            ],
                             decoration: InputDecoration(
                               isDense: true,
                               filled: true,
@@ -288,9 +291,8 @@ class BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
                           TextField(
                             controller: _quantityController,
                             keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]')), // Allow only digits
+                            inputFormatters: [
+                              ThousandsSeparatorInputFormatter(), // Apply custom formatter
                             ],
                             decoration: InputDecoration(
                               isDense: true,

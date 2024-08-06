@@ -211,7 +211,9 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                 const Text(
                   "Ngày tra: ",
                   style: TextStyle(
-                      fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                      fontSize: 16,
+                      color: Color.fromRGBO(12, 24, 68, 1),
+                      fontWeight: FontWeight.bold),
                 ),
                 DatePickerBox(
                   initialDate: widget.initialDate,
@@ -328,7 +330,8 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                                   child: Text('STT',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       )))),
                           const Expanded(
                               flex: 3,
@@ -336,7 +339,8 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                                   child: Text('Tên sách',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       )))),
                           const Expanded(
                               flex: 2,
@@ -344,7 +348,8 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                                   child: Text('Thể loại',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       )))),
                           const Expanded(
                               flex: 2,
@@ -352,7 +357,8 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                                   child: Text('Tác giả',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       )))),
                           const Expanded(
                               flex: 1,
@@ -360,7 +366,8 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                                   child: Text('Số lượng',
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       )))),
                         ],
                       ),
@@ -409,6 +416,7 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                                                 color: Color.fromRGBO(
                                                     12, 24, 68, 1),
                                                 fontSize: 16,
+                                                fontWeight: FontWeight.bold,
                                               )))),
                                   Expanded(
                                       flex: 3,
@@ -440,7 +448,7 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                                   Expanded(
                                       flex: 1,
                                       child: Center(
-                                          child: Text('${entry.quantity}',
+                                          child: Text(stdNumFormat.format(entry.quantity),
                                               style: const TextStyle(
                                                 color: Color.fromRGBO(
                                                     12, 24, 68, 1),

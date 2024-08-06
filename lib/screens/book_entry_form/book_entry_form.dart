@@ -16,7 +16,7 @@ List<EntryData> dataList = [
     genre: 'Truyện ngắn',
     author: 'Nguyễn Nhật Ánh',
     entryDate: stdDateFormat.parse('30/06/2024'),
-    quantity: 133,
+    quantity: 29,
   ),
   EntryData(
     entryCode: 'PNS3252655',

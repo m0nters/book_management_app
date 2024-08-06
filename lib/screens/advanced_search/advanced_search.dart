@@ -374,8 +374,8 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
                           TextField(
                             controller: _quantityController,
                             keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // Allow only digits
+                            inputFormatters: [
+                              ThousandsSeparatorInputFormatter(), // Apply custom formatter
                             ],
                             decoration: InputDecoration(
                               isDense: true,
