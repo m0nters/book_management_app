@@ -99,8 +99,8 @@ class BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
     }
 
     _bookNameController.text = widget.reference?.bookName ?? '';
-    _priceController.text = stdNumFormat.format(widget.reference?.price);
-    _quantityController.text = stdNumFormat.format(widget.reference?.quantity);
+    _priceController.text = widget.reference?.price != null ? stdNumFormat.format(widget.reference?.price) : '';
+    _quantityController.text =  widget.reference?.quantity != null ? stdNumFormat.format(widget.reference?.quantity) : '';
     _genreController = widget.reference?.genre ?? '';
     super.initState();
   }

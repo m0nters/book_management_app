@@ -91,7 +91,7 @@ class BookEntryInputFormState extends State<BookEntryInputForm> {
 
     _bookNameController.text = widget.reference?.bookName ?? '';
     _authorController.text = widget.reference?.author ?? '';
-    _quantityController.text = stdNumFormat.format(widget.reference?.quantity);
+    _quantityController.text = widget.reference?.quantity != null ? stdNumFormat.format(widget.reference?.quantity) : '';
     _genreController = widget.reference?.genre ?? '';
     super.initState();
   }

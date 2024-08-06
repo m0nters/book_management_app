@@ -448,7 +448,9 @@ class _BookEntryFormSearchState extends State<BookEntryFormSearch> {
                                   Expanded(
                                       flex: 1,
                                       child: Center(
-                                          child: Text(stdNumFormat.format(entry.quantity),
+                                          child: Text(
+                                              stdNumFormat
+                                                  .format(entry.quantity),
                                               style: const TextStyle(
                                                 color: Color.fromRGBO(
                                                     12, 24, 68, 1),

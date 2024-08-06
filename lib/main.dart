@@ -13,6 +13,10 @@ class BookstoreManagementApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: const Locale('vi'), // Set Vietnamese as the default locale
+      supportedLocales: const [
+        Locale('vi'), // Add Vietnamese to the list of supported locales
+      ],
       localizationsDelegates: const [
         GlobalWidgetsLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

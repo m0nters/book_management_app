@@ -24,7 +24,7 @@ List<String> genres = [
 // Some standard formats
 DateFormat stdDateFormat = DateFormat('dd/MM/yyyy');
 NumberFormat stdNumFormat = NumberFormat('#,###', 'vi_VN');
-/// For `keyboardType: TextInputType.number`'s TextField
+/// For `keyboardType: TextInputType.number`'s `TextField`
 class ThousandsSeparatorInputFormatter extends TextInputFormatter {
   final NumberFormat _numberFormat;
 
@@ -52,8 +52,6 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
     );
   }
 }
-
-
 // ============================================================================
 
 class CustomRoundedButton extends StatelessWidget {
