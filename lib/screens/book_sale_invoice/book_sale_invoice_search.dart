@@ -33,6 +33,7 @@ class BookSaleInvoiceSearch extends StatefulWidget {
   final Function(Widget) internalScreenContextSwitcher;
   late DateTime? initialDate;
   late String? customerName;
+  late String? phoneNumber;
 
   BookSaleInvoiceSearch({
     super.key,
@@ -40,6 +41,7 @@ class BookSaleInvoiceSearch extends StatefulWidget {
     required this.internalScreenContextSwitcher,
     this.initialDate,
     this.customerName,
+    this.phoneNumber,
   });
 
   @override
@@ -49,6 +51,7 @@ class BookSaleInvoiceSearch extends StatefulWidget {
 class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
   bool hasPickedDate = false;
   bool hasInputtedCustomerName = false;
+  bool hasInputtedPhoneNumber = false;
   bool hasEnoughInfo = false;
 
   bool allSelected =
@@ -58,6 +61,7 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
   final ScrollController _totalScrollController = ScrollController();
   final ScrollController _searchResultScrollController = ScrollController();
   final TextEditingController _customerNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
 
   @override
   void initState() {
@@ -89,6 +93,11 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
       hasInputtedCustomerName = true;
       _customerNameController.text = widget.customerName!.trim();
     }
+    if (widget.phoneNumber != null && widget.phoneNumber != '') {
+      // the second condition is easily to be ignored and when it's ignored it becomes a very insidious bug to detect
+      hasInputtedPhoneNumber = true;
+      _phoneNumberController.text = widget.phoneNumber!.replaceAll(' ', '');
+    }
 
     _selectedItems = List.generate(
         serverFetchedBookSaleInvoicesData.length, (index) => false);
@@ -99,10 +108,11 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
     _totalScrollController.dispose();
     _searchResultScrollController.dispose();
     _customerNameController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
-  void onInfoChange(DateTime? date, String? customerName) {
+  void onInfoChange(DateTime? date, String? customerName, String? phoneNumber) {
     setState(() {
       if (date != null) {
         hasPickedDate = true;
@@ -118,7 +128,14 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
         hasInputtedCustomerName = false;
       }
 
-      if (hasEnoughInfo = hasPickedDate & hasInputtedCustomerName) {
+      if (phoneNumber != null && phoneNumber != '') {
+        hasInputtedPhoneNumber = true;
+        widget.phoneNumber = phoneNumber;
+      } else {
+        hasInputtedPhoneNumber = false;
+      }
+
+      if (hasEnoughInfo = hasPickedDate & hasInputtedCustomerName & hasInputtedPhoneNumber) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _totalScrollController.animateTo(
             _totalScrollController.position.maxScrollExtent,
@@ -208,13 +225,17 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
     widget.internalScreenContextSwitcher(BookSaleInvoiceEditSearch(
       editedItems: editedItems,
       backContextSwitcher: widget.backContextSwitcher,
+      // these 3 below can be assured to be not null when passing since they must be
+      // non null before user can evoke this function
       editedDate: widget.initialDate!,
       customerName: widget.customerName!,
+      phoneNumber: widget.phoneNumber!,
     ));
   }
 
   @override
   Widget build(BuildContext context) {
+    // for displaying result title & error message
     final formattedDate =
         hasPickedDate ? stdDateFormat.format(widget.initialDate!) : '';
     final customerName =
@@ -256,7 +277,7 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                 DatePickerBox(
                   initialDate: widget.initialDate,
                   onDateChanged: (date) =>
-                      onInfoChange(date, widget.customerName),
+                      onInfoChange(date, widget.customerName, widget.phoneNumber),
                   backgroundColor: const Color.fromRGBO(200, 207, 160, 1),
                   foregroundColor: const Color.fromRGBO(12, 24, 68, 1),
                   hintColor: const Color.fromRGBO(122, 122, 122, 1),
@@ -291,13 +312,65 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                   ),
                   child: TextField(
                     onSubmitted: (text) =>
-                        onInfoChange(widget.initialDate, text),
+                        onInfoChange(widget.initialDate, text, widget.phoneNumber),
                     controller: _customerNameController,
                     decoration: InputDecoration(
                       isDense: true,
                       filled: true,
                       fillColor: const Color.fromRGBO(200, 207, 160, 1),
                       hintText: "Nhập họ tên khách hàng",
+                      hintStyle: const TextStyle(
+                          color: Color.fromRGBO(122, 122, 122, 1),
+                          fontWeight: FontWeight.w400),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                    ),
+                    style: const TextStyle(
+                        fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text(
+                  "Số điện thoại: ",
+                  style: TextStyle(
+                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1),fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  width: 196,
+                  decoration: BoxDecoration(
+                    boxShadow: hasShadow
+                        ? const [
+                      BoxShadow(
+                        offset: Offset(0, 4),
+                        color: Colors.grey,
+                        blurRadius: 4,
+                      )
+                    ]
+                        : null,
+                  ),
+                  child: TextField(
+                    onSubmitted: (text) => onInfoChange(widget.initialDate, widget.customerName, text),
+                    controller: _phoneNumberController,
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    decoration: InputDecoration(
+                      isDense: true,
+                      filled: true,
+                      fillColor: const Color.fromRGBO(200, 207, 160, 1),
+                      hintText: "Nhập số điện thoại",
                       hintStyle: const TextStyle(
                           color: Color.fromRGBO(122, 122, 122, 1),
                           fontWeight: FontWeight.w400),
@@ -597,14 +670,14 @@ class _BookSaleInvoiceSearchState extends State<BookSaleInvoiceSearch> {
                     )
                   ] else ...[
                     NotFound(
-                      errorText: "Không có kết quả nào cho ngày $formattedDate",
+                      errorText: "Không có kết quả nào cho khách hàng $customerName ngày $formattedDate",
                     )
                   ],
                 ] else ...[
                   const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 40),
+                      padding: EdgeInsets.symmetric(vertical: 20),
                       child: Text(
-                          "Chọn một ngày và nhập một tên khách hàng để bắt đầu tra cứu",
+                          "Nhập đầy đủ các thông tin trên để bắt đầu tra cứu",
                           style: TextStyle(
                               fontSize: 25,
                               color: Color.fromRGBO(123, 123, 123, 1))))

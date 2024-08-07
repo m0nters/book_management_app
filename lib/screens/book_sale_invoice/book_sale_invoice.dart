@@ -218,7 +218,8 @@ class _BookSaleInvoiceState extends State<BookSaleInvoice> {
                                 'Lịch sử',
                                 style: TextStyle(
                                     fontSize: 22,
-                                    color: Color.fromRGBO(120, 171, 168, 1)),
+                                    color: Color.fromRGBO(120, 171, 168, 1),
+                                    fontWeight: FontWeight.bold),
                               ),
                               const Spacer(),
                               Row(

@@ -147,7 +147,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
                         style: TextStyle(color: Color.fromRGBO(34, 12, 68, 1))),
                     // Customize the title
                     content: Text(
-                      "Nếu có nhiều hơn 1 phiếu nhập có cùng thông tin sách, dữ liệu về số lượng nhập ngày hôm đó cho cuốn sách đó khi lưu lại sẽ được cộng gộp các phiếu liên quan lại với nhau.",
+                      "Nếu có nhiều hơn 1 form nhập dưới đây có cùng thông tin về một cuốn sách nào đó, dữ liệu về số lượng nhập cho cuốn sách đó khi lưu lại sẽ được cộng gộp các form liên quan lại với nhau.",
                       style: TextStyle(color: Colors.grey[700]),
                     ),
                     // Customize the content
@@ -182,7 +182,7 @@ class _BookEntryFormCreateFormState extends State<BookEntryFormCreateForm> {
                 const Text(
                   "Ngày lập: ",
                   style: TextStyle(
-                      fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                      fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1), fontWeight: FontWeight.bold),
                 ),
                 DatePickerBox(
                   initialDate: DateTime.now(),

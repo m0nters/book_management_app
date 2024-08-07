@@ -330,11 +330,15 @@ class BookSaleInvoiceInputFormState extends State<BookSaleInvoiceInputForm> {
   }
 
   InvoiceData getBookSaleInvoiceData() {
+    // Remove any thousands separators (e.g., commas) before parsing
+    String priceText = _priceController.text.replaceAll('.', '');
+    String quantityText = _quantityController.text.replaceAll('.', '');
+
     return InvoiceData(
       bookName: _bookNameController.text,
       genre: _genreController,
-      price: int.tryParse(_priceController.text) ?? 0,
-      quantity: int.tryParse(_quantityController.text) ?? 0,
+      price: int.tryParse(priceText) ?? 0,
+      quantity: int.tryParse(quantityText) ?? 0,
     );
   }
 }

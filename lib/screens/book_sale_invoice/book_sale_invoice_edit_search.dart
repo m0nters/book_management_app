@@ -10,13 +10,16 @@ class BookSaleInvoiceEditSearch extends StatefulWidget {
   final List<InvoiceData> editedItems;
   final DateTime editedDate;
   final String customerName;
+  final String phoneNumber;
 
-  const BookSaleInvoiceEditSearch(
-      {super.key,
-      required this.editedItems,
-      required this.backContextSwitcher,
-      required this.editedDate,
-      required this.customerName});
+  const BookSaleInvoiceEditSearch({
+    super.key,
+    required this.editedItems,
+    required this.backContextSwitcher,
+    required this.editedDate,
+    required this.customerName,
+    required this.phoneNumber,
+  });
 
   @override
   State<BookSaleInvoiceEditSearch> createState() =>
@@ -27,6 +30,7 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
   final List<BookSaleInvoiceInputFormState> _formStates = [];
   bool _isShowingSnackBar = false;
   final TextEditingController _customerNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
 
   @override
   void initState() {
@@ -34,7 +38,15 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
       DeviceOrientation.portraitUp,
     ]);
     _customerNameController.text = widget.customerName;
+    _phoneNumberController.text = widget.phoneNumber;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _customerNameController.dispose();
+    _phoneNumberController.dispose();
   }
 
   void _onUpdatePressed() {
@@ -101,7 +113,7 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
     });
   }
 
-  void showError(BuildContext context) {
+  void showError({required BuildContext context, required String errorString}) {
     if (_isShowingSnackBar) return; // Prevent spamming button
 
     setState(() {
@@ -110,10 +122,9 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
 
     ScaffoldMessenger.of(context)
         .showSnackBar(
-          const SnackBar(
-            content: Text(
-                'Họ tên khách hàng đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu'),
-            duration: Duration(seconds: 2), // Adjust duration as needed
+          SnackBar(
+            content: Text(errorString),
+            duration: const Duration(seconds: 2), // Adjust duration as needed
             behavior:
                 SnackBarBehavior.floating, // Optional: make the Snackbar float
           ),
@@ -187,10 +198,55 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
                   width: 196,
                   child: GestureDetector(
                     onTap: () {
-                      showError(context);
+                      showError(
+                          context: context,
+                          errorString:
+                              'Họ tên khách hàng đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu');
                     },
                     child: TextField(
                       controller: _customerNameController,
+                      enabled: false,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        filled: true,
+                        fillColor: Colors.grey,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.grey, width: 0.0),
+                        ),
+                      ),
+                      style: const TextStyle(
+                          fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text(
+                  "Số điện thoại: ",
+                  style: TextStyle(
+                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1)),
+                ),
+                const SizedBox(
+                  height: 60,
+                ),
+                SizedBox(
+                  width: 196,
+                  child: GestureDetector(
+                    onTap: () {
+                      showError(
+                          context: context,
+                          errorString:
+                              'Số điện thoại khách hàng đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu');
+                    },
+                    child: TextField(
+                      controller: _phoneNumberController,
                       enabled: false,
                       decoration: InputDecoration(
                         isDense: true,

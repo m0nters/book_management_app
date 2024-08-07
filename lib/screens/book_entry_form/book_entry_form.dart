@@ -209,7 +209,8 @@ class _BookEntryFormState extends State<BookEntryForm> {
                               'Lịch sử',
                               style: TextStyle(
                                   fontSize: 22,
-                                  color: Color.fromRGBO(12, 24, 68, 1)),
+                                  color: Color.fromRGBO(12, 24, 68, 1),
+                                  fontWeight: FontWeight.bold),
                             ),
                             const Spacer(),
                             Row(

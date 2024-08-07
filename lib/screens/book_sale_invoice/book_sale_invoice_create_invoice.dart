@@ -5,7 +5,8 @@ import 'book_sale_invoice_widgets.dart';
 import '../setting/setting.dart';
 
 late DateTime serverUploadedDateInputData;
-late String serverUploadedCustomerNameInputData;
+late String serverUploadedCustomerName;
+late String serverUploadedPhoneNumber;
 List<InvoiceData> serverUploadedBookSaleInvoicesData = [];
 
 class BookSaleInvoiceCreateInvoice extends StatefulWidget {
@@ -27,12 +28,14 @@ class _BookSaleInvoiceCreateInvoiceState
   final ScrollController _scrollController =
       ScrollController(); // Scroll controller
   final TextEditingController _customerNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
   bool _isShowingSnackBar = false; // Track snack bar state
 
   @override
   void dispose() {
     _scrollController.dispose();
     _customerNameController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -100,7 +103,8 @@ class _BookSaleInvoiceCreateInvoiceState
         : "ngày ${serverUploadedDateInputData.day}/${serverUploadedDateInputData.month}/${serverUploadedDateInputData.year}";
 
     if (isValidForUpload(dateSaved: dateSaved)) {
-      serverUploadedCustomerNameInputData = _customerNameController.text;
+      serverUploadedCustomerName = _customerNameController.text;
+      serverUploadedPhoneNumber = _phoneNumberController.text;
       serverUploadedBookSaleInvoicesData = _formKeys
           .map((key) => key.currentState!.getBookSaleInvoiceData())
           .toList();
@@ -163,7 +167,7 @@ class _BookSaleInvoiceCreateInvoiceState
                             TextStyle(color: Color.fromRGBO(120, 171, 168, 1))),
                     // Customize the title
                     content: Text(
-                      "Nếu có nhiều hơn 1 phiếu nhập có cùng thông tin sách, dữ liệu về số lượng nhập ngày hôm đó cho cuốn sách đó khi lưu lại sẽ được cộng gộp các phiếu liên quan lại với nhau.",
+                      "Nếu có nhiều hơn 1 form nhập dưới đây có cùng thông tin về một cuốn sách nào đó, dữ liệu về số lượng nhập cho cuốn sách đó khi lưu lại sẽ được cộng gộp các form liên quan lại với nhau.",
                       style: TextStyle(color: Colors.grey[700]),
                     ),
                     // Customize the content
@@ -198,7 +202,7 @@ class _BookSaleInvoiceCreateInvoiceState
                 const Text(
                   "Ngày lập hoá đơn: ",
                   style: TextStyle(
-                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1)),
+                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1),fontWeight: FontWeight.bold),
                 ),
                 DatePickerBox(
                   initialDate: DateTime.now(),
@@ -217,7 +221,7 @@ class _BookSaleInvoiceCreateInvoiceState
                 const Text(
                   "Họ tên khách hàng: ",
                   style: TextStyle(
-                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1)),
+                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1),fontWeight: FontWeight.bold),
                 ),
                 Container(
                   width: 196,
@@ -239,6 +243,60 @@ class _BookSaleInvoiceCreateInvoiceState
                       filled: true,
                       fillColor: const Color.fromRGBO(200, 207, 160, 1),
                       hintText: "Nhập họ tên khách hàng",
+                      hintStyle: const TextStyle(
+                          color: Color.fromRGBO(122, 122, 122, 1),
+                          fontWeight: FontWeight.w400),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 1.0),
+                      ),
+                    ),
+                    style: const TextStyle(
+                        fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text(
+                  "Số điện thoại: ",
+                  style: TextStyle(
+                      fontSize: 16, color: Color.fromRGBO(120, 171, 168, 1),fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  width: 196,
+                  decoration: BoxDecoration(
+                    boxShadow: hasShadow
+                        ? const [
+                      BoxShadow(
+                        offset: Offset(0, 4),
+                        color: Colors.grey,
+                        blurRadius: 4,
+                      )
+                    ]
+                        : null,
+                  ),
+                  child: TextField(
+                    controller: _phoneNumberController,
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    decoration: InputDecoration(
+                      isDense: true,
+                      filled: true,
+                      fillColor: const Color.fromRGBO(200, 207, 160, 1),
+                      hintText: "Nhập số điện thoại",
+                      hintStyle: const TextStyle(
+                          color: Color.fromRGBO(122, 122, 122, 1),
+                          fontWeight: FontWeight.w400),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),

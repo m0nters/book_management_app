@@ -317,11 +317,12 @@ class BookEntryInputFormState extends State<BookEntryInputForm> {
   }
 
   EntryData getBookEntryData() {
+    String quantityText = _quantityController.text.replaceAll('.', '');
     return EntryData(
       bookName: _bookNameController.text,
       genre: _genreController,
       author: _authorController.text,
-      quantity: int.tryParse(_quantityController.text) ?? 0,
+      quantity: int.tryParse(quantityText) ?? 0,
     );
   }
 }

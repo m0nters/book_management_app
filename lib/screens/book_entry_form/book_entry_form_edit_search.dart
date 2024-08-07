@@ -130,7 +130,9 @@ class _BookEntryFormEditSearchState extends State<BookEntryFormEditSearch> {
                 const Text(
                   "Ngày đang chỉnh sửa: ",
                   style: TextStyle(
-                      fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                      fontSize: 16,
+                      color: Color.fromRGBO(12, 24, 68, 1),
+                      fontWeight: FontWeight.bold),
                 ),
                 DatePickerBox(
                   initialDate: widget.editedDate,
