@@ -188,7 +188,7 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                         style: TextStyle(
                                             color: widget.titleBarColor)),
                                     content: Text(
-                                        "Mã phiếu là khóa chính để định danh bản thân phiếu trên cơ sở dữ liệu, do đó ta không (thể) chỉnh sửa nó.",
+                                        "Bạn chỉ đang chỉnh sửa một phần trong phiếu nhập sách này.",
                                         style:
                                             TextStyle(color: Colors.grey[700])),
                                     actions: <Widget>[
@@ -260,6 +260,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                   backgroundColor:
                                       widget.contentInputFormFillColor,
                                   foregroundColor: widget.contentTitleColor,
+                                  isEnabled: false,
+                                  errorMessageWhenDisabled: "Ngày nhập đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu",
                                 ),
                               )
                             ],

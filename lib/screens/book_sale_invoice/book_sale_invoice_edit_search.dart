@@ -113,7 +113,7 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
     });
   }
 
-  void showError({required BuildContext context, required String errorString}) {
+  void explainWhyDisable({required BuildContext context, required String errorString}) {
     if (_isShowingSnackBar) return; // Prevent spamming button
 
     setState(() {
@@ -198,7 +198,7 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
                   width: 196,
                   child: GestureDetector(
                     onTap: () {
-                      showError(
+                      explainWhyDisable(
                           context: context,
                           errorString:
                               'Họ tên khách hàng đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu');
@@ -240,7 +240,7 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
                   width: 196,
                   child: GestureDetector(
                     onTap: () {
-                      showError(
+                      explainWhyDisable(
                           context: context,
                           errorString:
                               'Số điện thoại khách hàng đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu');

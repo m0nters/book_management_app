@@ -24,6 +24,7 @@ List<String> genres = [
 // Some standard formats
 DateFormat stdDateFormat = DateFormat('dd/MM/yyyy');
 NumberFormat stdNumFormat = NumberFormat('#,###', 'vi_VN');
+
 /// For `keyboardType: TextInputType.number`'s `TextField`
 class ThousandsSeparatorInputFormatter extends TextInputFormatter {
   final NumberFormat _numberFormat;
@@ -367,7 +368,9 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
               child: Text(
                 option,
                 style: TextStyle(
-                    fontSize: widget.fontSize, color: widget.contentColor, fontWeight: FontWeight.w400),
+                    fontSize: widget.fontSize,
+                    color: widget.contentColor,
+                    fontWeight: FontWeight.w400),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -381,6 +384,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
           },
           isExpanded: true,
           dropdownColor: widget.fillColor,
+          elevation: hasShadow ? 8 : 0,
         ),
       ),
     );
@@ -517,20 +521,23 @@ class _DatePickerBoxState extends State<DatePickerBox> {
         _isShowingSnackBar = true; // Set saving state to true
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(widget.errorMessageWhenDisabled),
-          duration: const Duration(seconds: 2), // Adjust duration as needed
-          behavior: SnackBarBehavior.floating, // Optional: make the Snackbar float
-        ),
-      ).closed
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+            SnackBar(
+              content: Text(widget.errorMessageWhenDisabled),
+              duration: const Duration(seconds: 2), // Adjust duration as needed
+              behavior: SnackBarBehavior
+                  .floating, // Optional: make the Snackbar float
+            ),
+          )
+          .closed
           .then((reason) {
         setState(() {
-          _isShowingSnackBar = false; // Reset saving state after snack bar is closed
+          _isShowingSnackBar =
+              false; // Reset saving state after snack bar is closed
         });
       });
     }
-
 
     return InkWell(
       onTap: () => widget.isEnabled ? _selectDate(context) : showError(context),
@@ -538,16 +545,20 @@ class _DatePickerBoxState extends State<DatePickerBox> {
       child: Ink(
         padding: const EdgeInsets.all(10), // Adjust padding
         decoration: BoxDecoration(
-          color: widget.isEnabled ? widget.backgroundColor : widget.disabledBackgroundColor,
+          color: widget.isEnabled
+              ? widget.backgroundColor
+              : widget.disabledBackgroundColor,
           border: Border.all(color: widget.borderColor, width: 1),
           borderRadius: BorderRadius.circular(widget.borderRadius),
-          boxShadow: (hasShadow && widget.isEnabled) ? [
-            const BoxShadow(
-              offset: Offset(0, 4),
-              color: Colors.grey,
-              blurRadius: 4,
-            ),
-          ] : [],
+          boxShadow: (hasShadow && widget.isEnabled)
+              ? [
+                  const BoxShadow(
+                    offset: Offset(0, 4),
+                    color: Colors.grey,
+                    blurRadius: 4,
+                  ),
+                ]
+              : [],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -556,13 +567,17 @@ class _DatePickerBoxState extends State<DatePickerBox> {
                 style: TextStyle(
                     fontSize: widget.fontSize,
                     color: _isSelectedDate
-                        ? (widget.isEnabled ? widget.foregroundColor : widget.disabledForegroundColor)
+                        ? (widget.isEnabled
+                            ? widget.foregroundColor
+                            : widget.disabledForegroundColor)
                         : widget.hintColor)), // Use hint color for hint text
             const SizedBox(width: 4), // Spacing
             Icon(
               Icons.calendar_month_sharp,
               size: widget.iconSize,
-              color: widget.isEnabled ? widget.foregroundColor : widget.disabledForegroundColor,
+              color: widget.isEnabled
+                  ? widget.foregroundColor
+                  : widget.disabledForegroundColor,
             ), // Calendar icon
           ],
         ),

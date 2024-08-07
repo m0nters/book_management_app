@@ -112,6 +112,31 @@ class _BookSaleInvoiceEditHistoryState
     });
   }
 
+  void explainWhyDisable({required BuildContext context, required String errorString}) {
+    if (_isShowingSnackBar) return; // Prevent spamming button
+
+    setState(() {
+      _isShowingSnackBar = true; // Set saving state to true
+    });
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+      SnackBar(
+        content: Text(errorString),
+        duration: const Duration(seconds: 2), // Adjust duration as needed
+        behavior:
+        SnackBarBehavior.floating, // Optional: make the Snackbar float
+      ),
+    )
+        .closed
+        .then((reason) {
+      setState(() {
+        _isShowingSnackBar =
+        false; // Reset saving state after snack bar is closed
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,7 +203,7 @@ class _BookSaleInvoiceEditHistoryState
                       child: Row(
                         children: [
                           Text(
-                            'Mã phiếu ${widget.editItem.invoiceCode}',
+                            'Mã hóa đơn ${widget.editItem.invoiceCode}',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -196,7 +221,7 @@ class _BookSaleInvoiceEditHistoryState
                                         style: TextStyle(
                                             color: widget.titleColor)),
                                     content: Text(
-                                        "Mã hóa đơn là khóa chính để định danh bản thân hóa đơn trên cơ sở dữ liệu, do đó ta không (thể) chỉnh sửa nó.",
+                                        "Bạn chỉ đang chỉnh sửa một phần trong hóa đơn bán sách này.",
                                         style:
                                             TextStyle(color: Colors.grey[700])),
                                     actions: <Widget>[
@@ -251,7 +276,7 @@ class _BookSaleInvoiceEditHistoryState
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text('Ngày mua',
+                                  Text('Ngày lập hóa đơn',
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -268,6 +293,8 @@ class _BookSaleInvoiceEditHistoryState
                                   backgroundColor:
                                       widget.contentInputFormFillColor,
                                   foregroundColor: widget.contentInputColor,
+                                  isEnabled: false,
+                                  errorMessageWhenDisabled: "Ngày lập hóa đơn đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu",
                                 ),
                               )
                             ],
@@ -280,7 +307,7 @@ class _BookSaleInvoiceEditHistoryState
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text('Tên khách hàng',
+                                  Text('Họ tên khách hàng',
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -290,25 +317,32 @@ class _BookSaleInvoiceEditHistoryState
                               const SizedBox(height: 4),
                               SizedBox(
                                 width: 300,
-                                child: TextField(
-                                  controller: _customerNameController,
-                                  decoration: InputDecoration(
-                                    suffixIcon: const Icon(Icons.people),
-                                    isDense: true,
-                                    filled: true,
-                                    fillColor: widget.contentInputFormFillColor,
-                                    hintText: "Nhập tên khách hàng",
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(4),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    explainWhyDisable(
+                                        context: context,
+                                        errorString:
+                                        'Họ tên khách hàng đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu');
+                                  },
+                                  child: TextField(
+                                    controller: _customerNameController,
+                                    enabled: false,
+                                    decoration: InputDecoration(
+                                      suffixIcon: const Icon(Icons.people),
+                                      isDense: true,
+                                      filled: true,
+                                      fillColor: Colors.grey,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      enabledBorder: const OutlineInputBorder(
+                                        borderSide:
+                                        BorderSide(color: Colors.grey, width: 0.0),
+                                      ),
                                     ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: widget.textFieldBorderColor,
-                                          width: 1.0),
-                                    ),
+                                    style: const TextStyle(
+                                        fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
                                   ),
-                                  style: TextStyle(
-                                      color: widget.contentInputColor),
                                 ),
                               )
                             ],
