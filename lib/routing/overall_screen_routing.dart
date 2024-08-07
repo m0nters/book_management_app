@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled2/screens/edit_regulation/edit_regulation.dart';
-import 'main_screen_context_controller.dart';
+import 'main_screen_routing.dart';
 import '../screens/advanced_search/advanced_search.dart';
 import '../screens/setting/setting.dart';
 
@@ -14,15 +14,15 @@ enum MainFunctionsContexts {
 
 enum OverallScreenContexts { mainFunctions, advancedSearch, editRegulation, setting }
 
-class MainScreenContextController extends StatefulWidget {
-  const MainScreenContextController({super.key});
+class OverallScreenRouting extends StatefulWidget {
+  const OverallScreenRouting({super.key});
 
   @override
-  createState() => _OverallScreenContextControllerState();
+  createState() => _OverallScreenRoutingState();
 }
 
-class _OverallScreenContextControllerState
-    extends State<MainScreenContextController> {
+class _OverallScreenRoutingState
+    extends State<OverallScreenRouting> {
   late int _selectedIndex;
 
   static late Map<int, Widget> _contextOptions;
@@ -34,7 +34,7 @@ class _OverallScreenContextControllerState
 
     // Initialize _contextOptions here to include the switchContext function
     _contextOptions = {
-      OverallScreenContexts.mainFunctions.index: MainFunctionsContextController(
+      OverallScreenContexts.mainFunctions.index: MainFunctionsRouting(
           overallScreenContextSwitcher: switchContext),
       OverallScreenContexts.advancedSearch.index:
       AdvancedSearch(overallScreenContextSwitcher: switchContext),

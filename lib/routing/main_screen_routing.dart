@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'overall_screen_context_controller.dart';
+import 'overall_screen_routing.dart';
 import '../screens/home/home.dart';
 import '../screens/book_entry_form/book_entry_form.dart';
 import '../screens/book_sale_invoice/book_sale_invoice.dart';
 import '../screens/bill/bill.dart';
 import '../screens/monthly_report/outstanding_report/outstanding_report.dart';
 
-class MainFunctionsContextController extends StatefulWidget {
+class MainFunctionsRouting extends StatefulWidget {
   final Function(int) overallScreenContextSwitcher;
 
-  const MainFunctionsContextController(
+  const MainFunctionsRouting(
       {required this.overallScreenContextSwitcher, super.key});
 
   @override
-  createState() => _MainFunctionsContextControllerState();
+  createState() => _MainFunctionsRoutingState();
 }
 
-class _MainFunctionsContextControllerState
-    extends State<MainFunctionsContextController> {
+class _MainFunctionsRoutingState
+    extends State<MainFunctionsRouting> {
   late int
       _selectedIndex; // ALWAYS need this to adjust selected item, colors,... for bottom bar's visualization
   late Map<int, List<Widget>> navigationStack;

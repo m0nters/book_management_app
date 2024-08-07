@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../../controllers/overall_screen_context_controller.dart';
+import '../../routing/overall_screen_routing.dart';
 
 class EditRegulation extends StatelessWidget {
   final Function(int) overallScreenContextSwitcher;
