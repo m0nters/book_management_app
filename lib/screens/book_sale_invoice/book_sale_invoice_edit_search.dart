@@ -113,12 +113,11 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
     });
   }
 
-  void explainWhyDisable({required BuildContext context, required String errorString}) {
+  void explainWhyDisable(
+      {required BuildContext context, required String errorString}) {
     if (_isShowingSnackBar) return; // Prevent spamming button
 
-    setState(() {
-      _isShowingSnackBar = true; // Set saving state to true
-    });
+    _isShowingSnackBar = true; // Set saving state to true
 
     ScaffoldMessenger.of(context)
         .showSnackBar(
@@ -131,10 +130,8 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
         )
         .closed
         .then((reason) {
-      setState(() {
-        _isShowingSnackBar =
-            false; // Reset saving state after snack bar is closed
-      });
+      _isShowingSnackBar =
+          false; // Reset saving state after snack bar is closed
     });
   }
 
@@ -219,7 +216,7 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
                         ),
                       ),
                       style: const TextStyle(
-                          fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                          fontSize: 16, color: Colors.black),
                     ),
                   ),
                 )
@@ -261,7 +258,7 @@ class _BookSaleInvoiceEditSearchState extends State<BookSaleInvoiceEditSearch> {
                         ),
                       ),
                       style: const TextStyle(
-                          fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                          fontSize: 16, color: Colors.black),
                     ),
                   ),
                 )

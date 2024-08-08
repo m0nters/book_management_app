@@ -43,7 +43,7 @@ class BookSaleInvoiceEditHistory extends StatefulWidget {
 class _BookSaleInvoiceEditHistoryState
     extends State<BookSaleInvoiceEditHistory> {
   final TextEditingController _customerNameController = TextEditingController();
-  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _bookNameController = TextEditingController();
   String _genreController = '';
   final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -58,7 +58,7 @@ class _BookSaleInvoiceEditHistoryState
     ]);
 
     _customerNameController.text = widget.editItem.customerName!;
-    _titleController.text = widget.editItem.bookName!;
+    _bookNameController.text = widget.editItem.bookName!;
     _genreController = widget.editItem.genre!;
     _quantityController.text = widget.editItem.quantity.toString();
     _priceController.text = widget.editItem.price.toString();
@@ -73,7 +73,7 @@ class _BookSaleInvoiceEditHistoryState
 
     if (_dateController == widget.editItem.purchaseDate &&
         _customerNameController.text == widget.editItem.customerName &&
-        _titleController.text == widget.editItem.bookName &&
+        _bookNameController.text == widget.editItem.bookName &&
         _genreController == widget.editItem.genre &&
         _quantityController.text == widget.editItem.quantity.toString() &&
         _priceController.text == widget.editItem.price.toString()) {
@@ -83,12 +83,12 @@ class _BookSaleInvoiceEditHistoryState
 
     serverUploadedDateInputData = _dateController;
     serverUploadedCustomerNameInputData = _customerNameController.text;
-    serverUploadedBookEntryData = getBookEntryData();
+    serverUploadedBookEntryData = getBookSaleInvoiceData();
 
     // add the code to upload data to server here (backend)
 
     _showSnackBar(
-        'Đã chỉnh sửa phiếu nhập sách số ${widget.editItem.invoiceCode}!');
+        'Đã chỉnh sửa hóa đơn bán sách số ${widget.editItem.invoiceCode}!');
 
     widget.reloadContext();
   }
@@ -112,7 +112,8 @@ class _BookSaleInvoiceEditHistoryState
     });
   }
 
-  void explainWhyDisable({required BuildContext context, required String errorString}) {
+  void explainWhyDisable(
+      {required BuildContext context, required String errorString}) {
     if (_isShowingSnackBar) return; // Prevent spamming button
 
     setState(() {
@@ -121,18 +122,18 @@ class _BookSaleInvoiceEditHistoryState
 
     ScaffoldMessenger.of(context)
         .showSnackBar(
-      SnackBar(
-        content: Text(errorString),
-        duration: const Duration(seconds: 2), // Adjust duration as needed
-        behavior:
-        SnackBarBehavior.floating, // Optional: make the Snackbar float
-      ),
-    )
+          SnackBar(
+            content: Text(errorString),
+            duration: const Duration(seconds: 2), // Adjust duration as needed
+            behavior:
+                SnackBarBehavior.floating, // Optional: make the Snackbar float
+          ),
+        )
         .closed
         .then((reason) {
       setState(() {
         _isShowingSnackBar =
-        false; // Reset saving state after snack bar is closed
+            false; // Reset saving state after snack bar is closed
       });
     });
   }
@@ -294,7 +295,8 @@ class _BookSaleInvoiceEditHistoryState
                                       widget.contentInputFormFillColor,
                                   foregroundColor: widget.contentInputColor,
                                   isEnabled: false,
-                                  errorMessageWhenDisabled: "Ngày lập hóa đơn đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu",
+                                  errorMessageWhenDisabled:
+                                      "Ngày lập hóa đơn đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu",
                                 ),
                               )
                             ],
@@ -322,7 +324,7 @@ class _BookSaleInvoiceEditHistoryState
                                     explainWhyDisable(
                                         context: context,
                                         errorString:
-                                        'Họ tên khách hàng đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu');
+                                            'Họ tên khách hàng đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu');
                                   },
                                   child: TextField(
                                     controller: _customerNameController,
@@ -336,12 +338,12 @@ class _BookSaleInvoiceEditHistoryState
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       enabledBorder: const OutlineInputBorder(
-                                        borderSide:
-                                        BorderSide(color: Colors.grey, width: 0.0),
+                                        borderSide: BorderSide(
+                                            color: Colors.grey, width: 0.0),
                                       ),
                                     ),
                                     style: const TextStyle(
-                                        fontSize: 16, color: Color.fromRGBO(12, 24, 68, 1)),
+                                        fontSize: 16, color: Colors.black),
                                   ),
                                 ),
                               )
@@ -369,7 +371,7 @@ class _BookSaleInvoiceEditHistoryState
                                     ),
                                     const SizedBox(height: 4),
                                     TextField(
-                                      controller: _titleController,
+                                      controller: _bookNameController,
                                       decoration: InputDecoration(
                                         isDense: true,
                                         filled: true,
@@ -502,10 +504,8 @@ class _BookSaleInvoiceEditHistoryState
                                     TextField(
                                       controller: _quantityController,
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: <TextInputFormatter>[
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(r'[0-9]')),
-                                        // Allow only digits
+                                      inputFormatters: [
+                                        ThousandsSeparatorInputFormatter()
                                       ],
                                       decoration: InputDecoration(
                                         isDense: true,
@@ -539,12 +539,16 @@ class _BookSaleInvoiceEditHistoryState
             )));
   }
 
-  InvoiceData getBookEntryData() {
+  InvoiceData getBookSaleInvoiceData() {
+    // Remove any thousands separators (e.g., commas) before parsing
+    String priceText = _priceController.text.replaceAll('.', '');
+    String quantityText = _quantityController.text.replaceAll('.', '');
+
     return InvoiceData(
-      bookName: _titleController.text,
+      bookName: _bookNameController.text,
       genre: _genreController,
-      price: int.tryParse(_priceController.text) ?? 0,
-      quantity: int.tryParse(_quantityController.text) ?? 0,
+      price: int.tryParse(priceText) ?? 0,
+      quantity: int.tryParse(quantityText) ?? 0,
     );
   }
 }

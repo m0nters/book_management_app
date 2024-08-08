@@ -25,6 +25,8 @@ List<String> genres = [
 DateFormat stdDateFormat = DateFormat('dd/MM/yyyy');
 NumberFormat stdNumFormat = NumberFormat('#,###', 'vi_VN');
 
+// ============================================================================
+
 /// For `keyboardType: TextInputType.number`'s `TextField`
 class ThousandsSeparatorInputFormatter extends TextInputFormatter {
   final NumberFormat _numberFormat;
@@ -53,6 +55,7 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
     );
   }
 }
+
 // ============================================================================
 
 class CustomRoundedButton extends StatelessWidget {
@@ -130,6 +133,7 @@ class CustomRoundedButton extends StatelessWidget {
     );
   }
 }
+
 // ============================================================================
 
 /// A customizable ticket-shaped widget for displaying information in a visually appealing way.
@@ -164,6 +168,7 @@ class CustomRoundedButton extends StatelessWidget {
 /// **Note:**
 ///
 /// - The widget automatically formats long text to fit within the ticket's boundaries.
+///
 class InfoTicket extends StatelessWidget {
   final List<Map<String, String>>
       fields; // Required list of title-content pairs
@@ -256,7 +261,7 @@ class InfoTicket extends StatelessWidget {
             int index = entry.key;
             Map<String, String> field = entry.value;
             CrossAxisAlignment alignment;
-            if (index == 0) {
+            if (index == 0 && sublist.length > 1) {
               alignment = CrossAxisAlignment.start;
             } else if (index == sublist.length - 1) {
               // this can be 2 (row has 3 items) or 1 (row has 2 items)
@@ -300,6 +305,7 @@ class InfoTicket extends StatelessWidget {
     );
   }
 }
+
 // ============================================================================
 
 class CustomDropdownMenu extends StatefulWidget {
@@ -390,6 +396,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
     );
   }
 }
+
 // ============================================================================
 
 class DatePickerBox extends StatefulWidget {
@@ -517,9 +524,7 @@ class _DatePickerBoxState extends State<DatePickerBox> {
     void showError(BuildContext context) {
       if (_isShowingSnackBar) return; // Prevent spamming button
 
-      setState(() {
-        _isShowingSnackBar = true; // Set saving state to true
-      });
+      _isShowingSnackBar = true; // Set saving state to true
 
       ScaffoldMessenger.of(context)
           .showSnackBar(
@@ -532,10 +537,8 @@ class _DatePickerBoxState extends State<DatePickerBox> {
           )
           .closed
           .then((reason) {
-        setState(() {
-          _isShowingSnackBar =
-              false; // Reset saving state after snack bar is closed
-        });
+        _isShowingSnackBar =
+            false; // Reset saving state after snack bar is closed
       });
     }
 
@@ -585,6 +588,7 @@ class _DatePickerBoxState extends State<DatePickerBox> {
     );
   }
 }
+
 // ============================================================================
 
 class NotFound extends StatelessWidget {

@@ -41,7 +41,7 @@ class BookEntryFormEditHistory extends StatefulWidget {
 
 class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
   late DateTime _dateController;
-  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _bookNameController = TextEditingController();
   String _genreController = '';
   final TextEditingController _authorController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
@@ -55,7 +55,7 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
       DeviceOrientation.portraitUp,
     ]);
 
-    _titleController.text = widget.editItem.bookName ?? '';
+    _bookNameController.text = widget.editItem.bookName ?? '';
     _authorController.text = widget.editItem.author ?? '';
     _quantityController.text = widget.editItem.quantity.toString();
     _genreController = widget.editItem.genre ?? '';
@@ -67,11 +67,11 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
     _isShowingSnackBar = true; // Set saving state to true
 
     if (_dateController == widget.editItem.entryDate &&
-        _titleController.text == widget.editItem.bookName &&
+        _bookNameController.text == widget.editItem.bookName &&
         _genreController == widget.editItem.genre &&
         _authorController.text == widget.editItem.author &&
         _quantityController.text == widget.editItem.quantity.toString()) {
-      _showSnackBar('Không có dữ liệu gì thay đổi!', isError: true);
+      _showUpdateStatus('Không có dữ liệu gì thay đổi!', isError: true);
       return;
     }
 
@@ -80,12 +80,12 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
 
     // add the code to upload data to server here (backend)
 
-    _showSnackBar(
+    _showUpdateStatus(
         'Đã chỉnh sửa phiếu nhập sách số ${widget.editItem.entryCode}!');
     widget.reloadContext();
   }
 
-  void _showSnackBar(String message, {bool isError = false}) {
+  void _showUpdateStatus(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context)
         .showSnackBar(
           SnackBar(
@@ -261,7 +261,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                       widget.contentInputFormFillColor,
                                   foregroundColor: widget.contentTitleColor,
                                   isEnabled: false,
-                                  errorMessageWhenDisabled: "Ngày nhập đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu",
+                                  errorMessageWhenDisabled:
+                                      "Ngày nhập đã bị vô hiệu hóa chỉnh sửa để đảm bảo tính toàn vẹn của dữ liệu",
                                 ),
                               )
                             ],
@@ -288,7 +289,7 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                     ),
                                     const SizedBox(height: 4),
                                     TextField(
-                                      controller: _titleController,
+                                      controller: _bookNameController,
                                       decoration: InputDecoration(
                                         isDense: true,
                                         filled: true,
@@ -414,10 +415,8 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
                                     TextField(
                                       controller: _quantityController,
                                       keyboardType: TextInputType.number,
-                                      inputFormatters: <TextInputFormatter>[
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(r'[0-9]')),
-                                        // Allow only digits
+                                      inputFormatters: [
+                                        ThousandsSeparatorInputFormatter()
                                       ],
                                       decoration: InputDecoration(
                                         isDense: true,
@@ -452,11 +451,12 @@ class _BookEntryFormEditHistoryState extends State<BookEntryFormEditHistory> {
   }
 
   EntryData getBookEntryData() {
+    String quantityText = _quantityController.text.replaceAll('.', '');
     return EntryData(
-      bookName: _titleController.text,
+      bookName: _bookNameController.text,
       genre: _genreController,
       author: _authorController.text,
-      quantity: int.tryParse(_quantityController.text) ?? 0,
+      quantity: int.tryParse(quantityText) ?? 0,
     );
   }
 }
