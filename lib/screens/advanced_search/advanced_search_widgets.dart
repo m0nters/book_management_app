@@ -15,10 +15,11 @@ class AvailabilityLabel extends StatelessWidget {
 
   const AvailabilityLabel(
       {super.key,
-        required this.text,
-        required this.backgroundColor,
-        this.foregroundColor = const Color.fromRGBO(245, 245, 245, 1),
-        this.message = '' // meaning there's no hint text event when long press by default
+      required this.text,
+      required this.backgroundColor,
+      this.foregroundColor = const Color.fromRGBO(245, 245, 245, 1),
+      this.message =
+          '' // meaning there's no hint text event when long press by default
       });
 
   @override
@@ -43,24 +44,25 @@ class AvailabilityLabel extends StatelessWidget {
 class InStockLabel extends AvailabilityLabel {
   InStockLabel({super.key})
       : super(
-      text: 'Còn hàng',
-      backgroundColor: const Color.fromRGBO(8, 131, 149, 1),
-      message: "Số lượng từ $lowOnStockThreshold trở lên");
+            text: 'Còn hàng',
+            backgroundColor: const Color.fromRGBO(8, 131, 149, 1),
+            message: "Số lượng từ $lowOnStockThreshold trở lên");
 }
 
 class LowStockLabel extends AvailabilityLabel {
   LowStockLabel({super.key})
       : super(
-      text: 'Còn ít hàng',
-      backgroundColor: const Color.fromRGBO(239, 156, 102, 1),
-      message: "Số lượng ít hơn $lowOnStockThreshold");
+            text: 'Còn ít hàng',
+            backgroundColor: const Color.fromRGBO(239, 156, 102, 1),
+            message: "Số lượng ít hơn $lowOnStockThreshold");
 }
 
 class OutOfStockLabel extends AvailabilityLabel {
   const OutOfStockLabel({super.key})
       : super(
-      text: 'Hết hàng',
-      backgroundColor: const Color.fromRGBO(255, 105, 105, 1),);
+          text: 'Hết hàng',
+          backgroundColor: const Color.fromRGBO(255, 105, 105, 1),
+        );
 }
 
 // =============================================================================
@@ -127,8 +129,8 @@ class _SearchCardUIState extends State<SearchCardUI> {
     final status = await Permission.storage.request();
 
     if (status.isGranted) {
-      final pickedFile = await ImagePicker().pickImage(
-          source: ImageSource.gallery);
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       setState(() {
         if (pickedFile != null) {
           _image = File(pickedFile.path);
@@ -138,51 +140,50 @@ class _SearchCardUIState extends State<SearchCardUI> {
       // Handle permanently denied permission (guide user to app settings)
       showDialog(
         context: context,
-        builder: (context) =>
-            AlertDialog(
-              title: const Text('Yêu cầu quyền truy cập'),
-              content: const Text(
-                  'Quyền truy cập vào thư viện ảnh là bắt buộc nếu bạn muốn sử dụng tính năng này. Vui lòng cấp quyền trong cài đặt ứng dụng.'),
-              actions: [
-                TextButton(
-                  onPressed: () => openAppSettings(),
-                  child: const Text('Mở cài đặt'),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Hủy'),
-                ),
-              ],
+        builder: (context) => AlertDialog(
+          title: const Text('Yêu cầu quyền truy cập'),
+          content: const Text(
+              'Quyền truy cập vào thư viện ảnh là bắt buộc nếu bạn muốn sử dụng tính năng này. Vui lòng cấp quyền trong cài đặt ứng dụng.'),
+          actions: [
+            TextButton(
+              onPressed: () => openAppSettings(),
+              child: const Text('Mở cài đặt'),
             ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Hủy'),
+            ),
+          ],
+        ),
       );
     } else {
       // Show custom dialog for permission request
       showDialog(
         context: context,
-        builder: (context) =>
-            AlertDialog(
-              title: const Text('Yêu cầu quyền truy cập'),
-              content: const Text(
-                  'Ứng dụng này yêu cầu quyền truy cập vào thư viện, bạn có đồng ý cung cấp quyền này cho ứng dụng?'),
-              actions: [
-                TextButton(
-                  onPressed: () async {
-                    Navigator.pop(context); // Close the dialog
-                    final status = await Permission.storage
-                        .request(); // Request again
-                    if (status.isGranted) {
-                      _pickImage(); // Retry picking image if granted
-                    }
-                  },
-                  child: const Text('Có'),
-                ), TextButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Close the dialog
-                  },
-                  child: const Text('Không'),
-                ),
-              ],
+        builder: (context) => AlertDialog(
+          title: const Text('Yêu cầu quyền truy cập'),
+          content: const Text(
+              'Ứng dụng này yêu cầu quyền truy cập vào thư viện, bạn có đồng ý cung cấp quyền này cho ứng dụng?'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context); // Close the dialog
+                final status =
+                    await Permission.storage.request(); // Request again
+                if (status.isGranted) {
+                  _pickImage(); // Retry picking image if granted
+                }
+              },
+              child: const Text('Có'),
             ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Không'),
+            ),
+          ],
+        ),
       );
     }
   }
@@ -192,8 +193,7 @@ class _SearchCardUIState extends State<SearchCardUI> {
       text: TextSpan(text: text, style: style),
       maxLines: 1,
       textDirection: TextDirection.ltr,
-    )
-      ..layout(minWidth: 0, maxWidth: double.infinity);
+    )..layout(minWidth: 0, maxWidth: double.infinity);
     return textPainter.size.width;
   }
 
@@ -231,13 +231,15 @@ class _SearchCardUIState extends State<SearchCardUI> {
         decoration: BoxDecoration(
           color: const Color.fromRGBO(7, 25, 82, 1),
           borderRadius: const BorderRadius.all(Radius.circular(25)),
-          boxShadow: hasShadow ? const [
-            BoxShadow(
-              offset: Offset(0, 4),
-              color: Colors.grey,
-              blurRadius: 4,
-            )
-          ] : null,
+          boxShadow: hasShadow
+              ? const [
+                  BoxShadow(
+                    offset: Offset(0, 4),
+                    color: Colors.grey,
+                    blurRadius: 4,
+                  )
+                ]
+              : null,
         ),
         child: Stack(
           children: [
@@ -262,13 +264,13 @@ class _SearchCardUIState extends State<SearchCardUI> {
                   width: 80,
                   child: _image == null
                       ? Image.network(
-                    fit: BoxFit.cover,
-                    widget.imageUrl,
-                  )
+                          fit: BoxFit.cover,
+                          widget.imageUrl,
+                        )
                       : Image.file(
-                    _image!,
-                    fit: BoxFit.cover,
-                  ),
+                          _image!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ),
@@ -308,7 +310,10 @@ class _SearchCardUIState extends State<SearchCardUI> {
                       ),
                       const SizedBox(width: 25),
                       Text(
-                        _formatText(widget.author, contentStyle,),
+                        _formatText(
+                          widget.author,
+                          contentStyle,
+                        ),
                         style: contentStyle,
                       ),
                     ],
@@ -322,7 +327,10 @@ class _SearchCardUIState extends State<SearchCardUI> {
                       ),
                       const SizedBox(width: 15),
                       Text(
-                        _formatText(stdNumFormat.format(widget.quantity), contentStyle,),
+                        _formatText(
+                          stdNumFormat.format(widget.quantity),
+                          contentStyle,
+                        ),
                         style: contentStyle,
                       ),
                     ],
@@ -336,8 +344,7 @@ class _SearchCardUIState extends State<SearchCardUI> {
                       ),
                       const SizedBox(width: 22),
                       Text(
-                        "${_formatText(stdNumFormat.format(widget.price), contentStyle,
-                            maxWidth: 100)} VND",
+                        "${_formatText(stdNumFormat.format(widget.price), contentStyle, maxWidth: 100)} VND",
                         style: contentStyle,
                       ),
                     ],
@@ -404,8 +411,27 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
     super.dispose();
   }
 
+  void search() {
+    serverUploadedTitleInputData = _titleController.text;
+    serverUploadedGenreInputData = _genreController;
+    serverUploadedAuthorInputData = _authorController.text;
+    // the `tryParse()` method below shall not fail since there's impossible that
+    // the users can type non-digit character (I code this shit very carefully),
+    // but just put it in here for the industry's norm of modern safety code convention
+    serverUploadedQuantityInputData = _quantityController.text == ''
+        ? 0
+        : int.tryParse(_quantityController.text.replaceAll('.', '')) ?? 0;
+
+    uploadDataToServer();
+    widget.fetchDataFunction();
+  }
+
   void uploadDataToServer() {
     // your backend here, do something with `serverUploadedTitleInputData`, `serverUploadedGenreInputData`,...
+    print(serverUploadedTitleInputData);
+    print(serverUploadedGenreInputData);
+    print(serverUploadedAuthorInputData);
+    print(serverUploadedQuantityInputData);
   }
 
   @override
@@ -421,12 +447,12 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
                 topLeft: Radius.circular(8), topRight: Radius.circular(8)),
             boxShadow: hasShadow
                 ? const [
-              BoxShadow(
-                offset: Offset(0, 4),
-                color: Colors.grey,
-                blurRadius: 4,
-              )
-            ]
+                    BoxShadow(
+                      offset: Offset(0, 4),
+                      color: Colors.grey,
+                      blurRadius: 4,
+                    )
+                  ]
                 : null,
           ),
           child: Align(
@@ -441,7 +467,7 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
           ),
         ),
         Container(
-          // content area
+            // content area
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
               color: widget.contentAreaColor,
@@ -451,12 +477,12 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
               ),
               boxShadow: hasShadow
                   ? const [
-                BoxShadow(
-                  offset: Offset(0, 4),
-                  color: Colors.grey,
-                  blurRadius: 4,
-                )
-              ]
+                      BoxShadow(
+                        offset: Offset(0, 4),
+                        color: Colors.grey,
+                        blurRadius: 4,
+                      )
+                    ]
                   : null,
             ),
             child: Column(
@@ -629,15 +655,7 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
             width: 165,
             fontSize: 16,
             onPressed: () {
-              serverUploadedTitleInputData = _titleController.text;
-              serverUploadedGenreInputData = _genreController;
-              serverUploadedAuthorInputData = _authorController.text;
-              serverUploadedQuantityInputData = _quantityController.text == ''
-                  ? 0
-                  : int.parse(_quantityController.text);
-
-              uploadDataToServer();
-              widget.fetchDataFunction();
+              search();
             },
           ),
         ),
@@ -650,9 +668,13 @@ class _AdvancedSearchFormState extends State<AdvancedSearchForm> {
 // ============================================================================
 
 class SearchResult extends StatefulWidget {
+  final ScrollController totalScrollController;
   final ScrollController searchResultScrollController;
 
-  const SearchResult({super.key, required this.searchResultScrollController});
+  const SearchResult(
+      {super.key,
+      required this.searchResultScrollController,
+      required this.totalScrollController});
 
   @override
   State<SearchResult> createState() => _SearchResultState();
@@ -667,19 +689,19 @@ class _SearchResultState extends State<SearchResult> {
         .asMap() // Convert list to a map with indices
         .entries // Get the entries (key-value pairs)
         .expand((entry) => [
-      SearchCardUI(
-        orderNum: entry.key + 1,
-        // Use the index as orderNum
-        title: entry.value.title,
-        genre: entry.value.genre,
-        author: entry.value.author,
-        quantity: entry.value.quantity,
-        price: entry.value.price,
-        imageUrl:
-        "https://cdn.britannica.com/25/74225-050-7F97DCE4/second-jetliners-terrorists-al-Qaeda-smoke-billows-crash-Sept-11-2001.jpg",
-      ),
-      const SizedBox(height: 15),
-    ])
+              SearchCardUI(
+                orderNum: entry.key + 1,
+                // Use the index as orderNum
+                title: entry.value.title,
+                genre: entry.value.genre,
+                author: entry.value.author,
+                quantity: entry.value.quantity,
+                price: entry.value.price,
+                imageUrl:
+                    "https://cdn.britannica.com/25/74225-050-7F97DCE4/second-jetliners-terrorists-al-Qaeda-smoke-billows-crash-Sept-11-2001.jpg",
+              ),
+              const SizedBox(height: 15),
+            ])
         .toList();
   }
 
@@ -699,7 +721,7 @@ class _SearchResultState extends State<SearchResult> {
   void bestToWorstSellerSort() {
     processedDataList.sort((a, b) {
       int comparison =
-      a.monthlySalesCountTotal.compareTo(b.monthlySalesCountTotal);
+          a.monthlySalesCountTotal.compareTo(b.monthlySalesCountTotal);
       if (comparison == 0) {
         return removeDiacritics(a.title).compareTo(removeDiacritics(b.title));
       } else {
@@ -753,6 +775,14 @@ class _SearchResultState extends State<SearchResult> {
     if (sortOptionSelected != null) {
       sortOption(sortOptionSelected);
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.totalScrollController.animateTo(
+        widget.totalScrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   @override
@@ -783,48 +813,48 @@ class _SearchResultState extends State<SearchResult> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: rawDataList.isNotEmpty
               ? [
-            const Text(
-              'Sắp xếp theo: ',
-              style: TextStyle(
-                fontSize: 16,
-                color: Color.fromRGBO(7, 25, 82, 1),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            CustomDropdownMenu(
-              options: const [
-                'Bán chạy tháng',
-                'Mới nhất',
-                'Giá từ thấp tới cao',
-                'Giá từ cao tới thấp'
-              ],
-              initialValue: sortOptionSelected,
-              action: (selected) {
-                setState(() {
-                  sortOptionSelected = selected;
-                  rebuildResultData();
-                });
-              },
-              fillColor: Colors.white,
-              width: 140,
-              fontSize: 14,
-            ),
-            const Spacer(),
-            CustomDropdownMenu(
-              options: const ['Tất cả', 'Còn hàng', 'Hết hàng'],
-              initialValue: filterOptionSelected,
-              action: (status) {
-                setState(() {
-                  filterOptionSelected = status;
-                  rebuildResultData();
-                });
-              },
-              fillColor: Colors.white,
-              width: 110,
-              fontSize: 14,
-            ),
-          ]
-              : [const NotFound()],
+                  const Text(
+                    'Sắp xếp theo: ',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Color.fromRGBO(7, 25, 82, 1),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  CustomDropdownMenu(
+                    options: const [
+                      'Bán chạy tháng',
+                      'Mới nhất',
+                      'Giá từ thấp tới cao',
+                      'Giá từ cao tới thấp'
+                    ],
+                    initialValue: sortOptionSelected,
+                    action: (selected) {
+                      setState(() {
+                        sortOptionSelected = selected;
+                        rebuildResultData();
+                      });
+                    },
+                    fillColor: Colors.white,
+                    width: 140,
+                    fontSize: 14,
+                  ),
+                  const Spacer(),
+                  CustomDropdownMenu(
+                    options: const ['Tất cả', 'Còn hàng', 'Hết hàng'],
+                    initialValue: filterOptionSelected,
+                    action: (status) {
+                      setState(() {
+                        filterOptionSelected = status;
+                        rebuildResultData();
+                      });
+                    },
+                    fillColor: Colors.white,
+                    width: 110,
+                    fontSize: 14,
+                  ),
+                ]
+              : [],
         ),
         const SizedBox(
           height: 15,
@@ -850,13 +880,21 @@ class _SearchResultState extends State<SearchResult> {
                     children: [
                       NotFound(
                         paddingLeft: 25,
-                        paddingTop: 40,
+                        paddingTop: 65,
                       ),
                     ],
                   );
                 }
               } else {
-                return const SizedBox(); // Placeholder if rawDataList is empty
+                return const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    NotFound(
+                      paddingLeft: 25,
+                      paddingTop: 50,
+                    ),
+                  ],
+                ); // Placeholder if rawDataList is empty
               }
             },
           ),

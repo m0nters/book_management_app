@@ -29,7 +29,6 @@ class BookstoreManagementApp extends StatelessWidget {
         // highlightColor: Colors.transparent, // Disable highlight for long presses
       ),
       home: const SafeArea(child: OverallScreenRouting()),
-      // home: const BookEntryFormSearch()
     );
   }
 }

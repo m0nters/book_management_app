@@ -30,7 +30,7 @@ List<SearchCardCoreData> rawDataList = [
     title: "Tư Duy Ngược",
     genre: "Tiểu thuyết",
     author: "Nguyễn Anh Dũng",
-    quantity: 0,
+    quantity: 10,
     price: 69500,
     lastImportDate: DateTime(2024, 6, 28),
   ),
@@ -217,6 +217,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height - 330,
                   child: SearchResult(
+                    totalScrollController: _totalScrollController,
                     searchResultScrollController: _searchResultScrollController,
                   ),
                 ),

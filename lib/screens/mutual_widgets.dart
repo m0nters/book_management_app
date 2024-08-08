@@ -29,11 +29,6 @@ NumberFormat stdNumFormat = NumberFormat('#,###', 'vi_VN');
 
 /// For `keyboardType: TextInputType.number`'s `TextField`
 class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  final NumberFormat _numberFormat;
-
-  ThousandsSeparatorInputFormatter({String locale = 'vi_VN'})
-      : _numberFormat = NumberFormat('#,###', locale);
-
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
@@ -41,18 +36,26 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
       return newValue.copyWith(text: '');
     }
 
-    // Remove all non-digit characters
+    // Remove all non-digit characters from the input
     String newText = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
 
-    // Format the new text
-    String formattedText = _numberFormat.format(int.parse(newText));
+    // Try to parse the cleaned text
+    try {
+      final intValue = int.parse(newText);
 
-    // Preserve the cursor position after formatting
-    int selectionIndex = formattedText.length;
-    return newValue.copyWith(
-      text: formattedText,
-      selection: TextSelection.collapsed(offset: selectionIndex),
-    );
+      // Format the new text
+      String formattedText = stdNumFormat.format(intValue);
+
+      // Preserve the cursor position after formatting
+      int selectionIndex = formattedText.length;
+      return newValue.copyWith(
+        text: formattedText,
+        selection: TextSelection.collapsed(offset: selectionIndex),
+      );
+    } catch (e) {
+      // If parsing fails, return the unformatted text allowing for corrections
+      return newValue.copyWith(text: newText);
+    }
   }
 }
 
