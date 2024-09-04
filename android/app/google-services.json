@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "762126839247",
+    "project_id": "bookstore-management-sys-614c4",
+    "storage_bucket": "bookstore-management-sys-614c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762126839247:android:e3001a3a8dfd5ce17fb6ba",
+        "android_client_info": {
+          "package_name": "com.example.bookstore_management_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCxbC7TRDtAONm8Odhs-hjDSzZsmRGzQY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

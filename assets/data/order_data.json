@@ -1,0 +1,58 @@
+[
+  {
+    "customer": "PNcfXev8uOIeJRQc0bgT",
+    "date": "2024-18-07",
+    "bookList": [
+      {
+        "book": "K8Q00QO0R14DaxXJsSvb",
+        "quantity": 2
+      },
+      {
+        "book": "1ccUwhc33ijd0jxzsXBQ",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "customer": "ifPzY9c8yZONnypM7mjA",
+    "date": "2024-20-07",
+    "bookList": [
+      {
+        "book": "PNlyf1zpJw7ljeykOMnx",
+        "quantity": 1
+      },
+      {
+        "book": "awTPf0fDTBK2TY4c3w0t",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "customer": "53Pj76rpp9Vms15Gt8xc",
+    "date": "2024-22-07",
+    "bookList": [
+      {
+        "book": "UVVvpocx9s6RC8nPaXKM",
+        "quantity": 1
+      },
+      {
+        "book": "buhTA3SqWrJtE7jeCcGL",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "customer": "QrYEyzJ2VQzODjedjD2E",
+    "date": "2024-22-07",
+    "bookList": [
+      {
+        "book": "gbcOf1LEGBBE0NCeb5TO",
+        "quantity": 2
+      },
+      {
+        "book": "pacBcEzl0lfScVhg4r1o",
+        "quantity": 2
+      }
+    ]
+  }
+]

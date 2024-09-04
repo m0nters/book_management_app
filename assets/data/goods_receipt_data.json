@@ -1,0 +1,67 @@
+[
+  {
+    "date": "2024-01-08",
+    "bookList": [
+      {
+        "book": "yZSoUvuSKOoPJZtqIqQw",
+        "quantity": 150
+      },
+      {
+        "book": "FtvcjKC6sMZuyu657UjN",
+        "quantity": 151
+      }
+    ]
+  },
+  {
+    "date": "2024-02-08",
+    "bookList": [
+      {
+        "book": "nUVz3htYhGfWXUq18pQS",
+        "quantity": 152
+      },
+      {
+        "book": "Dc3Lt9qjaokD4ymop4Mx",
+        "quantity": 153
+      }
+    ]
+  },
+  {
+    "date": "2024-03-08",
+    "bookList": [
+      {
+        "book": "k8484LLHdsmk4iXxuPH9",
+        "quantity": 154
+      },
+      {
+        "book": "J6FWffFaQWLXEIg6dWWR",
+        "quantity": 155
+      }
+    ]
+  },
+  {
+    "date": "2024-04-08",
+    "bookList": [
+      {
+        "book": "F25y83YOT5MMucuL24w1",
+        "quantity": 156
+      },
+      {
+        "book": "K7OyRbVz2hrXljLlqeDW",
+        "quantity": 157
+      }
+    ]
+  },
+  {
+    "date": "2024-05-08",
+    "bookList": [
+      {
+        "book": "XVfnkjQXTkLAc758rlcM",
+        "quantity": 158
+      },
+      {
+        "book": "GjnB96Y6umHkfxYyyXKg",
+        "quantity": 159
+      }
+    ]
+  }
+]

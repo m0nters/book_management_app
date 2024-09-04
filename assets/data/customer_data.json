@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Nguyễn Quốc Thuần",
+    "phoneNumber": "0123456789",
+    "address": "Ho Chi Minh city, VietNam",
+    "email": "mrhandsome@gmail.com",
+    "debt": 0.0
+  },
+  {
+    "name": "Nguyễn Đức Hưng",
+    "phoneNumber": "0987654321",
+    "address": "Phu Yen, VietNam",
+    "email": "duchung@gmail.com",
+    "debt": 600000.0
+  },
+  {
+    "name": "Trần Nhật Huy",
+    "phoneNumber": "0135792468",
+    "address": "Ho Chi Minh city, VietNam",
+    "email": "nhathuy@gmail.com",
+    "debt": 500000.0
+  },
+  {
+    "name": "Trịnh Anh Tài",
+    "phoneNumber": "086497531",
+    "address": "Ho Chi Minh city, VietNam",
+    "email": "anhtai@gmail.com",
+    "debt": 1000000.0
+  }
+]
