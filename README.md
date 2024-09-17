@@ -4,9 +4,9 @@
 |-----|---------------------------|----------|----------|---------|
 | 1   | Lập phiếu nhập sách        | BM1      | QD1      |         |
 | 2   | Lập hóa đơn bán sách       | BM2      | QD2      |         |
-| 3   | Tra cứu sách               | BM3      | QD3      |         |
+| 3   | Tra cứu sách               | BM3      |       |         |
 | 4   | Lập phiếu thu tiền         | BM4      | QD4      |         |
-| 5   | Lập báo cáo tháng          | BM5      | QD5      |         |
+| 5   | Lập báo cáo tháng          | BM5      |       |         |
 | 6   | Thay đổi qui định          |          | QD6      |         |       |
 
 ## 2. Danh sách các biểu mẫu và quy định
@@ -45,7 +45,7 @@
 </tbody>
 </table>
 
-> QĐ1: Số lượng nhập ít nhất lá 150. Chỉ nhập các đầu sách có lượng tồn ít hơn 300.
+> QĐ1: Số lượng nhập ít nhất là 150. Chỉ nhập các đầu sách có lượng tồn ít hơn 300.
 
 
 ### 2.2 Biểu mẫu 2 và qui định 2
@@ -143,7 +143,7 @@
 </tbody>
 </table>
 
-> QĐ4: Số tiền thu không vượt quá số tiền khách hàng đang nợ
+> QĐ4: Số tiền thu không vượt quá số tiền khách hàng đang nợ.
 
 
 ### 2.5 Biểu mẫu 5
@@ -221,10 +221,10 @@
 
 ### 2.6 Quy định 6
 
-> QĐ6: Người dùng có thể thay đổi các qui định như sau :
+> QĐ6: Người dùng có thể thay đổi các quy định như sau:
 + QĐ1 : Thay đổi số lượng nhập tối thiểu, lượng tồn tối thiểu trước khi nhập.
-+ QĐ2 : Thay đổi tiền nợ tối đa, lượng tồn tối thiểu sau khi bán .
-+ QĐ4 : Sử dụng hay không sử dụng qui định này.
++ QĐ2 : Thay đổi tiền nợ tối đa, lượng tồn tối thiểu sau khi bán.
++ QĐ4 : Sử dụng hay không sử dụng quy định này.
 
 
 
@@ -233,7 +233,7 @@
 - Ngôn ngữ: Dart
 - Framework: Flutter
 - Server: Firebase store
-- Thời gian: 2 tháng (10/7/2024 -- 2/9/2024)
+- Thời gian thực hiện: 2 tháng (10/7/2024 -- 2/9/2024)
 
 
 
