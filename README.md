@@ -12,14 +12,6 @@
 ## 2. Danh sách các biểu mẫu và quy định
 ### 2.1 Biểu mẫu 1 và quy định 1
 
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
-</style>
 <table class="tg"><thead>
   <tr>
     <th class="tg-c3ow">BM1:</th>
@@ -57,14 +49,7 @@
 
 
 ### 2.2 Biểu mẫu 2 và qui định 2
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
-</style>
+
 <table class="tg"><thead>
   <tr>
     <th class="tg-c3ow">BM2:</th>
@@ -103,14 +88,7 @@
 
 
 ### 2.3 Biểu mẫu 3
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
-</style>
+
 <table class="tg"><thead>
   <tr>
     <th class="tg-c3ow">BM3:</th>
@@ -143,14 +121,7 @@
 
 
 ### 2.4 Biểu mẫu 4 và quy định 4
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-0lax{text-align:left;vertical-align:top}
-</style>
+
 <table class="tg"><thead>
   <tr>
     <th class="tg-0lax">BM4:</th>
@@ -177,14 +148,7 @@
 
 ### 2.5 Biểu mẫu 5
 #### Biểu mẫu 5.1
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
-</style>
+
 <table class="tg"><thead>
   <tr>
     <th class="tg-0pky">BM5:</th>
@@ -220,14 +184,7 @@
 
 
 #### Biểu mẫu 5.2
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;}
-.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
-  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
-</style>
+
 <table class="tg"><thead>
   <tr>
     <th class="tg-0pky">BM5:</th>
@@ -284,28 +241,41 @@
 
 ## 4. Ảnh chụp màn hình sản phẩm
 ### Trang chủ
-![Trang chủ](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-06-57-029_com.example.bookstore_management_system-edit.jpg?raw=true)
+<img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-06-57-029_com.example.bookstore_management_system-edit.jpg?raw=true" alt="Trang chủ" style="width: 200px; height: auto;"/>
+
 ### Phiếu nhập sách
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-09-676_com.example.bookstore_management_system.jpg?raw=true)
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-25-469_com.example.bookstore_management_system.jpg?raw=true)
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-42-033_com.example.bookstore_management_system.jpg?raw=true)
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-47-305_com.example.bookstore_management_system.jpg?raw=true)
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-51-220_com.example.bookstore_management_system.jpg?raw=true)
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-09-676_com.example.bookstore_management_system.jpg?raw=true" alt="Phiếu nhập sách 1" style="width: 200px; height: auto;"/>
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-25-469_com.example.bookstore_management_system.jpg?raw=true" alt="Phiếu nhập sách 2" style="width: 200px; height: auto;"/>
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-42-033_com.example.bookstore_management_system.jpg?raw=true" alt="Phiếu nhập sách 3" style="width: 200px; height: auto;"/>
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-47-305_com.example.bookstore_management_system.jpg?raw=true" alt="Phiếu nhập sách 4" style="width: 200px; height: auto;"/>
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-51-220_com.example.bookstore_management_system.jpg?raw=true" alt="Phiếu nhập sách 5" style="width: 200px; height: auto;"/>
+</div>
+
 ### Hóa đơn bán sách
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-54-721_com.example.bookstore_management_system.jpg?raw=true)
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-02-186_com.example.bookstore_management_system.jpg?raw=true)
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-05-648_com.example.bookstore_management_system.jpg?raw=true)
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-28-516_com.example.bookstore_management_system.jpg?raw=true)
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-37-277_com.example.bookstore_management_system.jpg?raw=true)
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-07-54-721_com.example.bookstore_management_system.jpg?raw=true" alt="Hóa đơn bán sách 1" style="width: 200px; height: auto;"/>
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-02-186_com.example.bookstore_management_system.jpg?raw=true" alt="Hóa đơn bán sách 2" style="width: 200px; height: auto;"/>
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-05-648_com.example.bookstore_management_system.jpg?raw=true" alt="Hóa đơn bán sách 3" style="width: 200px; height: auto;"/>
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-28-516_com.example.bookstore_management_system.jpg?raw=true" alt="Hóa đơn bán sách 4" style="width: 200px; height: auto;"/>
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-37-277_com.example.bookstore_management_system.jpg?raw=true" alt="Hóa đơn bán sách 5" style="width: 200px; height: auto;"/>
+</div>
+
 ### Phiếu thu tiền
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-47-610_com.example.bookstore_management_system.jpg?raw=true)
+<img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-47-610_com.example.bookstore_management_system.jpg?raw=true" alt="Phiếu thu tiền" style="width: 200px; height: auto;"/>
+
 ### Báo cáo tồn/Báo cáo công nợ
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-50-457_com.example.bookstore_management_system.jpg?raw=true)
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-53-967_com.example.bookstore_management_system.jpg?raw=true)
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-58-247_com.example.bookstore_management_system.jpg?raw=true)
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-50-457_com.example.bookstore_management_system.jpg?raw=true" alt="Báo cáo tồn 1" style="width: 200px; height: auto;"/>
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-53-967_com.example.bookstore_management_system.jpg?raw=true" alt="Báo cáo tồn 2" style="width: 200px; height: auto;"/>
+  <img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-08-58-247_com.example.bookstore_management_system.jpg?raw=true" alt="Báo cáo tồn 3" style="width: 200px; height: auto;"/>
+</div>
+
 ### Tìm kiếm nâng cao
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-09-06-088_com.example.bookstore_management_system.jpg?raw=true)
+<img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-09-06-088_com.example.bookstore_management_system.jpg?raw=true" alt="Tìm kiếm nâng cao" style="width: 200px; height: auto;"/>
+
 ### Cài đặt
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-09-16-009_com.example.bookstore_management_system.jpg?raw=true)
+<img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-09-16-009_com.example.bookstore_management_system.jpg?raw=true" alt="Cài đặt" style="width: 200px; height: auto;"/>
+
 ### Mất kết nối internet
-![](https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-10-20-550_com.example.bookstore_management_system.jpg?raw=true)
+<img src="https://github.com/m0nters/book_management_app/blob/master/screenshots/Screenshot_2024-09-17-23-10-20-550_com.example.bookstore_management_system.jpg?raw=true" alt="Mất kết nối internet" style="width: 200px; height: auto;"/>
